@@ -1,6 +1,6 @@
 Installation
 1.download the package
-2.unzip the files to your disk, under your site root
+2.unzip the files to your disk, under root of your site
 3.open the index.php with your convenient editor, change host, port, admins and so on to yours
 4.visit the index.php in your browser, for example: http://localhost/rockmongo/index.php
 5.play with your MongoDBs!
