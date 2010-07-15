@@ -3,7 +3,7 @@
 					"db" => $db, 
 					"collection" => $collection
 				)));
-			?>"><?php h($collection);?></a></h4>
+			?>"><?php h($collection);?></a> &raquo; Indexes</h4>
 
 <div class="operation"><a href="<?php 
 				h(url("createIndex", array( 

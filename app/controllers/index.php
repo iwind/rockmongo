@@ -228,12 +228,16 @@ class IndexController extends RExtController {
 			$this->display();
 			return;
 		}
-
+		
 		//分页
+		$pagesize = xi("pagesize");
+		if ($pagesize < 1) {
+			$pagesize = 10;
+		}
 		import("lib.page.RPageStyle1");
 		$page = new RPageStyle1();
 		$page->setTotal($count);
-		$page->setSize(10);
+		$page->setSize($pagesize);
 		$page->setAutoQuery();
 
 		$this->page = $page;
@@ -245,11 +249,24 @@ class IndexController extends RExtController {
 			$query->limit($page->size());
 		}
 		
+		//格式
+		$format = x("format");
+		if (!$format) {
+			$format = "json";
+		}
+		$params = xn();
+		$params["format"] = "array";
+		$this->arrayLink = $this->path($this->action(), $params);
+		$params["format"] = "json";
+		$this->jsonLink = $this->path($this->action(), $params);
+		
 		$microtime = microtime(true);	
 		$this->rows = $query->findAll();
 		$this->cost = microtime(true) - $microtime;
 		foreach ($this->rows as $index => $row) {
-			$row["data"] = $this->_highlight($row);
+			$native = $row;
+			$row["data"] = $this->_highlight($native, $format);
+			$row["text"] = ($format == "array") ? var_export($native, true) : json_format($this->_encodeJson($native));
 			$this->rows[$index] = $row;
 		}
 		
@@ -493,9 +510,24 @@ class IndexController extends RExtController {
 		$this->display();
 	}
 	
-	private function _highlight($var) {
-		$string = highlight_string("<?php " . var_export($var, true), true);
-		$string = preg_replace("/" . preg_quote('<span style="color: #0000BB">&lt;?php&nbsp;</span>', "/") . "/", '', $string, 1);
+	private function _encodeJson($var) {
+		if (function_exists("json_encode")) {
+			return json_encode($var);
+		}
+		import("classes.Services_JSON");
+		$service = new Services_JSON();
+		return $service->encode($var);
+	}
+	
+	private function _highlight($var, $format = "array") {
+		$string = null;
+		if ($format == "array") {
+			$string = highlight_string("<?php " . var_export($var, true), true);
+			$string = preg_replace("/" . preg_quote('<span style="color: #0000BB">&lt;?php&nbsp;</span>', "/") . "/", '', $string, 1);
+		}
+		else {
+			$string =  json_format_html($this->_encodeJson($var));
+		}
 		return $string;
 	}
 }
@@ -526,6 +558,206 @@ function rock_array_sort(array $array, $key = null, $asc = true) {
 		unset($GLOBALS["ROCK_ARRAY_SORT_KEY_" . nil]);
 	}	
 	return $array;
+}
+
+
+/**
+ * PHP Integration of Open Flash Chart
+ * Copyright (C) 2008 John Glazebrook <open-flash-chart@teethgrinder.co.uk>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+// Pretty print some JSON
+//modified by iwind
+function json_format_html($json)
+{
+    $tab = "&nbsp;&nbsp;";
+    $new_json = "";
+    $indent_level = 0;
+    $in_string = false;
+
+/*
+ commented out by monk.e.boy 22nd May '08
+ because my web server is PHP4, and
+ json_* are PHP5 functions...
+
+    $json_obj = json_decode($json);
+
+    if($json_obj === false)
+        return false;
+
+    $json = json_encode($json_obj);
+*/
+    $len = strlen($json);
+
+    for($c = 0; $c < $len; $c++)
+    {
+        $char = $json[$c];
+        switch($char)
+        {
+            case '{':
+            case '[':
+            	$char = "<font color=\"green\">" . $char . "</font>";//iwind
+                if(!$in_string)
+                {
+                    $new_json .= $char . "<br/>" . str_repeat($tab, $indent_level+1);
+                    $indent_level++;
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case '}':
+            case ']':
+            	$char = "<font color=\"green\">" . $char . "</font>";//iwind
+                if(!$in_string)
+                {
+                    $indent_level--;
+                    $new_json .= "<br/>" . str_repeat($tab, $indent_level) . $char;
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case ',':
+            	$char = "<font color=\"green\">" . $char . "</font>";//iwind
+                if(!$in_string)
+                {
+                    $new_json .= ",<br/>" . str_repeat($tab, $indent_level);
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case ':':
+            	$char = "<font color=\"green\">" . $char . "</font>";//iwind
+                if(!$in_string)
+                {
+                    $new_json .= ": ";
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case '"':
+                if($c > 0 && $json[$c-1] != '\\')
+                {
+                    $in_string = !$in_string;
+                    $new_json .= $in_string ? "<font color=\"red\">" . $char: $char . "</font>"; //iwind
+                    break;//iwind
+                }
+            default:
+            	if (!$in_string) {
+            		$char = "<font color=\"blue\">" . $char . "</font>";
+            	}
+                $new_json .= $char;
+                break;
+        }
+    }
+
+    return $new_json;
+}
+
+
+function json_format($json)
+{
+    $tab = "  ";
+    $new_json = "";
+    $indent_level = 0;
+    $in_string = false;
+
+/*
+ commented out by monk.e.boy 22nd May '08
+ because my web server is PHP4, and
+ json_* are PHP5 functions...
+
+    $json_obj = json_decode($json);
+
+    if($json_obj === false)
+        return false;
+
+    $json = json_encode($json_obj);
+*/
+    $len = strlen($json);
+
+    for($c = 0; $c < $len; $c++)
+    {
+        $char = $json[$c];
+        switch($char)
+        {
+            case '{':
+            case '[':
+                if(!$in_string)
+                {
+                    $new_json .= $char . "\n" . str_repeat($tab, $indent_level+1);
+                    $indent_level++;
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case '}':
+            case ']':
+                if(!$in_string)
+                {
+                    $indent_level--;
+                    $new_json .= "\n" . str_repeat($tab, $indent_level) . $char;
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case ',':
+                if(!$in_string)
+                {
+                    $new_json .= ",\n" . str_repeat($tab, $indent_level);
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case ':':
+                if(!$in_string)
+                {
+                    $new_json .= ": ";
+                }
+                else
+                {
+                    $new_json .= $char;
+                }
+                break;
+            case '"':
+                if($c > 0 && $json[$c-1] != '\\')
+                {
+                    $in_string = !$in_string;
+                }
+            default:
+                $new_json .= $char;
+                break;
+        }
+    }
+
+    return $new_json;
 }
 
 ?>
