@@ -6,7 +6,7 @@
 $MONGO = array();
 $MONGO["servers"] = array(
 	array(
-		"host" => "192.168.1.251",//MongoDB host ip or name
+		"host" => "192.168.1.251",//MongoDB host ip or domain name
 		"port" => "27017",//MongoDB port
 		"username" => null,//MongoDB username
 		"password" => null,//MongoDB password

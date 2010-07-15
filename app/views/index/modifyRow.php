@@ -13,11 +13,12 @@ Data:<br/>
 <input type="submit" value="Save"/> <input type="button" value="Back" onclick="window.location='<?php h(xn("uri"));?>'"/>
 </form>
 
+Data must be an valid PHP array, just like:
 <blockquote>
 <pre>
 array (
-	"value1" => 1,
-	"value2" => 2,
+	'value1' => 1,
+	'value2' => 2,
 	...
 );
 </pre>

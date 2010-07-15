@@ -10,11 +10,12 @@ Data:<br/>
 <input type="submit" value="Save"/>
 </form>
 
+Data must be an valid PHP array, just like:
 <blockquote>
 <pre>
 array (
-	"value1" => 1,
-	"value2" => 2,
+	'value1' => 1,
+	'value2' => 2,
 	...
 );
 </pre>
