@@ -6,12 +6,12 @@
 $MONGO = array();
 $MONGO["servers"] = array(
 	array(
-		"host" => "192.168.1.251",
-		"port" => "27017",
-		"username" => null,
-		"password" => null,
+		"host" => "192.168.1.251",//MongoDB host ip or name
+		"port" => "27017",//MongoDB port
+		"username" => null,//MongoDB username
+		"password" => null,//MongoDB password
 		"admins" => array( 
-			"admin" => "admin", // USERNAME => PASSWORD
+			"admin" => "admin", //Administrator's USERNAME => PASSWORD
 			//"iwind" => "123456",
 		)
 	),
@@ -31,7 +31,7 @@ $MONGO["servers"] = array(
 
 //default settings, you need not change them in current version
 define("__LANG__", "en_us");
-define("ROCK_MONGO_VERSION", "1.0");
+define("ROCK_MONGO_VERSION", "1.0.1");
 error_reporting(E_ALL | E_STRICT);
 
 //detect environment
