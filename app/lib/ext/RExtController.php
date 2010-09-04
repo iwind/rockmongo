@@ -1,12 +1,18 @@
 <?php
 
+define("__BASE__", rtrim(str_replace(DS, "/", dirname($_SERVER["PHP_SELF"])), "/"));//当前主目录路径
+
 class RExtController extends RController {
-	function redirect($action, array $params = array()) {
-		header("location:" . $this->path($action, $params));
+	function redirect($action, array $params = array(), $js = false) {
+		$this->redirectUrl($this->path($action, $params), $js);
 		exit();
 	}
 	
-	function redirectUrl($url) {
+	function redirectUrl($url, $js = false) {
+		if ($js) {
+			echo '<script language="Javascript">window.location="' . $url . '"</script>';
+			exit();
+		}
 		header("location:{$url}");
 		exit();
 	}
@@ -23,17 +29,30 @@ class RExtController extends RController {
 	}
 	
 	/**
-	 * 判断当前浏览器请求方法是否是POST
+	 * Is POST request?
 	 *
 	 * @return boolean
 	 */
 	function isPost() {
 		return ($_SERVER["REQUEST_METHOD"] == "POST");
 	}
+	
+	/**
+	 * Is from AJAX request?
+	 *
+	 * @return boolean
+	 */
+	function isAjax() {
+		return (isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest");
+	}
 }
 
 function h($var) {
 	echo $var;
+}
+
+function hm($var) {
+	echo rock_lang($var);
 }
 
 function url($action, array $params = array()) {

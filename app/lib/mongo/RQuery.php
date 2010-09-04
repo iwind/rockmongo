@@ -58,7 +58,7 @@ class RQuery {
 			$nameOrAttrs = array( $nameOrAttrs => $value );
 		}
 		foreach ($nameOrAttrs as $attr => $value) {
-			if ($attr == "_id" && (!is_object($value) || !($value instanceof MongoId))) {
+			if ($attr == "_id" && (!is_object($value) || !($value instanceof MongoId)) && strlen($attr) == 24) {
 				$value = new MongoId($value);
 			}
 			if (!isset($this->_attrs[$attr])) {
@@ -307,11 +307,11 @@ class RQuery {
 		foreach (func_get_args() as $arg) {
 			if (is_array($arg)) {
 				foreach ($arg as $_id) {
-					$this->attr("_id", new MongoId($_id));
+					$this->attr("_id", rock_real_id($_id));
 				}
 			}
 			else if (!($arg instanceof MongoId)) {
-				$this->attr("_id", new MongoId($arg));
+				$this->attr("_id", rock_real_id($arg));
 			}
 			else {
 				$this->attr("_id", $arg);
@@ -429,16 +429,19 @@ class RQuery {
 	/**
 	 * 取出所有记录
 	 *
+	 * @param boolean $keepId 是否保留ID的原始状态
 	 * @return array
 	 */
-	function findAll() {
+	function findAll($keepId = false) {
 		$rets = array();
 		foreach ($this->cursor() as $value) {
 			if ($this->_noPk) {
 				unset($value["_id"]);
 			}
 			else {
-				$value["_id"] = $value["_id"]->__toString();
+				if (!$keepId && isset($value["_id"]) && ($value["_id"] instanceof MongoId)) {
+					$value["_id"] = $value["_id"]->__toString();
+				}
 			}
 			$rets[] = $value;
 		}
@@ -484,7 +487,12 @@ class RQuery {
 		$bool = $this->_collection->insert($attrs);
 		if ($bool) {
 			import("@.RMongo");
-			RMongo::setLastInsertId($attrs["_id"]->__toString());
+			if ($attrs["_id"] instanceof MongoId) {
+				RMongo::setLastInsertId($attrs["_id"]->__toString());
+			}
+			else {
+				RMongo::setLastInsertId($attrs["_id"]);
+			}
 		}
 		return $bool;
 	}	

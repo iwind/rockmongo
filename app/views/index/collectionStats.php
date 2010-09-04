@@ -1,9 +1,12 @@
-<h4><?php h($db);?> &raquo; <a href="<?php h(url("collection", array( "db"=>$db,"collection"=>$collection )));?>"><?php h($collection)?></a> &raquo; Statistics</h4>
+<h3><a href="<?php h(url("databases"));?>"><?php hm("databases"); ?></a> &raquo; <a href="<?php h(url("db",array("db"=>$db)));?>"><?php h($db);?></a> &raquo; <a href="<?php h(url("collection", array( "db"=>$db,"collection"=>$collection )));?>"><?php h($collection)?></a> &raquo; <?php hm("statistics"); ?> [<a href="<?php h($_SERVER["REQUEST_URI"]);?>"><?php hm("refresh"); ?></a>]</h3>
 
 <table bgcolor="#cccccc" width="600" cellpadding="2" cellspacing="1">
+	<tr bgcolor="#cfffff">
+		<td colspan="2">db.<?php h($collection); ?>.stats()</td>
+	</tr>
 <?php foreach ($stats as $name => $stat):?>
 	<tr bgcolor="#ffffff">
-		<td width="150" bgcolor="#fffeee"><?php h($name);?></td>
+		<td width="150" bgcolor="#fffeee" valign="top"><?php h($name);?></td>
 		<td><?php 
 			if (is_array($stat)) {
 				h("<xmp>" . var_export($stat, true) . "</xmp>"); 
@@ -17,4 +20,17 @@
 			?></td>
 	</tr>
 <?php endforeach; ?>
+<?php if(!empty($top)):?>
+ 	<tr bgcolor="#cfffff">
+		<td colspan="2">{top:1}</td>
+	</tr>
+	<?php foreach ($top as $name => $stat):?>
+		<tr bgcolor="#ffffff">
+			<td width="150" bgcolor="#fffeee" valign="top"><?php h($name);?></td>
+			<td><?php 
+				h($stat);
+				?></td>
+		</tr>
+	<?php endforeach; ?>
+<?php endif;?>
 </table>

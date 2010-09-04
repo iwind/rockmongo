@@ -99,12 +99,7 @@ class RObject extends RModel implements ArrayAccess {
 	 * @param string|MongoId $id 新的Id，如果非长度为24的16禁止的字符串，则MongoDB会认为是非法的ID，而忽略之
 	 */
 	function setId($id) {
-		if (is_object($id) && ($id instanceof MongoId)) {
-			$this->_id = $id;
-		}
-		else {
-			$this->_id = new MongoId($id);
-		}
+		$this->_id = rock_real_id($id);
 	}
 	
 	/**

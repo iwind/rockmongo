@@ -17,7 +17,7 @@ function removeNewField(btn) {
 }
 </script>
 
-<h4><?php h($db);?> &raquo; <a href="<?php 
+<h3><a href="<?php h(url("databases"));?>"><?php hm("databases"); ?></a> &raquo; <a href="<?php h(url("db",array("db"=>$db)));?>"><?php h($db);?></a> &raquo; <a href="<?php 
 				h(url("collection", array( 
 					"db" => $db, 
 					"collection" => $collection
@@ -27,7 +27,7 @@ function removeNewField(btn) {
 					"db" => $db, 
 					"collection" => $collection
 				)));
-			?>">Indexes</a> &raquo; Create</h4>
+			?>"><?php hm("indexes");?></a> &raquo; Create</h3>
 			
 <?php if(isset($message)): ?>
 <p class="error"><?php h($message);?></p>

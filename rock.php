@@ -4,6 +4,7 @@ define("DS", DIRECTORY_SEPARATOR);
 define("__ROOT__", dirname(__FILE__) . DS . "app");
 define("__VERSION__", "0.0.1");
 define("nil", "nil_" . uniqid(microtime(true)));
+define("PHP_VERSION_5_3", version_compare(PHP_VERSION, "5.3.0")>=0);
 if (!defined("__ENV__")) {
 	define("__ENV__", "dev");
 }
@@ -241,14 +242,18 @@ function x($name, $value = nil) {
  * 过滤参数
  *
  * @param string $param 参数
+ * @param boolean $filter 是否过滤
  * @return mixed
  */
-function rock_filter_param($param) {
+function rock_filter_param($param, $filter = true) {
 	if (!is_array($param) && !is_object($param)) {
-		return htmlspecialchars(trim($param));
+		if (!PHP_VERSION_5_3 && get_magic_quotes_gpc()) {
+			$param = stripslashes($param);
+		}
+		return $filter ? htmlspecialchars(trim($param)) : $param;
 	}
 	foreach ($param as $key => $value) {
-		$param[$key] = rock_filter_param($value);
+		$param[$key] = rock_filter_param($value, $filter);
 	}
 	return $param;
 }
@@ -264,10 +269,10 @@ function rock_filter_param($param) {
  */
 function xn($name = nil) {
 	if ($name == nil) {
-		return $GLOBALS["ROCK_VARS"];
+		return rock_filter_param($GLOBALS["ROCK_VARS"], false);
 	}
 	if (isset($GLOBALS["ROCK_VARS"][$name])) {
-		return $GLOBALS["ROCK_VARS"][$name];
+		return rock_filter_param($GLOBALS["ROCK_VARS"][$name], false);
 	}
 	return null;
 }
@@ -545,7 +550,33 @@ function rock_lang($code) {
 			$GLOBALS["ROCK_LANGS"] = array();
 		}
 	}
-	return isset($GLOBALS["ROCK_LANGS"][$code]) ? $GLOBALS["ROCK_LANGS"][$code] : null;
+	$ret = isset($GLOBALS["ROCK_LANGS"][$code]) ? $GLOBALS["ROCK_LANGS"][$code] : null;
+	if (is_null($ret)) {
+		require __ROOT__ . "/langs/en_us/message.php";
+		if (isset($message[$code])) {
+			$ret = $message[$code];
+		}
+	}
+	
+	$args = func_get_args();
+	unset($args[0]);
+	if (empty($args)) {
+		return $ret;
+	}
+	return vsprintf($ret, $args);
+}
+
+function rock_real_id($id) {
+	if (is_object($id)) {
+		return $id;
+	}
+	if (is_numeric($id)) {
+		return floatval($id);
+	}
+	if (preg_match("/^[0-9a-z]{24}$/i", $id)) {
+		return new MongoId($id);
+	}
+	return $id;
 }
 
 ?>

@@ -1,13 +1,13 @@
-<h4><?php h($db);?> &raquo; Create New Collection</h4>
+<h3><a href="<?php h(url("databases"));?>"><?php hm("databases"); ?></a> &raquo; <a href="<?php h(url("db",array("db"=>$db)));?>"><?php h($db);?></a> &raquo; <?php hm("create_collection_full"); ?></h3>
 
-<p class="error">
 <?php if (isset($message)):?>
+<p class="message">
 <?php h($message);?>
+</p>
 <script language="javascript">
-window.top.frames["left"].location.reload();
+window.parent.frames["left"].location.reload();
 </script>
 <?php endif;?>
-</p>
 
 <form method="post">
 Name:<br/>
