@@ -1,7 +1,28 @@
 <?php
+/**
+ * RockMongo chinese translation
+ *
+ * @package rockmongo
+ * @author iwind.liu <iwind.liu@gmail.com>
+ * @version 1.0
+ */
+
+$message["TRANSLATION_NAME"] = "简体中文 - Chinese simplified";
+$message["TRANSLATION_ID"] = 2;
+ 
+/** login interface **/
+$message["admin"] = "管理员";
+$message["password"] = "密码";
+$message["language"] = "语言";
+$message["hour"] = "小时";
+$message["hours"] = "小时";
+$message["month"] = "月";
+$message["alive"] = "有效期";
+
 /** connection **/
 $message["can_not_connect"] = "MongoDB连接错误: %s. 请检查配置是否正确.";
 
+$message["overview"] = "全局";
 $message["server"] = "服务器";
 $message["status"] = "状态";
 $message["databases"] = "数据库";
@@ -43,15 +64,17 @@ $message["clear_conditions"] = "清除条件";
 $message["rows_per_page"] = "每页显示数";
 $message["action"] = "动作";
 $message["limit"] = "条数";
+$message["new_field"] = "新字段";
 
 $message["tools"] = "工具";
 $message["manuals"] = "手册";
 $message["logout"] = "退出";
 
 /** about **/
+$message["loginandrock"] = "登录";
 $message["about_content"] = '<strong class="big">RockMongo</strong>是可视化的MongoDB管理工具.
 
-<p>请访问 <a href="http://code.google.com/p/rock-php/wiki/rock_mongo" target="_blank">http://code.google.com/p/rock-php/wiki/rock_mongo</a> 获取更多信息.</p>
+<p>请访问 <a href="http://rockmongo.com" target="_blank">http://rockmongo.com</a> 获取更多信息.</p>
 
 <p>如果有任何问题和反馈，请发送邮件到：<a href="mailto:iwind.liu@gmail.com">iwind.liu@gmail.com</a> .</p>';
 

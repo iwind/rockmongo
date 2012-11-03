@@ -671,7 +671,7 @@ class Services_JSON
 
                 } elseif (preg_match('/^\[.*\]$/s', $str) || preg_match('/^\{.*\}$/s', $str)) {
                     // array, or object notation
-
+                    
                     if ($str{0} == '[') {
                         $stk = array(SERVICES_JSON_IN_ARR);
                         $arr = array();
@@ -691,7 +691,7 @@ class Services_JSON
 
                     $chrs = substr($str, 1, -1);
                     $chrs = $this->reduce_string($chrs);
-
+                    
                     if ($chrs == '') {
                         if (reset($stk) == SERVICES_JSON_IN_ARR) {
                             return $arr;
@@ -739,7 +739,7 @@ class Services_JSON
                                     } else {
                                         $obj->$key = $val;
                                     }
-                                } elseif (preg_match('/^\s*(\w+)\s*:\s*(\S.*),?$/Uis', $slice, $parts)) {
+                                } elseif (preg_match('/^\s*([$\w]+)\s*:\s*(\S.*),?$/Uis', $slice, $parts)) {//iwind:add char "$" to sequence 
                                     // name:value pair, where name is unquoted
                                     $key = $parts[1];
                                     $val = $this->decode($parts[2]);

@@ -1,21 +1,21 @@
 <?php
+/**
+ * RockMongo startup
+ *
+ * In here we define some default settings and start the configuration files
+ * @package rockmongo
+ */
 
-###########CONFIGRATION BEGIN###########################
-//Notice: configurations have been moved to [config.php], 
-//        so that we can upgrade RockMongo more easily.
-###########CONFIGRATION END#############################
+/**
+* Defining version number and enabling error reporting
+*/
+define("ROCK_MONGO_VERSION", "1.1.2");
 
-//default settings, you need not change them in current version
-if (isset($_COOKIE["ROCK_LANG"])) {
-	define("__LANG__", $_COOKIE["ROCK_LANG"]);
-}
-else {
-	define("__LANG__", "en_us");
-}
-define("ROCK_MONGO_VERSION", "1.0.7");
 error_reporting(E_ALL);
 
-//detect environment
+/**
+* Environment detection
+*/
 if (!version_compare(PHP_VERSION, "5.0")) {
 	exit("To make things right, you must install PHP5");
 }
@@ -23,9 +23,18 @@ if (!class_exists("Mongo")) {
 	exit("To make things right, you must install php_mongo module. <a href=\"http://www.php.net/manual/en/mongo.installation.php\" target=\"_blank\">Here for installation documents on PHP.net.</a>");
 }
 
-//rock roll
+// enforce Mongo support for int64 data type (Kyryl Bilokurov <kyryl.bilokurov@gmail.com>)
+ini_set("mongo.native_long", 1);
+ini_set("mongo.long_as_object", 1);
+
+/**
+* Initializing configuration files and RockMongo
+*/
 require "config.php";
 require "rock.php";
+rock_check_version();
+rock_init_lang();
+rock_init_plugins();
 Rock::start();
 
 ?>

@@ -99,7 +99,7 @@ class RObject extends RModel implements ArrayAccess {
 	 * @param string|MongoId $id 新的Id，如果非长度为24的16禁止的字符串，则MongoDB会认为是非法的ID，而忽略之
 	 */
 	function setId($id) {
-		$this->_id = rock_real_id($id);
+		$this->_id = ($id);
 	}
 	
 	/**
@@ -208,16 +208,16 @@ class RObject extends RModel implements ArrayAccess {
 			throw new RMongoException("Object is not in any collection, please use setCollection() to method to set a collection.");
 		}
 		$bool = true;
-		if ($this->_id) {//如果已经存在
+		if ($this->_id) {//if exists
 			if (!empty($this->_operations)) {
-				$bool = $this->_collection->update(array( "_id" => $this->_id ), $this->_operations, array(  "upsert" => false, "multiple" => false ));
+				$bool = $this->_collection->update(array( "_id" => $this->_id ), $this->_operations, array(  "upsert" => false, "multiple" => false, "safe" => true ));
 				if ($refresh) {
 					$bool = $this->refresh();
 				}
 			}
 		}
 		else {
-			$bool = $this->_collection->insert($this->_attrs);
+			$bool = $this->_collection->insert($this->_attrs, true);
 			if ($bool) {
 				$this->_id = $this->_attrs["_id"];
 				import("@.RMongo");

@@ -8,26 +8,26 @@ define("PHP_VERSION_5_3", version_compare(PHP_VERSION, "5.3.0")>=0);
 if (!defined("__ENV__")) {
 	define("__ENV__", "dev");
 }
-if (!defined("__LANG__")) {
-	define("__LANG__", "zh_cn");
-}
 if (!defined("__PLATFORM__")) {
 	define("__PLATFORM__", "def");
 }
 
-//合并$_POST和$_GET
-$GLOBALS["ROCK_VARS"] = array_merge($_GET, $_POST);
+//merge $_POST and $_GET
+$GLOBALS["ROCK_USER_VARS"] = array();
+$GLOBALS["ROCK_HTTP_VARS"] = array_merge($_GET, $_POST);
 
 /**
- * 应用主类
+ * Application class
  *
  */
 class Rock {
+	private static $_controller;
+	
 	/**
-	 * 启动应用
+	 * Start application
 	 *
 	 */
-	static function start() {
+	public static function start() {
 		$path = x("action");
 		if (!$path) {
 			$path = "index.index";
@@ -35,14 +35,29 @@ class Rock {
 		if (!strstr($path, ".")) {
 			$path .= ".index";
 		}
-		if (!preg_match("/(^.*(?:^|\.))(\w+)\.(\w+)$/", $path, $match)) {
+		if (!preg_match("/(^.*(?:^|\\.))(\\w+)\\.(\\w+)$/", $path, $match)) {
 			trigger_error("you called an invalid action");
 		}
 		$name = $match[1] . $match[2];
+		define("__CONTROLLER__", $name);
 		$controller = $match[2];
 		$action = $match[3];
+		$mainRoot = null;
+		$isInPlugin = false;
+		if (substr($name, 0, 1) == "@") {
+			$isInPlugin = true;
+			$mainRoot = __ROOT__ . DS . "plugins" . DS . substr($name, 1, strpos($name, ".") - 1);
+			if (!is_dir($mainRoot)) {
+				$mainRoot = dirname(dirname(__ROOT__)) . DS . "plugins" . DS . substr($name, 1, strpos($name, ".") - 1);
+			}
+			$name = substr($name, strpos($name, ".") + 1);
+		}
+		else {
+			$isInPlugin = false;
+			$mainRoot = __ROOT__;
+		}
 		$dir = str_replace(".", DS, $name);
-		$file = __ROOT__ . DS . "controllers" . DS . $dir . ".php";
+		$file = $mainRoot . DS . "controllers" . DS . $dir . ".php";
 		if (!is_file($file)) {
 			trigger_error("file '{$file}' of controller '{$controller}' is not found", E_USER_ERROR);
 		}
@@ -56,90 +71,128 @@ class Rock {
 		if (!($obj instanceof RController)) {
 			trigger_error("controller class '{$class}' must be a subclass of RController", E_USER_ERROR);
 		}
-		define("__CONTROLLER__", $name);
+		
 		define("__ACTION__", $action);
+		$obj->setRoot($mainRoot);
 		$obj->setAction($action);
 		$obj->setPath($file);
 		$obj->setName($name);
+		$obj->setInPlugin($isInPlugin);
 		$obj->exec();
 	}
+	
+	public static function setController($controller) {
+		self::$_controller = $controller;
+	}	
+	
+	/**
+	 * get current running controller object
+	 *
+	 * @return RController
+	 */
+	public static function controller() {
+		return self::$_controller;
+	}	
 }
 
 /**
- * 控制器父类
+ * Controller parent class
  *
  */
 class RController {
 	private $_action;
 	private $_path;
 	private $_name;
+	private $_inPlugin = false;
 	
 	/**
-	 * 设置当前控制器的动作
+	 * set current action name 
 	 *
-	 * @param string $action 动作名
+	 * @param string $action action name
 	 */
-	function setAction($action) {
+	public function setAction($action) {
 		$this->_action = $action;
 	}
 	
 	/**
-	 * 取得当前动作的名称
+	 * Get action name
 	 *
 	 * @return string
 	 */
-	function action() {
+	public function action() {
 		return $this->_action;
 	}
 	
+	public function setRoot($root) {
+		$this->_root = $root;
+	}
+	
+	public function root() {
+		return $this->_root;
+	}	
+	
 	/**
-	 * 设置当前控制器所在的文件路径
+	 * Set controller file path
 	 *
-	 * @param string $path 文件路径
+	 * @param string $path file path
 	 */
-	function setPath($path) {
+	public function setPath($path) {
 		$this->_path = $path;
 	}
 	
 	/**
-	 * 设置当前控制器的名字
+	 * Set controller name
 	 *
-	 * @param string $name 控制器名
+	 * @param string $name controller name
 	 */
-	function setName($name) {
+	public function setName($name) {
 		$this->_name = $name;
 	}
 	
 	/**
-	 * 取得当前控制器名称
+	 * Get controller name
 	 *
 	 * @return string
 	 */
-	function name() {
+	public function name() {
 		return $this->_name;
 	}
 	
 	/**
-	 * 设置在控制器动作执行前执行的方法
+	 * Set if the controller is in a plugin
+	 *
+	 * @param boolean $isInPlugin true or false
+	 */
+	public function setInPlugin($isInPlugin) {
+		$this->_inPlugin = $isInPlugin;
+	}
+	
+	/**
+	 * Call before actions
 	 *
 	 */
-	function onBefore() {
+	public function onBefore() {
 		
 	}
 	
 	/**
-	 * 设置在控制器动作执行后执行的方法
+	 * Call after actions
 	 *
 	 */
-	function onAfter() {
+	public function onAfter() {
 		
 	}
 	
 	/**
-	 * 执行当前动作
+	 * Execute action
 	 *
 	 */
-	function exec() {
+	public function exec() {
+		Rock::setController($this);
+		
+		if (class_exists("RPlugin")) {
+			RPlugin::callBefore();
+		}
 		$this->onBefore();
 		
 		$method = "do" . $this->_action;
@@ -152,18 +205,27 @@ class RController {
 		}
 		
 		$this->onAfter();
+		if (class_exists("RPlugin")) {
+			RPlugin::callAfter();
+		}
 	}
 	
 	/**
-	 * 显示动作对应的视图
+	 * Display View
 	 *
-	 * @param string $action 动作名，如果不为NULL，则使用此动作名查找视图
+	 * @param string $action action name, if not NULL, find view with this name
 	 */
-	function display($action = null) {
+	public function display($action = null) {
 		if (is_null($action)) {
 			$action = $this->_action;
 		}
-		$view = __ROOT__ . "/views/" . str_replace(".", "/", $this->_name) . "/{$action}.php";
+		$view = null;
+		if ($this->_inPlugin) {
+			$view = dirname(dirname($this->_path))  . "/views/" . str_replace(".", "/", $this->_name) . "/{$action}.php";
+		}
+		else {
+			$view = dirname(__ROOT__) . DS . rock_theme_path()  . "/views/" . str_replace(".", "/", $this->_name) . "/{$action}.php";
+		}
 		if (is_file($view)) {
 			extract(get_object_vars($this), EXTR_OVERWRITE);
 			require($view);
@@ -172,7 +234,7 @@ class RController {
 }
 
 /**
- * 模型父类
+ * Model class
  *
  */
 class RModel {
@@ -180,15 +242,15 @@ class RModel {
 }
 
 /**
- * 视图父类
+ * View class
  *
  */
 class RView {
 	/**
-	 * 显示视图
+	 * Display view
 	 *
 	 */
-	function display() {
+	public function display() {
 		
 	}
 }
@@ -224,16 +286,19 @@ function p($data1 = null) {
  * 获取或设置参数对应的值
  *
  * @param string|array $name 一个或一组参数名
- * @param mixed $value 如果不为null，则将此值赋给参数
+ * @param mixed $value 如果不为nil，则将此值赋给参数
  * @return mixed
  */
 function x($name, $value = nil) {
 	if ($value != nil) {
-		$GLOBALS["ROCK_VARS"][$name] = $value;
+		$GLOBALS["ROCK_USER_VARS"][$name] = $value;
 		return $value;
 	}
-	if (isset($GLOBALS["ROCK_VARS"][$name])) {
-		return rock_filter_param($GLOBALS["ROCK_VARS"][$name]);
+	if (array_key_exists($name, $GLOBALS["ROCK_USER_VARS"])) {
+		return $GLOBALS["ROCK_USER_VARS"][$name];
+	}
+	if (array_key_exists($name, $GLOBALS["ROCK_HTTP_VARS"])) {
+		return rock_filter_param($GLOBALS["ROCK_HTTP_VARS"][$name]);
 	}
 	return null;
 }
@@ -247,7 +312,7 @@ function x($name, $value = nil) {
  */
 function rock_filter_param($param, $filter = true) {
 	if (!is_array($param) && !is_object($param)) {
-		if (!PHP_VERSION_5_3 && get_magic_quotes_gpc()) {
+		if (ini_get("magic_quotes_gpc")) {
 			$param = stripslashes($param);
 		}
 		return $filter ? htmlspecialchars(trim($param)) : $param;
@@ -269,10 +334,14 @@ function rock_filter_param($param, $filter = true) {
  */
 function xn($name = nil) {
 	if ($name == nil) {
-		return rock_filter_param($GLOBALS["ROCK_VARS"], false);
+		return array_merge(rock_filter_param($GLOBALS["ROCK_HTTP_VARS"], false), $GLOBALS["ROCK_USER_VARS"]);
 	}
-	if (isset($GLOBALS["ROCK_VARS"][$name])) {
-		return rock_filter_param($GLOBALS["ROCK_VARS"][$name], false);
+	
+	if (array_key_exists($name, $GLOBALS["ROCK_USER_VARS"])) {
+		return $GLOBALS["ROCK_USER_VARS"][$name];
+	}
+	if (array_key_exists($name, $GLOBALS["ROCK_HTTP_VARS"])) {
+		return rock_filter_param($GLOBALS["ROCK_HTTP_VARS"][$name], false);
 	}
 	return null;
 }
@@ -289,20 +358,15 @@ function xi($name) {
 }
 
 /**
- * 导入文件
+ * import a class file
  * 
- * 比如：
- * import("classes.MyClass");
- * import("models.TLog");
- * import("@.RHttpRequest");//引入当前目录下的RHttpRequest类
- * import("@.@.RHttpRequest");//引入上一级目录下的RHttpRequest类
- *
- * @param string $class 类文件名（包含完整的地址）
+ * @param string $class full class name
+ * @param boolean $isClass if file is class
  */
-function import($class) {
+function import($class, $isClass = true) {
 	$className = substr($class, strrpos($class, ".") + 1);
-	if (class_exists($className, false)) {
-		return;
+	if ($isClass && class_exists($className, false)) {
+		return $className;
 	}
 	
 	$file = null;
@@ -323,6 +387,7 @@ function import($class) {
 		require($file);
 		$GLOBALS["ROCK_LOADED"][] = $file;
 	}
+	return $className;
 }
 
 /**
@@ -354,11 +419,11 @@ function o($config) {
 			$dir = dirname($dir);
 		}
 		$filename = array_shift($pieces);
-		$file = $dir . "/" . $filename . "." . __ENV__ . "@" . __PLATFORM__ . ".php";
+		$file = $dir . "/" . $filename . "@" . __PLATFORM__ . ".php";
 	}
 	else {
 		$filename = array_shift($pieces);
-		$file = __ROOT__ . "/" . $filename . "." . __ENV__ . "@" . __PLATFORM__ . ".php";
+		$file = __ROOT__ . "/configs/" . $filename . "@" . __PLATFORM__ . ".php";
 	}
 	
 	$options = $pieces;
@@ -394,10 +459,10 @@ function rock_name_to_java($name) {
 }
 
 /**
- * 取得一个数组中中某个键的值
+ * get value from array for one key
  *
- * @param array $array 数组
- * @param array|string $keys 键，可以是多级的，比如a.b.c
+ * @param array $array the array
+ * @param array|string $keys key or keys, can be a.b.c
  * @return mixed
  * @see rock_array_set
  */	
@@ -413,14 +478,14 @@ function rock_array_get(array $array, $keys) {
 	}
 	if (count($keys) == 1) {
 		$firstKey = array_pop($keys);
-		$firstKey = str_replace("\.", ".", $firstKey);
+		$firstKey = str_replace("\\.", ".", $firstKey);
 		return array_key_exists($firstKey, $array)?$array[$firstKey]:null;
 	}
 	$lastKey = array_pop($keys);
-	$lastKey = str_replace("\.", ".", $lastKey);
+	$lastKey = str_replace("\\.", ".", $lastKey);
 	$lastArray = $array;
 	foreach ($keys as $key) {
-		$key = str_replace("\.", ".", $key);
+		$key = str_replace("\\.", ".", $key);
 		if (is_array($lastArray) && array_key_exists($key, $lastArray)) {
 			$lastArray = $lastArray[$key];
 		}
@@ -534,9 +599,9 @@ function rock_array_combine($array, $keyName, $valueName = null) {
 }
 
 /**
- * 获取语言消息
+ * Retrieve message from language file
  *
- * @param string $code 消息代号
+ * @param string $code message code
  * @return mixed
  */
 function rock_lang($code) {
@@ -556,6 +621,7 @@ function rock_lang($code) {
 		if (isset($message[$code])) {
 			$ret = $message[$code];
 		}
+		$GLOBALS["ROCK_LANGS"] = array_merge($message, $GLOBALS["ROCK_LANGS"]);
 	}
 	
 	$args = func_get_args();
@@ -566,17 +632,96 @@ function rock_lang($code) {
 	return vsprintf($ret, $args);
 }
 
-function rock_real_id($id) {
-	if (is_object($id)) {
-		return $id;
+/**
+ * Check RockMongo version
+ *
+ */
+function rock_check_version() {
+	global $MONGO;
+	if (!isset($MONGO["servers"][0]["host"])) {
+		return;
 	}
-	if (is_numeric($id)) {
-		return floatval($id);
+	
+	//version 1.0.x
+	foreach ($MONGO["servers"] as $index => $server) {
+		foreach($server as $param => $value) {
+			switch ($param) {
+				case "host":
+					$server["mongo_host"] = $value;
+					break;
+				case "port":
+					$server["mongo_port"] = $value;
+					$server["mongo_name"] = $server["mongo_host"] . ":" . $server["mongo_port"];
+					break;
+				case "username":
+					$server["mongo_user"] = $value;
+					break;
+				case "password":
+					$server["mongo_pass"] = $value;
+					break;
+				case "auth_enabled":
+					if (!$value) {
+						$server["mongo_auth"] = false;
+						$server["control_auth"] = false;
+					}
+					break;
+				case "admins":
+					foreach ($value as $name => $pass) {
+						$server["control_users"][$name] = $pass;
+					}
+					break;
+				case "show_dbs":
+					$server["ui_only_dbs"] = $value;
+					break;
+			}
+		}
+		$MONGO["servers"][$index] = $server;
 	}
-	if (preg_match("/^[0-9a-z]{24}$/i", $id)) {
-		return new MongoId($id);
+}
+
+/**
+ * initialize language
+ *
+ */
+function rock_init_lang() {
+	if (isset($_COOKIE["ROCK_LANG"])) {
+		define("__LANG__", $_COOKIE["ROCK_LANG"]);
+		return;
 	}
-	return $id;
+	if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
+		$firstLang = "";
+		if (strstr($_SERVER["HTTP_ACCEPT_LANGUAGE"], ",")) {
+			list($firstLang) = explode(",", $_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+		}
+		else {
+			$firstLang = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+		}
+		if ($firstLang) {
+			$firstLang = strtolower(str_replace("-", "_", $firstLang));
+			if (is_dir(__ROOT__ . DS . "langs" . DS . $firstLang)) {
+				define("__LANG__", $firstLang);
+				return;
+			}
+		}
+	}
+	if (!defined("__LANG__")) {
+		define("__LANG__", "en_us");
+	}
+}
+
+/**
+ * initialize plugins
+ *
+ */
+function rock_init_plugins() {
+	global $MONGO;
+	if (empty($MONGO["features"]["plugins"]) || strtolower($MONGO["features"]["plugins"]) != "on") {
+		return;
+	}
+	import("lib.core.RPlugin");
+	import("lib.core.REvent");
+	import("lib.core.RFilter");
+	RPlugin::load();
 }
 
 ?>

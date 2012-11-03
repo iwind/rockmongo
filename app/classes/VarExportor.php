@@ -9,7 +9,7 @@ class VarExportor {
 	private $_phpParams = array();
 	private $_jsonParams = array();
 	private $_paramIndex = 0;
-	
+
 	/**
 	 * construct exportor
 	 *
@@ -21,7 +21,16 @@ class VarExportor {
 		$this->_var = $var;
 	}
 	
-	function export($type = MONGO_EXPORT_PHP) {
+	/**
+	 * Export the variable to a string
+	 *
+	 * @param string $type variable type (array or json)
+	 * @param boolean $fieldLabel if add label to fields
+	 */
+	function export($type = MONGO_EXPORT_PHP, $fieldLabel = false) {
+		if ($fieldLabel) {
+			$this->_var = $this->_addLabelToArray($this->_var);
+		}
 		if ($type == MONGO_EXPORT_PHP) {
 			return $this->_exportPHP();
 		}
@@ -31,27 +40,66 @@ class VarExportor {
 	private function _exportPHP() {
 		$var = $this->_formatVar($this->_var);
 		$string = var_export($var, true);
+		$params = array();
 		foreach ($this->_phpParams as $index => $value) {
-			$string = str_replace("'" . $this->_param($index) . "'", $value, $string);
+			$params["'" . $this->_param($index) . "'"] = $value;
 		}
-		return $string;
+
+		return strtr($string, $params);
 	}
 	
-	private function _exportJSON() {
-		$ret = $this->_db->execute('function(v){ return tojson(v);}',array( $this->_var ));
-		if ($ret["ok"] == 1) {
-			return $ret["retval"];
+	/**
+	 * Enter description here...
+	 *
+	 * @param unknown_type $str
+	 * @param unknown_type $from
+	 * @param unknown_type $len
+	 * @return unknown
+	 * @author sajjad at sajjad dot biz (copied from PHP manual)
+	 */
+	private function _utf8_substr($str,$from,$len) {
+		return function_exists('mb_substr') ?
+            mb_substr($str, $from, $len, 'UTF-8') :
+		    preg_replace('#^(?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'. $from .'}'.'((?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'. $len .'}).*#s','$1', $str);
+	}
+	
+	private function _addLabelToArray($array, $prev = "") {
+		$ret = array();
+		$cutLength = 150;
+		foreach ($array as $key => $value) {
+			if (is_string($key) || is_int($key) || is_float($key)) {
+				$newKey = $prev . ($prev === ""?"":".") . "rockfield." . $key;
+				if (is_string($value) && strlen($value) > $cutLength) {
+					$value = $this->_utf8_substr($value, 0, $cutLength);
+					$value = $value . " __rockmore.{$newKey}.rockmore__";
+				}
+				$ret[$newKey . ".rockfield"] = $value;
+				if (is_array($value)) {
+					$ret[$newKey . ".rockfield"] = $this->_addLabelToArray($value, $newKey);
+				}
+			}
+			else {
+				$ret[$key] = $value;
+			}
 		}
-		
-		import("classes.Services_JSON");
-		$service = new Services_JSON();
-		$var = $this->_formatVarAsJSON($this->_var, $service);
+		return $ret;
+	}
 
-		$string = $service->encode($var);
-		foreach ($this->_jsonParams as $index => $value) {
-			$string = str_replace("\"" . $this->_param($index) . "\"", $value, $string);
+	private function _exportJSON() {
+		if (function_exists('json_encode')) {
+		    $service = 'json_encode';
+		} else {
+		    import("classes.Services_JSON");
+		    $json = new Services_JSON();
+		    $service = array(&$json, 'encode');
 		}
-		return ($string);
+		$var = $this->_formatVarAsJSON($this->_var, $service);
+		$string = call_user_func($service, $var);
+		$params = array();
+		foreach ($this->_jsonParams as $index => $value) {
+			$params['"' . $this->_param($index) . '"'] = $value;
+		}
+		return json_unicode_to_utf8(json_format(strtr($string, $params)));
 	}
 	
 	private function _param($index) {
@@ -60,7 +108,17 @@ class VarExportor {
 	
 	private function _formatVar($var) {
 		if (is_scalar($var) || is_null($var)) {
-			return $var;
+			switch (gettype($var)) {
+				case "integer":
+					if (class_exists("MongoInt32")) {
+		                // producing MongoInt32 to keep type unchanged (Kyryl Bilokurov <kyryl.bilokurov@gmail.com>)
+		 				$this->_paramIndex ++;
+		 				$this->_phpParams[$this->_paramIndex] = 'new MongoInt32(' . $var . ')';
+		            	return $this->_param($this->_paramIndex);      
+					}                          
+				default:
+					return $var;
+			}
 		}
 		if (is_array($var)) {
 			foreach ($var as $index => $value) {
@@ -73,6 +131,12 @@ class VarExportor {
 			switch (get_class($var)) {
 				case "MongoId":
 					$this->_phpParams[$this->_paramIndex] = 'new MongoId("' . $var->__toString() . '")';
+					return $this->_param($this->_paramIndex);
+				case "MongoInt32":
+					$this->_phpParams[$this->_paramIndex] = 'new MongoInt32(' . $var->__toString() . ')';
+					return $this->_param($this->_paramIndex);
+				case "MongoInt64":
+					$this->_phpParams[$this->_paramIndex] = 'new MongoInt64(' . $var->__toString() . ')';
 					return $this->_param($this->_paramIndex);
 				case "MongoDate":
 					$this->_phpParams[$this->_paramIndex] = 'new MongoDate(' . $var->sec . ', ' . $var->usec . ')';
@@ -103,7 +167,14 @@ class VarExportor {
 	
 	private function _formatVarAsJSON($var, $jsonService) {
 		if (is_scalar($var) || is_null($var)) {
-			return $var;
+			switch (gettype($var)) {
+				case "integer":
+					$this->_paramIndex ++;
+					$this->_jsonParams[$this->_paramIndex] = 'NumberInt(' . $var . ')';
+					return $this->_param($this->_paramIndex);
+				default:
+					return $var;
+			}
 		}
 		if (is_array($var)) {
 			foreach ($var as $index => $value) {
@@ -117,35 +188,40 @@ class VarExportor {
 				case "MongoId":
 					$this->_jsonParams[$this->_paramIndex] = 'ObjectId("' . $var->__toString() . '")';
 					return $this->_param($this->_paramIndex);
-				case "MongoDate":
-					$this->_jsonParams[$this->_paramIndex] = "\"" . date("r", $var->sec) . "\"";
+				case "MongoInt32":
+						$this->_jsonParams[$this->_paramIndex] = 'NumberInt(' . $var->__toString() . ')';
+						return $this->_param($this->_paramIndex);
+				case "MongoInt64":
+					$this->_jsonParams[$this->_paramIndex] = 'NumberLong(' . $var->__toString() . ')';
 					return $this->_param($this->_paramIndex);
-				case "MongoRegex":
-					$this->_jsonParams[$this->_paramIndex] = $var->__toString();
+				case "MongoDate":
+					$timezone = @date_default_timezone_get();
+					date_default_timezone_set("UTC");
+					$this->_jsonParams[$this->_paramIndex] = "ISODate(\"" . date("Y-m-d", $var->sec) . "T" . date("H:i:s.", $var->sec) . ($var->usec/1000) . "Z\")";
+					date_default_timezone_set($timezone);
 					return $this->_param($this->_paramIndex);
 				case "MongoTimestamp":
-					$this->_jsonParams[$this->_paramIndex] = $jsonService->encode(array(
+					$this->_jsonParams[$this->_paramIndex] = call_user_func($jsonService, array(
 						"t" => $var->inc * 1000,
 						"i" => $var->sec
 					));
 					return $this->_param($this->_paramIndex);
 				case "MongoMinKey":
-					$this->_jsonParams[$this->_paramIndex] = $jsonService->encode(array( '$minKey' => 1 ));
+					$this->_jsonParams[$this->_paramIndex] = call_user_func($jsonService, array( '$minKey' => 1 ));
 					return $this->_param($this->_paramIndex);
 				case "MongoMaxKey":
-					$this->_jsonParams[$this->_paramIndex] = $jsonService->encode(array( '$maxKey' => 1 ));
+					$this->_jsonParams[$this->_paramIndex] = call_user_func($jsonService, array( '$minKey' => 1 ));
 					return $this->_param($this->_paramIndex);
 				case "MongoCode":
 					$this->_jsonParams[$this->_paramIndex] = $var->__toString();
 					return $this->_param($this->_paramIndex);
 				default:
-					if (method_exists($var, "__toString")) {
-						return $var->__toString();
-					}
+        			if (method_exists($var, "__toString")) {
+        				return $var->__toString();
+        			}
+                    return '<unknown type>';
 			}
 		}
-		
-		
 	}
 }
 

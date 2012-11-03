@@ -41,6 +41,9 @@ class RPageStyle1 extends RPage {
 				$start = max(1, $currPageNo - $middlePageNum);
 				$end = min($currPageNo + $middlePageNum - 1, $pageNum);
 			}
+			if ($pageNum > 1) {
+				$pages[] = "<a href=\"" . $this->url(1)  . "\" title=\"First Page\">&laquo;</a>&nbsp; ";
+			}
 			if ($currPageNo > 1) {
 				$pages[] = "<a href=\"" . $this->url($currPageNo - 1)  . "\" title=\"Previous {$size}\">" . $this->message("pager_prev") . "</a>&nbsp; ";
 			}
@@ -56,6 +59,9 @@ class RPageStyle1 extends RPage {
 			}
 			if ($currPageNo < $pageNum) {
 				$pages[] = " &nbsp;<a href=\"" . $this->url($currPageNo + 1) . "\" title=\"Next {$size}\">" . $this->message("pager_next") . "</a>";
+			}
+			if ($pageNum > 1) {
+				$pages[] = "<a href=\"" . $this->url($pageNum)  . "\" title=\"Last Page\">&raquo;</a>&nbsp; ";
 			}
 		}
 		

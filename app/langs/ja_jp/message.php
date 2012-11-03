@@ -1,4 +1,15 @@
 <?php
+/**
+ * RockMongo japanese translation
+ *
+ * @package rockmongo
+ * @author iwind.liu <iwind.liu@gmail.com>
+ * @version 1.0
+ */
+ 
+$message["TRANSLATION_NAME"] = "日本語 - Jananese";
+$message["TRANSLATION_ID"] = 4;
+
 /** connection **/
 $message["can_not_connect"] = "MongoDB connection exception: %s. Please check your configuration.";
 
@@ -53,7 +64,7 @@ $message["logout"] = "ログアウト";
 /** about **/
 $message["about_content"] = '<strong class="big">RockMongo</strong> is a MongoDB administration tool, written in PHP 5.
 
-<p>See <a href="http://code.google.com/p/rock-php/wiki/rock_mongo" target="_blank">http://code.google.com/p/rock-php/wiki/rock_mongo</a> for more details.</p>
+<p>See <a href="http://rockmongo.com" target="_blank">http://rockmongo.com</a> for more details.</p>
 
 <p>If you have any questions, please send email to me: <a href="mailto:iwind.liu@gmail.com">iwind.liu@gmail.com</a> .</p>';
 

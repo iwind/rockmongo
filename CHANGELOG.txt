@@ -1,0 +1,163 @@
+v1.1.2 - 2012-05-07
+* Italian translation, thanks to Andrea Cardinale
+* NumberInt, NumberLong
+
+v1.1.1 - 2012-05-04
+* Russian translation, thanks to Станислав Воробьёв <stanislav.vorobyev@gmail.com>
+* Fix host switch bug
+* Fix date_default_timezone_get() warning
+* new French translation
+* improve importing and exporting
+* Fix broken on sharding collections
+* add $MONGO["servers"][$i]["mongo_options"] option, see http://rockmongo.com/wiki/configuration?lang=en_us#%23%23%23%23+mongo_options%0D
+* fix mongo_timeout issue
+* JSON format importing
+
+
+v1.1.0(beta) - 2011-04-17
+ * Upgrade Notice
+     * from 1.0.x to v1.1.0: if you will not use new features, just overwrite files, excluding config.php, that's all; Or you should re-configure the system
+ * *Implement basic theme feature*
+ * *[configuration New Configurations]*
+ * *[plugin Implement Plug-in feature:Filters, Events and Plug-in controllers]*
+ * Load language packages automatically
+ * Choose language after log-in on the top bar
+ * Automatic language proposition based on browser settings
+ * Fix a display bug on IE9
+ * Change timezone from default to UTC
+ * Represent date using ISODate()
+ * Add confirmation to "Apply to all" buttons
+ * Change all of float_value options to double_value
+ * Fix db[`_`name] bug, now your collection name's prefix can be "`_`"
+ * Fix empty collection issue
+ * Support numberic `_`id string
+
+v1.0.12 - 2011-03-08
+ * Fix date format in tooltip 
+ * Fix MongoCursor->fields() undefined error
+ * Convert unicode in json to utf-8 when editing 
+ * Edit installation construction
+ * Add Chinese tranditional translation
+ * Fixed features for capped collection
+ * Fix slashes bug when magic_quotes_gpc is on in php.ini
+ * Fix bug: field "0" can not be updated or removed
+ * Remember data format when query
+ * Add "Logout" link when no servers can be connected
+ * Fix records count in left bar when no data in the collection
+
+v1.0.11 - 2011-01-09
+ * Add true, false and null to allowed PHP codes in saving data
+ * Highlight current collection in left menu when it reload
+ * Support JSON format in inserting and updating
+ * Added feature to show only user-defined set of databases (to avoid costly listDBs call)
+ * Add mongoint32, mongoint64 to allowed tokens in PHP array
+ * Spanish and German translation
+ * Fix token_get_all undefined issue
+ * Add panels layout (thank Borda Juan Ignacio)
+ * Fix NULL field updating bug
+ * When host is unable to connect, you can choose another host
+
+v1.0.10 - 2010-11-16
+  * Added docblock comments to translation files, updated brazilian translation, 
+    updated english translation, created additional localization variables (contato)
+  * Convert \uxxxx in JSON to UTF-8 chars
+  * Fix display bug on Opera
+  * Choose SESSION lifetime in sign in form
+  * Refresh records count in a collection when click collection name on left bar
+  * Allow float number in query criteria
+  * Prompt error message when insert/update fail
+  * Add auth_enabled option to disable authentication, see FAQ for details
+  * Fix field selection bug when it's in an array list 
+
+v1.0.9 - 2010-10-26
+ * replace eval() with safer VarEval class
+ * fix records sorting bug
+ * support query in json format
+ * support tab key in textarea
+ * fix explain query
+ * collections can be exported as a .gz file
+ * add brazilian and french translation
+ * query history: in config.php set the feature to on
+
+v1.0.8 - 2010-09-14
+ * Make operations on single field more easily, now you can update, rename, remove, 
+   clear (set to null), query, create indexes on a field, just click field name in 
+   record to get surprise
+ * Add new field to a record or to whole collection
+ * Autocomplete field in index creation
+ * Add go "TOP" link
+ * Refresh single record without whole page reloading
+ * Add a simple menu to number, let you view number as bytes or a date time
+ * Shorten long text, and then you click "..." to see full text
+
+v1.0.7.r87 - 2010-09-05
+ * fix hints bug
+ * some slight GUI changes
+
+v1.0.7 - 2010-09-04
+ * Add more collection statistics with command {top:1}
+ * Add full processlist, connections is included
+ * Expend and collapse single record
+ * Now you can specify query result fields and hints in query
+ * GridFS is supported, you can view chunks and download the full file
+ * Some slight improvements
+   * Change font size from 11px to 12px
+   * Use a few icons
+   * Keep record operations always displayed
+
+v1.0.6 - 2010-08-29
+ * improved GUI
+ * I18N, English, chinese and japanese is supported
+ * More replication information
+ * connection to mongos is supported
+
+v1.0.5 - 2010-8-20
+ * NOTICE:move configurations from index.php to config.php
+ * drop all collections in a db
+ * clear all collections in a db
+ * make _id index un-dropable
+ * collection property modification (capped, max, size ...)
+ * rename collection
+ * data transfer: transfer collections to other servers
+ * export and import collections (JSON data format)
+ * Master/Slave information
+
+v1.0.4.r39 - 2010-08-12
+ * fix pagination problem 
+ * check unauthorized exception 
+ * fix issue when use double quotes in query
+
+v1.0.4.r37 - 2010-08-04
+ * fix bugs when using non-standard _id
+
+v1.0.4.r34
+* change frameset to iframe
+* switch hosts without re-login
+* add manual links
+* processlist
+* fix bugs
+
+v1.0.3.r24
+* database profiling
+* database user management
+* fix jQuery path error in some cases
+* fix object data representation in JSON and PHP format
+* server command line
+* validate collection
+* repair database
+* explain query
+
+v1.0.2 - 2010-07-17
+* server statistics, databases 
+* execute command and code
+* database statistics and drop
+* a better GUI
+* remove some unused php files
+
+v1.0.1 - 2010-07-15
+* switch PHP Array and JSON data format
+* choose record size per page
+* switch data to text in textarea, so we can copy it easily
+
+v1.0 - 2010-07-13
+* basic version

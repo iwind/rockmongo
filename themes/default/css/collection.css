@@ -1,0 +1,26 @@
+/** fields and hints list **/
+.fieldsmenu {
+  float:right;
+  margin-right:100px;
+  margin-top:0px;
+  background-color:#eee;
+  border-left:1px #ccc solid;
+  border-top:1px #ccc solid;
+  border-right:2px #ccc solid;
+  border-bottom:2px #ccc solid;
+  padding-left:3px;
+  position:absolute;
+  display:none;
+  width:400px;
+}
+.fieldsmenu ul {list-style-type:none; margin:0; padding:0}
+.fieldsmenu ul li {float:left; width:200px}
+
+/** operation menu **/
+#field_menu a {display:block; }
+#field_menu a:hover {display:block; background-color:#ccc }
+#field_menu a:active {display:block; color:blue }
+
+/** colors **/
+a.disabled { color:gray }
+a.disabled:active { color: gray }

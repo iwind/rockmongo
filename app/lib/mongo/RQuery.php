@@ -31,6 +31,7 @@ class RQuery {
 	private $_limit = 0;
 	private $_conds = array();//field1 => array( '$lt' => value1, .. )
 	private $_noPk = false;
+	private $_hints = array();
 
 	/**
 	 * 构造查询
@@ -84,7 +85,12 @@ class RQuery {
 	function result($attr1 = null) {
 		foreach (func_get_args() as $arg) {
 			if ($arg) {
-				if (strstr($arg, ",")) {
+				if (is_array($arg)) {
+					foreach ($arg as $v) {
+						$this->_results[$v] = 1;
+					}
+				}
+				else if (strstr($arg, ",")) {
 					foreach (preg_split("/\s*,\s*/", $arg) as $attr) {
 						$this->_results[$attr] = 1;
 					}
@@ -307,11 +313,11 @@ class RQuery {
 		foreach (func_get_args() as $arg) {
 			if (is_array($arg)) {
 				foreach ($arg as $_id) {
-					$this->attr("_id", rock_real_id($_id));
+					$this->attr("_id", ($_id));
 				}
 			}
 			else if (!($arg instanceof MongoId)) {
-				$this->attr("_id", rock_real_id($arg));
+				$this->attr("_id", ($arg));
 			}
 			else {
 				$this->attr("_id", $arg);
@@ -345,13 +351,23 @@ class RQuery {
 	}
 	
 	/**
+	 * add hints for query
+	 *
+	 * @param unknown_type $hint
+	 * @return RQuery
+	 */
+	function hint($hint) {
+		$this->_hints[] = $hint;
+		return $this;
+	}
+	
+	/**
 	 * 取得当前查询的游标
 	 *
 	 * @return MongoCursor
 	 */
 	function cursor() {
-		$cursor = $this->_collection->find($this->criteria());
-		$cursor->fields($this->_results);
+		$cursor = $this->_collection->find($this->criteria(), $this->_results);
 		if ($this->_offset >= 0) {
 			$cursor->skip($this->_offset);
 		}
@@ -360,6 +376,11 @@ class RQuery {
 		}
 		if ($this->_sort) {
 			$cursor->sort($this->_sort);
+		}
+		if (!empty($this->_hints)) {
+			foreach ($this->_hints as $hint) {
+				$cursor->hint($hint);
+			}
 		}
 		return $cursor;
 	}
@@ -432,7 +453,7 @@ class RQuery {
 	 * @param boolean $keepId 是否保留ID的原始状态
 	 * @return array
 	 */
-	function findAll($keepId = false) {
+	function findAll($keepId = true) {
 		$rets = array();
 		foreach ($this->cursor() as $value) {
 			if ($this->_noPk) {
@@ -478,13 +499,14 @@ class RQuery {
 	}
 	
 	/**
-	 * 插入新的行
+	 * Insert new record
 	 *
-	 * @param array $attrs 新行的属性集
+	 * @param array $attrs attributes of new record
+	 * @param boolean $safe check result
 	 * @return boolean
 	 */
-	function insert(array $attrs) {
-		$bool = $this->_collection->insert($attrs);
+	function insert(array $attrs, $safe = false) {
+		$bool = $this->_collection->insert($attrs, array( "safe" => $safe ));
 		if ($bool) {
 			import("@.RMongo");
 			if ($attrs["_id"] instanceof MongoId) {
@@ -505,7 +527,7 @@ class RQuery {
 	 */
 	function insertNext(array $attrs) {
 		$response = $this->_db->execute('function insertObject(o, myCollection) {
-			var x = db[myCollection];
+			var x = db.getCollection(myCollection);
 			while( 1 ) {
 		        // determine next _id value to try
 		        var c = x.find({},{_id:1}).sort({_id:-1}).limit(1);

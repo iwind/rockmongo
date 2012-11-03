@@ -47,24 +47,4 @@ class RExtController extends RController {
 	}
 }
 
-function h($var) {
-	echo $var;
-}
-
-function hm($var) {
-	echo rock_lang($var);
-}
-
-function url($action, array $params = array()) {
-	unset($params["action"]);
-	if (!strstr($action, ".")) {
-		$action = __CONTROLLER__ . "." . $action;
-	}
-	$url = $_SERVER["PHP_SELF"] . "?action=" . $action;
-	if (!empty($params)) {
-		$url .= "&" . http_build_query($params);
-	}
-	return $url;
-}
-
 ?>

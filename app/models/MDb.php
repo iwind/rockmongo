@@ -1,6 +1,14 @@
 <?php
 
 class MDb {
+	/**
+	 * Execute a piece of javascript code
+	 *
+	 * @param MongoDB $db DB
+	 * @param string $code javascript code
+	 * @param array $params javascript function parameters
+	 * @return array 
+	 */
 	static function exec(MongoDB $db, $code, array $params = array()) {
 		$query = $db->execute($code, $params);
 		if (!$query["ok"]) {
@@ -9,17 +17,50 @@ class MDb {
 		return $query["retval"];
 	}
 	
+	/**
+	 * List collections in a DB
+	 * 
+	 * @param MongoDB $db DB
+	 * @return array<MongoCollection>
+	 */
 	static function listCollections(MongoDB $db) {
-		$names = self::exec($db, 'function (){ return db.getCollectionNames(); }');
+		$server = MServer::currentServer();
+		
+		$names = array();
+		try {
+			$names = self::exec($db, 'function (){ return db.getCollectionNames(); }');
+		} catch(Exception $e) {
+			
+		}
+
 		$ret = array();
 		foreach ($names as $name) {
-			if (!preg_match("/^system\./", $name)) {
-				$ret[] = $name;
+			if ($server->shouldHideCollection($name)) {
+				continue;
 			}
+			if (preg_match("/^system\\./", $name)) {
+				continue;
+			}
+			$ret[] = $name;
 		}
 		sort($ret);
+		
+		//system collections
+		if (!$server->uiHideSystemCollections()) {
+			foreach ($names as $name) {
+				if ($server->shouldHideCollection($name)) {
+					continue;
+				}
+				if (preg_match("/^system\\./", $name)) {
+					$ret[] = $name;
+				}
+			}
+		}
 		$collections = array();
 		foreach ($ret as $v) {
+			if ($v === "") {//older MongoDB version (maybe before 1.7) allow empty collection name
+				continue;
+			}
 			$collections[] = $db->selectCollection($v);
 		}
 		return $collections;
