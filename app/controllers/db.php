@@ -24,9 +24,16 @@ class DbController extends BaseController {
 		if (isset($ret["sizeOnDisk"])) {
 			$ret["diskSize"] = $this->_formatBytes($ret["sizeOnDisk"]);
 		}
-		$ret["dataSize"] = $this->_formatBytes($ret["dataSize"]);
-		$ret["storageSize"] = $this->_formatBytes($ret["storageSize"]);
-		$ret["indexSize"] = $this->_formatBytes($ret["indexSize"]);
+				if(isset($ret["dataSize"])){
+			$ret["dataSize"] = $this->_formatBytes($ret["dataSize"]);
+		}
+		if(isset($ret["storageSize"])){
+			$ret["storageSize"] = $this->_formatBytes($ret["storageSize"]);
+		}
+		if(isset($ret["indexSize"])){
+			$ret["indexSize"] = $this->_formatBytes($ret["indexSize"]);
+		}
+
 		
 		$this->stats = array();
 		$this->stats["Size"] = $ret["diskSize"];
@@ -43,12 +50,12 @@ class DbController extends BaseController {
 					. $this->path("collection.index", array( "db" => $this->db, "collection" => $collection->getName())) . "\">" . $collection->getName() . "</a>";
 			}
 		}
-		$this->stats["Objects"] = $ret["objects"];
-		$this->stats["Data Size"] = $ret["dataSize"];
-		$this->stats["Storage Size"] = $ret["storageSize"];
-		$this->stats["Extents"] = $ret["numExtents"];
-		$this->stats["Indexes"] = $ret["indexes"];
-		$this->stats["Index Size"] = $ret["indexSize"];
+		if(isset($ret["objects"])){$this->stats["Objects"] = $ret["objects"];}
+		if(isset($ret["dataSize"])){$this->stats["Data Size"] = $ret["dataSize"];}
+		if(isset($ret["storageSize"])){$this->stats["Storage Size"] = $ret["storageSize"];}
+		if(isset($ret["numEvents"])){$this->stats["Extents"] = $ret["numExtents"];}
+		if(isset($ret["indexes"])){$this->stats["Indexes"] = $ret["indexes"];}
+		if(isset($ret["indexSize"])){$this->stats["Index Size"] = $ret["indexSize"];}
 
 		$this->display();
 	}
