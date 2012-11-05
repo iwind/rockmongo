@@ -52,11 +52,7 @@ Please feel free to report any bugs and issues to me, my email is: iwind.liu@gma
 Source Code Repository
 --------------------------------------
 Repositories are located at 
-  SVN: svn://rockmongo.com/rockmongo
-you can checkout them with any subversion client.
-
-Or
-  Git: https://github.com/iwind/rockmongo.git
+  https://github.com/iwind/rockmongo.git
 
 
 Contributing
