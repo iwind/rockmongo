@@ -52,12 +52,15 @@ Please feel free to report any bugs and issues to me, my email is: iwind.liu@gma
 Source Code Repository
 --------------------------------------
 Repositories are located at 
-  svn://ifphp.cn/rockmongo
+  SVN: svn://rockmongo.com/rockmongo
 you can checkout them with any subversion client.
+
+Or
+  Git: https://github.com/iwind/rockmongo.git
 
 
 Contributing
 --------------------------------------
 Somebody who want to contribute to the project, may help us by doing these:
-* Supply us a logo in size:75 X 75
 * Translate messages from English to other languages (you can see them in app/langs directory)
+* Make donations here: http://rockmongo.com/donation
