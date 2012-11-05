@@ -256,18 +256,9 @@ class RView {
 }
 
 /**
- * 打印数据的内容
+ * print data to screen
  * 
- * 函数名为Print的缩写
- * 
- * <code>
- * p($obj);
- * p($obj1, $obj2, ...)
- * </code>
- * 
- * 从1.0.2开始，在命令行下不再显示<xmp>和</xmp>
- * 
- * @param mixed $data1 要被打印的数据
+ * @param mixed $data1 data to be printed
  */
 function p($data1 = null) {
 	$args = func_get_args();
@@ -283,10 +274,10 @@ function p($data1 = null) {
 }
 
 /**
- * 获取或设置参数对应的值
+ * get or set parameter value
  *
- * @param string|array $name 一个或一组参数名
- * @param mixed $value 如果不为nil，则将此值赋给参数
+ * @param string|array $name a name or an array of values
+ * @param mixed $value value to be set
  * @return mixed
  */
 function x($name, $value = nil) {
@@ -304,10 +295,10 @@ function x($name, $value = nil) {
 }
 
 /**
- * 过滤参数
+ * filter parameters
  *
- * @param string $param 参数
- * @param boolean $filter 是否过滤
+ * @param string $param parameters to be filtered
+ * @param boolean $filter will filter?
  * @return mixed
  */
 function rock_filter_param($param, $filter = true) {
@@ -324,11 +315,11 @@ function rock_filter_param($param, $filter = true) {
 }
 
 /**
- * 获取参数的值
+ * get parameter value
  * 
- * 与x($name)不同的是，该函数获取的参数不会被自动过滤（通过trim和htmlspecialchars）
+ * different from x($name), the value will not be filtered (trim or htmlspecialchars)
  *
- * @param string $name 参数名
+ * @param string $name parameter name
  * @return mixed
  * @see x
  */
@@ -347,9 +338,9 @@ function xn($name = nil) {
 }
 
 /**
- * 获取参数的值，并转化为整数
+ * get parameter value and convert it to integer value
  *
- * @param string $name 参数名
+ * @param string $name parameter name
  * @return integer
  * @see x
  */
@@ -391,14 +382,15 @@ function import($class, $isClass = true) {
 }
 
 /**
- * 查找配置
+ * get configuration value
  * 
- * 配置都有环境和平台限制
+ * support __PLATFORM__
  * 
- * o("@.config") - 查找当前目录下的config.dev@def.php配置
- * o("@.config.servers") - 查找config配置，并取出其中的servers键对应的值
+ * o("config.name") - find in app/configs/config.php directory
+ * o("@.config") - find config.php in current directory
+ * o("@.config.servers") - find config.php in current directory
  *
- * @param string $config 配置名
+ * @param string $config configuration key
  * @return mixed
  */
 function o($config) {
@@ -445,12 +437,12 @@ function o($config) {
 }
 
 /**
- * 将名称转换为Java的编程风格
+ * convert name to java style
  *
- * 首字母小写，其余单词的首字母大写<br/>
+ * Example:<br/>
  * load_xml_config --> loadXmlConfig
  * 
- * @param string $name 名称
+ * @param string $name name to be converted
  * @return string
  */
 function rock_name_to_java($name) {
@@ -499,13 +491,11 @@ function rock_array_get(array $array, $keys) {
 
 
 /**
- * 设置一个数组中某个键的值，并返回设置后的值
- * 
- * 对原有的数组没有影响
+ * set an element's value in the array, and return a new array
  *
- * @param array $array 数组
- * @param array|string $keys 键，可以是多级的，比如a.b.c
- * @param mixed $value 新的键值
+ * @param array $array array
+ * @param array|string $keys key of the element, support dot operator (.), for example: a.b.c
+ * @param mixed $value new value
  * @return array
  * @see rock_array_get
  */
@@ -540,7 +530,7 @@ function rock_array_set(array $array, $keys, $value) {
 }
 
 /**
- * 从一个数组的值中选取key做当前数组的key
+ * pick values from an array, the make it as keys
  * 
  * <code>
  * $array = array(
@@ -552,7 +542,7 @@ function rock_array_set(array $array, $keys, $value) {
  * $array2 = rock_array_combine($array, "a", "b");
  * </code>
  * 
- * $array2就变成了：
+ * then $array2 will be:
  * <code>
  * array(
  *   11 => 12,
@@ -560,7 +550,7 @@ function rock_array_set(array $array, $keys, $value) {
  * );
  * </code>
  * 
- * 如果$valueName没有值，则是把当前元素值当成value:
+ * if $valueName not be set, the element value be "value":
  * 
  * <code>
  * $array2 = rock_array_combine($array, "a");
@@ -571,13 +561,13 @@ function rock_array_set(array $array, $keys, $value) {
  * );
  * </code>
  * 
- * 支持以点(.)符号连接的多层次keyName和valueName：
+ * support dot (.) operator in keyName and valueName:
  * - rock_array_combine($array, "a.b", "a.c"); 
- * 即重新构成了一个以$array[n][a][b]为键，以$array[n][a][c]为值的数组，其中n是数组的索引
+ * $array[n][a][b] will be "key"，$array[n][a][c] value be"value", here, n is index
  *
- * @param array $array 二维数组
- * @param integer|string $keyName 选取的key名称
- * @param integer|string $valueName 选取的值名称
+ * @param array $array array values to combine from
+ * @param integer|string $keyName key name
+ * @param integer|string $valueName value name
  * @return array
  * @since 1.0
  */

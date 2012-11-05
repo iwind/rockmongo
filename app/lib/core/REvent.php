@@ -7,8 +7,8 @@ class REvent {
 	/**
 	 * dispatch event
 	 * 
-	 * @param unknown_type $event
-	 * @param array $params
+	 * @param string $event Event Name
+	 * @param array $params Parameters
 	 */
 	public static function dispatch($event, array $params = array()) {
 		if (empty(self::$_listeners[$event])) {
@@ -28,9 +28,9 @@ class REvent {
 	/**
 	 * add a event listener
 	 *
-	 * @param unknown_type $event
-	 * @param unknown_type $callback
-	 * @param unknown_type $priority
+	 * @param string $event Event Name
+	 * @param callback $callback Callback
+	 * @param integer $priority Priority
 	 */
 	public static function listen($event, $callback, $priority = -1) {
 		if ($priority == -1) {
@@ -47,7 +47,7 @@ class REvent {
 	/**
 	 * stop event propagation
 	 *
-	 * @param unknown_type $event
+	 * @param string $event Event Name
 	 */
 	public static function stop($event) {
 		self::$_events[$event]["enabled"] = false;
@@ -56,8 +56,8 @@ class REvent {
 	/**
 	 * remove a event listener
 	 *
-	 * @param unknown_type $event
-	 * @param unknown_type $callback
+	 * @param string $event Event Name
+	 * @param callback $callback Callback
 	 */
 	public static function remove($event, $callback) {
 		if (empty(self::$_listeners[$event])) {
