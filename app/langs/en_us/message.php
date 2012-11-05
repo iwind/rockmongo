@@ -152,7 +152,7 @@ $message["phpmongo"] = "PHP Mongo";
 $message["repstatus"] = "Replication Status";
 $message["me"] = "Me";
 
-$message["repstatus"] = "Repair Database";
+$message["repair_database"] = "Repair Database";
 $message["response_from_server"] = "Response from Server";
 
 $message["dropped_from_database"] = "is dropped from database";
