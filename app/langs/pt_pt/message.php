@@ -8,7 +8,7 @@
  */
  
 $message["TRANSLATION_NAME"] = "Portugu&ecirc;s - Portugal";
-$message["TRANSLATION_ID"] = 5;
+$message["TRANSLATION_ID"] = 11;
 
 /** Conexão **/
 $message["can_not_connect"] = "Impossível conectar com o MongoDB: %s. Verifique a configuração";
