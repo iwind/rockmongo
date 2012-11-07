@@ -1,3 +1,7 @@
+v1.1.3 - 2012-11-07
+* Fix UTF-8 characters display issue(PHP 5.4.x)
+* Add portuguese (Portugal) translation, by Luis Romao <zecompadre@gmail.com>
+
 v1.1.2 - 2012-05-07
 * Italian translation, thanks to Andrea Cardinale
 * NumberInt, NumberLong
