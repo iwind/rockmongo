@@ -205,6 +205,6 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> is a MongoDB
 /** Login **/
 $message["loginandrock"] = "Login and Rock";
 $message["changeconfig"] = "You may change your username and password in config.php.";
-$message["rockmongocredits"] = "Powered by <a href=\"http://rockmongo.com\" target=\"_blank\">RockMongo</a> v" . (ROCK_MONGO_VERSION) . ", <a href=\"http://rockmongo.com/downloads\" target=\"_blank\">check out new version here.</a>";
+$message["rockmongocredits"] = "Powered by <a href=\"http://rockmongo.com\" target=\"_blank\">RockMongo</a> v" . (ROCK_MONGO_VERSION) . ", <a href=\"http://rockmongo.com/downloads\" target=\"_blank\">check out new version here.</a> &nbsp; [<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=iwind%2eliu%40gmail%2ecom&lc=US&amount=10&item_name=RockMongo%20Project%20Donation&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest\">Donate 10 dollars</a>]";
 
 ?>

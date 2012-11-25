@@ -28,10 +28,10 @@ currentFields.push("<?php h(addslashes($field));?>");
 
 <div class="query">
 <form method="get" id="query_form">
-<input type="hidden" name="db" value="<?php h($db);?>"/>
-<input type="hidden" name="collection" value="<?php h($collection);?>"/>
-<input type="hidden" name="action" value="<?php h(x("action"));?>"/>
-<input type="hidden" name="format" value="<?php h(x("format")); ?>"/>
+<input type="hidden" name="db" value="<?php h_escape($db);?>"/>
+<input type="hidden" name="collection" value="<?php h_escape($collection);?>"/>
+<input type="hidden" name="action" value="<?php h_escape(x("action"));?>"/>
+<input type="hidden" name="format" value="<?php h_escape(x("format")); ?>"/>
 <table>
 	<tr>
 		<td valign="top">
@@ -44,9 +44,9 @@ currentFields.push("<?php h(addslashes($field));?>");
 		<td valign="top" class="field_orders">
 			<!-- fields will be used in sorting -->
 			<p><input type="text" name="field[]" value="<?php h(rock_array_get(x("field"),0));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),0)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),0)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
-			<p><input type="text" name="field[]" value="<?php h(rock_array_get(x("field"),1));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),1)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),1)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
-			<p><input type="text" name="field[]" value="<?php h(rock_array_get(x("field"),2));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),2)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),2)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
-			<p><input type="text" name="field[]" value="<?php h(rock_array_get(x("field"),3));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),3)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),3)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select> </p>
+			<p><input type="text" name="field[]" value="<?php h_escape(rock_array_get(x("field"),1));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),1)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),1)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
+			<p><input type="text" name="field[]" value="<?php h_escape(rock_array_get(x("field"),2));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),2)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),2)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
+			<p><input type="text" name="field[]" value="<?php h_escape(rock_array_get(x("field"),3));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),3)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),3)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select> </p>
 		</td>
 	</tr>
 	<tr>
