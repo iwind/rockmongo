@@ -66,7 +66,7 @@ class RQuery {
 				$this->_attrs[$attr] = array();
 			}
 			if (is_array($value)) {
-				$this->_attrs[$attr] = array_merge($this->_attrs[$attr], $value);
+				$this->_attrs[$attr] = array_merge($this->_attrs[$attr], array($value));
 			}
 			else {
 				$this->_attrs[$attr][] = $value;
@@ -311,17 +311,7 @@ class RQuery {
 	 */
 	function id($pk1) {
 		foreach (func_get_args() as $arg) {
-			if (is_array($arg)) {
-				foreach ($arg as $_id) {
-					$this->attr("_id", ($_id));
-				}
-			}
-			else if (!($arg instanceof MongoId)) {
-				$this->attr("_id", ($arg));
-			}
-			else {
-				$this->attr("_id", $arg);
-			}
+			$this->attr("_id", $arg);
 		}
 		return $this;
 	}
@@ -336,7 +326,7 @@ class RQuery {
 	 * @return array
 	 */
 	function criteria() {
-		$attrs = array();
+		$attrs = $this->_attrs;
 		foreach ($this->_attrs as $attr => $values) {
 			if (!empty($values)) {
 				if (count($values) == 1) {

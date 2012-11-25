@@ -97,6 +97,8 @@ function rock_real_id($id) {
 				return new MongoInt32($value);
 			case "MongoInt64":
 				return new MongoInt64($value);
+			case "json":
+				return json_decode(base64_decode($value), true);
 		}
 		return;
 	}
@@ -122,7 +124,10 @@ function rock_id_string($id) {
 	if (is_object($id)) {
 		return "rid_" . get_class($id) . ":" . $id->__toString();
 	}
-	return "rid_" . gettype($id) . ":" . $id;
+	if (is_scalar($id)) {
+		return "rid_" . gettype($id) . ":" . $id;
+	}
+	return "rid_json:" . base64_encode(json_encode($id));
 }
 
 /**
@@ -132,7 +137,15 @@ function rock_id_string($id) {
  */
 function h($var) {
 	if (is_array($var)) {
-		echo json_encode($var, true);
+		echo htmlspecialchars(json_encode($var));
+		return;
+	}
+	if (is_null($var)) {
+		echo "NULL";
+		return;
+	}
+	if (is_bool($var)) {
+		echo $var ? "TRUE":"FALSE";
 		return;
 	}
 	echo $var;
