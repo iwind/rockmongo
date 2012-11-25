@@ -131,6 +131,10 @@ function rock_id_string($id) {
  * @param mixed $var a variable
  */
 function h($var) {
+	if (is_array($var)) {
+		echo json_encode($var, true);
+		return;
+	}
 	echo $var;
 }
 

@@ -23,7 +23,7 @@
 <div style="border:2px #ccc solid;margin-bottom:5px;background-color:#eeefff">
 <?php hm("responseserver"); ?>
 	<div style="margin-top:5px">
-		<?php h($ret);?>
+		<?php h($ret_json);?>
 	</div>
 </div>
 

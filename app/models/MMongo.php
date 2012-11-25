@@ -2,7 +2,7 @@
 
 class MMongo {
 	/**
-	 * throw operation exception 
+	 * Throw operation exception 
 	 * 
 	 * @param mixed $ret the result to be checked
 	 */
@@ -23,6 +23,12 @@ class MMongo {
 		exit();
 	}
 	
+	/**
+	 * Read exception from response result
+	 * 
+	 * @param array $ret response result
+	 * @return unknown|string
+	 */
 	public static function readException($ret) {
 		if (!empty($ret["assertion"])) {
 			return $ret["assertion"];

@@ -1,5 +1,7 @@
 <?php
 
+import("lib.mongo.RMongo");
+
 class MServer {
 	private $_mongoName = null;
 	private $_mongoHost = "127.0.0.1";
@@ -29,7 +31,7 @@ class MServer {
 	/**
 	 * Mongo connection object
 	 * 
-	 * @var Mongo
+	 * @var RMongo
 	 */
 	private $_mongo;
 	
@@ -236,7 +238,7 @@ class MServer {
 			$server = $this->_mongoHost;
 		}
 		try {
-			$this->_mongo = new Mongo($server, $this->_mongoOptions);
+			$this->_mongo = new RMongo($server, $this->_mongoOptions);
 			$this->_mongo->setSlaveOkay(true);
 		}
 		catch(Exception $e) {

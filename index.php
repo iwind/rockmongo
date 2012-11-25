@@ -9,7 +9,7 @@
 /**
 * Defining version number and enabling error reporting
 */
-define("ROCK_MONGO_VERSION", "1.1.3");
+define("ROCK_MONGO_VERSION", "1.1.4");
 
 error_reporting(E_ALL);
 

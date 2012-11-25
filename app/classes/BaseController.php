@@ -36,7 +36,7 @@ class BaseController extends RExtController {
 	/**
 	 * Enter description here ...
 	 * 
-	 * @var Mongo
+	 * @var RMongo
 	 */
 	protected $_mongo;
 

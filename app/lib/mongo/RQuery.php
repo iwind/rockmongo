@@ -40,7 +40,7 @@ class RQuery {
 	 * @param string $db 数据库
 	 * @param string $collection 集合
 	 */
-	function __construct(Mongo $mongo, $db, $collection) {
+	function __construct(RMongo $mongo, $db, $collection) {
 		$this->_dbName = $db;
 		$this->_collectionName = $collection;
 		$this->_db = $mongo->selectDB($this->_dbName);

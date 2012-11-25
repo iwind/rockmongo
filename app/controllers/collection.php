@@ -678,7 +678,7 @@ window.parent.frames["left"].location.reload();
 	public function doRemoveCollection() {
 		$this->db = x("db");
 		$this->collection = xn("collection");
-		$db = new MongoDB($this->_mongo, $this->db);
+		$db = $this->_mongo->selectDB($this->db);
 		$db->dropCollection($this->collection);
 		$this->display();
 	}
@@ -687,7 +687,7 @@ window.parent.frames["left"].location.reload();
 	public function doCollectionIndexes() {
 		$this->db = x("db");
 		$this->collection = xn("collection");
-		$collection = $this->_mongo->selectCollection(new MongoDB($this->_mongo, $this->db), $this->collection);
+		$collection = $this->_mongo->selectCollection($this->_mongo->selectDB($this->db), $this->collection);
 		$this->indexes = $collection->getIndexInfo();
 		foreach ($this->indexes as $_index => $index) {
 			$index["data"] = $this->_highlight($index["key"], "json");
@@ -701,7 +701,7 @@ window.parent.frames["left"].location.reload();
 		$this->db = x("db");
 		$this->collection = xn("collection");
 		
-		$db = new MongoDB($this->_mongo, $this->db);
+		$db = $this->_mongo->selectDB($this->db);
 		$collection = $this->_mongo->selectCollection($db, $this->collection);
 		$indexes = $collection->getIndexInfo();
 		foreach ($indexes as $index) {
@@ -723,7 +723,7 @@ window.parent.frames["left"].location.reload();
 		$this->collection = xn("collection");
 		$this->nativeFields = MCollection::fields($this->_mongo->selectDB($this->db), $this->collection);
 		if ($this->isPost()) {
-			$db = new MongoDB($this->_mongo, $this->db);
+			$db = $this->_mongo->selectDB($this->db);
 			$collection = $this->_mongo->selectCollection($db, $this->collection);
 			
 			$fields = xn("field");
@@ -779,7 +779,7 @@ window.parent.frames["left"].location.reload();
 		$this->collection = xn("collection");
 		$this->stats = array();
 		
-		$db = new MongoDB($this->_mongo, $this->db);
+		$db = $this->_mongo->selectDB($this->db);
 		$ret = $db->command(array( "collStats" => $this->collection ));
 		if ($ret["ok"]) {
 			$this->stats = $ret;
@@ -846,7 +846,7 @@ window.parent.frames["left"].location.reload();
  			else {
  				$this->error = "Operation failure";
  			}
-			$this->ret = $this->_highlight($this->ret, "json");
+			$this->ret_json = $this->_highlight($this->ret, "json");
 		}
 		$this->display();
 	}
@@ -880,7 +880,6 @@ window.parent.frames["left"].location.reload();
 			$this->max = xi("max");
 			
 			//rename current collection
-			p($this->isCapped, $this->size, $this->max);
 			$bkCollection = $this->collection . "_rockmongo_bk_" . uniqid();
 			$this->ret = $this->_mongo->selectDB($this->db)->execute('function (coll, newname, dropExists) { db.getCollection(coll).renameCollection(newname, dropExists);}', array( $this->collection, $bkCollection, true ));
 			if (!$this->ret["ok"]) {
