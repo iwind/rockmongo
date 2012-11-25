@@ -177,7 +177,9 @@ class RQuery {
 	 * @return RQuery
 	 */
 	function cond(array $cond) {
-		$this->_conds = array_merge($this->_conds, $cond);
+		foreach ($cond as $key => $value) {
+			$this->_conds[$key] = $value;
+		}
 		return $this;
 	}
 	
@@ -337,7 +339,10 @@ class RQuery {
 				}
 			}
 		}
-		return array_merge($attrs, $this->_conds);
+		foreach ($this->_conds as $key => $value) {
+			$attrs[$key] = $value;
+		}
+		return $attrs;
 	}
 	
 	/**
