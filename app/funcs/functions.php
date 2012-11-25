@@ -109,7 +109,7 @@ function json_format_html($json)
             case ':':
             	$char = "<font color=\"green\">" . $char . "</font>";//iwind
                 if($in_string) {
-                    $new_json .= ": ";
+                    $new_json .= ":";
                 }
                 else {
                     $new_json .= $char;

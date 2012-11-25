@@ -8,11 +8,11 @@
 <?php endif;?>
 
 <form method="post">
-<input type="hidden" name="oldname" value="<?php h($realName);?>"/>
+<input type="hidden" name="oldname" value="<?php h_escape($realName);?>"/>
 <?php hm("oldname"); ?>:<br/>
-<input type="text" value="<?php h($realName); ?>" disabled="disabled"/><br/>
+<input type="text" value="<?php h_escape($realName); ?>" disabled="disabled"/><br/>
 <?php hm("newname"); ?>:<br/>
-<input type="text" name="newname" value="<?php h(x("newname")); ?>"/><br/>
+<input type="text" name="newname" value="<?php h_escape(x("newname")); ?>"/><br/>
 <?php hm("dropifexists"); ?><br/>
 <input type="checkbox" name="remove_exists" value="1" <?php if(x("remove_exists")):?>checked="checked"<?php endif;?> /><br/>
 <input type="submit" value="<?php hm("save"); ?>"/>

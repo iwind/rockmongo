@@ -638,7 +638,7 @@ class CollectionController extends BaseController {
 		$this->id = xn("id");
 		$db = $this->_mongo->selectDB($this->db);
 		$prefix = substr($this->collection, 0, strrpos($this->collection, "."));
-		$file = $db->getGridFS()->findOne(array("_id" => rock_real_id($this->id)));
+		$file = $db->getGridFS($prefix)->findOne(array("_id" => rock_real_id($this->id)));
 		$fileinfo = pathinfo($file->getFilename());
 		$extension = strtolower($fileinfo["extension"]);
 		import("lib.mime.types", false);

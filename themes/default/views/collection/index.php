@@ -179,12 +179,21 @@ currentFields.push("<?php h(addslashes($field));?>");
 							"id" => rock_id_string($row["_id"]),
 						)));
 						?>">Download</a> <a href="<?php
+						$criteria = null;
+						if ($this->last_format == "json") {
+							$criteria = '{
+	"files_id": ' . (($row["_id"] instanceof MongoId) ? "ObjectId(\"" . addslashes($row["_id"]->__toString()) . "\")" : "\"" . addslashes($row["_id"]) . "\"") . '
+}';
+						}
+						else {
+							$criteria = 'array(
+	"files_id" => ' . (($row["_id"] instanceof MongoId) ? "new MongoId(\"" . addslashes($row["_id"]->__toString()) . "\")" : "\"" . addslashes($row["_id"]) . "\"") . '
+)';
+						}
 						h(url("collection.index", array(
 							"db" => $db,
 							"collection" => MCollection::chunksCollection($collection),
-							"criteria" => 'array(
-	"files_id" => ' . (($row["_id"] instanceof MongoId) ? "new MongoId(\"" . addslashes($row["_id"]->__toString()) . "\")" : "\"" . addslashes($row["_id"]) . "\"") . '
-)')));
+							"criteria" => $criteria)));
 						?>">Chunks</a>
 						<?php endif;?>
 					</div>	
