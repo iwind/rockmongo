@@ -230,14 +230,34 @@ class RMongo {
 		return $this->_mongo->__toString();
 	}
 	
-	static function getVersion() {
+	/**
+	 * Get mongo driver version
+	 * 
+	 * @return string
+	 * @since 1.1.4
+	 */
+	public static function getVersion() {
 		if (class_exists("MongoClient")) {
 			return MongoClient::VERSION;
 		}
 		if (class_exists("Mongo")) {
 			return Mongo::VERSION;
 		}
-		return "unknown";
+		return "0";
+	}
+	
+	/**
+	 * Compare another version with current version
+	 * 
+	 * @param string $version Version to compare
+	 * @return integer -1,0,1
+	 * @since 1.1.4
+	 */
+	public static function compareVersion($version) {
+		$currentVersion = self::getVersion();
+		preg_match("/^[\\.\\d]+/", $currentVersion, $match);
+		$number = $match[0];
+		return version_compare($number, $version); 
 	}
 	
 	static function setLastInsertId($lastId) {

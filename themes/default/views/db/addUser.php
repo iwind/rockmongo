@@ -9,7 +9,7 @@
 	<?php if(isset($error)):?><p class="error"><?php h($error);?></p><?php endif;?>
 	<form method="post">
 	<?php hm("username"); ?>:<br/>
-	<input type="text" name="username" value="<?php h(x("username"));?>"/><br/>
+	<input type="text" name="username" value="<?php h_escape(x("username"));?>"/><br/>
 	<?php hm("password"); ?>:<br/>
 	<input type="password" name="password"/><br/>
 	<?php hm("confirm_pass"); ?>:<br/>

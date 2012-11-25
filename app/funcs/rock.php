@@ -137,7 +137,7 @@ function rock_id_string($id) {
  */
 function h($var) {
 	if (is_array($var)) {
-		echo htmlspecialchars(json_encode($var));
+		echo json_encode($var);
 		return;
 	}
 	if (is_null($var)) {
@@ -149,6 +149,26 @@ function h($var) {
 		return;
 	}
 	echo $var;
+}
+/**
+ * Output a variable escaped
+ *
+ * @param mixed $var a variable
+ */
+function h_escape($var) {
+	if (is_array($var)) {
+		echo htmlspecialchars(json_encode($var));
+		return;
+	}
+	if (is_null($var)) {
+		echo "";
+		return;
+	}
+	if (is_bool($var)) {
+		echo $var;
+		return;
+	}
+	echo htmlspecialchars($var);
 }
 
 /**
