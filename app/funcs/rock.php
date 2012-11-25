@@ -98,8 +98,8 @@ function rock_real_id($id) {
 			case "MongoInt64":
 				return new MongoInt64($value);
 			case "mixed":
-				$realId = null;
-				eval('$realId=' . base64_decode($value) . ';');
+				$eval = new VarEval(base64_decode($value));
+				$realId = $eval->execute();
 				return $realId;
 		}
 		return;

@@ -68,7 +68,9 @@ class VarEval {
 							T_CONSTANT_ENCAPSED_STRING, 
 							T_DOUBLE_ARROW, 
 							T_CLOSE_TAG,
-							T_NEW))) {
+							T_NEW,
+							T_DOUBLE_COLON
+							))) {
 						continue;
 					}
 					
@@ -89,7 +91,8 @@ class VarEval {
 								"mongotimestamp",
 								"true",
 								"false",
-								"null"
+								"null",
+								"__set_state"
 							))) {
 							continue;
 						}
