@@ -97,8 +97,10 @@ function rock_real_id($id) {
 				return new MongoInt32($value);
 			case "MongoInt64":
 				return new MongoInt64($value);
-			case "json":
-				return json_decode(base64_decode($value), true);
+			case "mixed":
+				$realId = null;
+				eval('$realId=' . base64_decode($value) . ';');
+				return $realId;
 		}
 		return;
 	}
@@ -127,7 +129,7 @@ function rock_id_string($id) {
 	if (is_scalar($id)) {
 		return "rid_" . gettype($id) . ":" . $id;
 	}
-	return "rid_json:" . base64_encode(json_encode($id));
+	return "rid_mixed:" . base64_encode(var_export($id, true));
 }
 
 /**

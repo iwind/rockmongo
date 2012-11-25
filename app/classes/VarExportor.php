@@ -26,6 +26,7 @@ class VarExportor {
 	 *
 	 * @param string $type variable type (array or json)
 	 * @param boolean $fieldLabel if add label to fields
+	 * @return string
 	 */
 	function export($type = MONGO_EXPORT_PHP, $fieldLabel = false) {
 		if ($fieldLabel) {
