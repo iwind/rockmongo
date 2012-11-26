@@ -14,12 +14,6 @@ class RMongo {
 		}
 	}
 	
-	public function setSlaveOkay($ok) {
-		if (method_exists($this->_mongo, "setSlaveOkay")) {
-			$this->_mongo->setSlaveOkay($ok);
-		}
-	}
-	
 	/**
 	 * Closes this connection
 	 * 
@@ -217,6 +211,19 @@ class RMongo {
 	public function setReadPreference($readPreference, array $tags = array()) {
 		if (method_exists($this->_mongo, "setReadPreference")) {
 			return $this->_mongo->setReadPreference($readPreference, $tags);
+		}
+		return false;
+	}
+	
+	/**
+	 * Change slaveOkay setting for this connection
+	 *
+	 * @param boolean $ok If reads should be sent to secondary members of a replica set for all possible queries using this Mongo instance
+	 * @return boolean
+	 */
+	public function setSlaveOkay($ok) {
+		if (method_exists($this->_mongo, "setSlaveOkay")) {
+			return $this->_mongo->setSlaveOkay($ok);
 		}
 		return false;
 	}
