@@ -42,7 +42,7 @@ $i ++;
 /**
 $MONGO["servers"][$i]["mongo_name"] = "Localhost2";
 $MONGO["servers"][$i]["mongo_host"] = "127.0.0.1";
-$MONGO["servers"][$i]["mongo_port"] = "27018";
+$MONGO["servers"][$i]["mongo_port"] = "27017";
 $MONGO["servers"][$i]["control_users"]["admin"] = "admin";
 $i ++;
 **/

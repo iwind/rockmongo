@@ -68,14 +68,17 @@ class MUser {
 	}
 	
 	/**
-	 * Enter description here ...
+	 * Validate User
 	 *
 	 * @return boolean
 	 */
 	public function validate() {
 		import("@.MServer");
-		return MServer::serverWithIndex($this->_hostIndex)
-				->auth($this->_username, $this->_password, $this->_db);
+		$server = MServer::serverWithIndex($this->_hostIndex);
+		if (empty($server)) {
+			return false;
+		}
+		return $server->auth($this->_username, $this->_password, $this->_db);
 	}
 	
 	public function servers() {
