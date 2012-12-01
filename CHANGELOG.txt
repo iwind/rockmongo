@@ -1,3 +1,11 @@
+v1.1.4 - 2012-12-01
+* Make compatible with php_mongo 1.3.0
+* Support composite _id
+* Fix gridfs downloads and view chunks issue
+* Fix h() function error
+* Fix Slave link on topbar
+* Fix User auth error (after you remove some servers)
+
 v1.1.3 - 2012-11-07
 * Fix UTF-8 characters display issue(PHP 5.4.x)
 * Add portuguese (Portugal) translation, by Luis Romao <zecompadre@gmail.com>

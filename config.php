@@ -28,7 +28,7 @@ $MONGO["servers"][$i]["mongo_timeout"] = 0;//mongo connection timeout
 $MONGO["servers"][$i]["mongo_auth"] = false;//enable mongo authentication?
 
 $MONGO["servers"][$i]["control_auth"] = true;//enable control users, works only if mongo_auth=false
-$MONGO["servers"][$i]["control_users"]["admin"] = "admin";//one of control users [USERNAME]=PASSWORD, works only if mongo_auth=false
+$MONGO["servers"][$i]["control_users"]["admin"] = "admin";//one of control users ["USERNAME"]=PASSWORD, works only if mongo_auth=false
 
 $MONGO["servers"][$i]["ui_only_dbs"] = "";//databases to display
 $MONGO["servers"][$i]["ui_hide_dbs"] = "";//databases to hide
@@ -43,7 +43,7 @@ $i ++;
 $MONGO["servers"][$i]["mongo_name"] = "Localhost2";
 $MONGO["servers"][$i]["mongo_host"] = "127.0.0.1";
 $MONGO["servers"][$i]["mongo_port"] = "27017";
-$MONGO["servers"][$i]["control_users"]["admin"] = "admin";
+$MONGO["servers"][$i]["control_users"]["admin"] = "password";
 $i ++;
 **/
 
