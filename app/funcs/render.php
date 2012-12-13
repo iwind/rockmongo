@@ -83,9 +83,9 @@ function render_navigation($db, $collection = null, $extend = true) {
  */
 function render_manual_items() {
 	$items = array(
-		'<a href="http://www.mongodb.org/display/DOCS/Advanced+Queries" target="_blank">' . rock_lang("querying") . '</a>',		
-		'<a href="http://www.mongodb.org/display/DOCS/Updating" target="_blank">' . rock_lang("updating") . '</a>',
-		'<a href="http://www.mongodb.org/display/DOCS/List+of+Database+Commands" target="_blank">' . rock_lang("commands") . '</a>',
+		'<a href="http://docs.mongodb.org/manual/reference/operators/" target="_blank">' . rock_lang("querying") . '</a>',		
+		'<a href="http://docs.mongodb.org/manual/applications/update/" target="_blank">' . rock_lang("updating") . '</a>',
+		'<a href="http://docs.mongodb.org/manual/reference/command/" target="_blank">' . rock_lang("commands") . '</a>',
 		'<a href="http://api.mongodb.org/js/" target="_blank">' . rock_lang("jsapi") . '</a>',
 		'<a href="http://www.php.net/manual/en/book.mongo.php" target="_blank">' . rock_lang("phpmongo") . '</a>'				
 	);

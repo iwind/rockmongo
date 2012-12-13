@@ -242,6 +242,7 @@ class MServer {
 			if ($this->_mongoAuth) {
 				$options["username"] = $username;
 				$options["password"] = $password;
+				$options["db"] = $db;
 			}
 			$this->_mongo = new RMongo($server, $options);
 			$this->_mongo->setSlaveOkay(true);

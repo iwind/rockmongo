@@ -21,3 +21,7 @@
 	</tr>
 	<?php endforeach; ?>
 </table>
+
+<p style="margin-top:60px">
+	<a href="http://docs.mongodb.org/manual/tutorial/control-access-to-mongodb-with-authentication/" target="_blank">Official Document: Control Access to MongoDB Instances with Authentication</a>
+</p>

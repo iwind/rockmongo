@@ -5,6 +5,7 @@ v1.1.4 - 2012-12-01
 * Fix h() function error
 * Fix Slave link on topbar
 * Fix User auth error (after you remove some servers)
+* Fix issue when query with numberic field
 
 v1.1.3 - 2012-11-07
 * Fix UTF-8 characters display issue(PHP 5.4.x)

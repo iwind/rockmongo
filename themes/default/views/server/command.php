@@ -2,7 +2,7 @@
 	<?php render_server_menu("command"); ?>
 </div>
 
-<a href="http://www.mongodb.org/display/DOCS/List+of+Database+Commands" target="_blank">&raquo; <?php hm("listdbcommands"); ?></a> 
+<a href="http://docs.mongodb.org/manual/reference/command/" target="_blank">&raquo; <?php hm("listdbcommands"); ?></a> 
 
 <?php if(isset($message)):?>
 <p class="error"><?php h($message);?></p>
