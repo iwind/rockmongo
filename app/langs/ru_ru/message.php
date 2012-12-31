@@ -9,7 +9,7 @@
 
 $message["TRANSLATION_NAME"] = "Русский - Russian";
 $message["TRANSLATION_ID"] = 9;
- 
+
 /** Login interface **/
 $message["admin"] = "Администратор";
 $message["password"] = "Пароль";
@@ -140,7 +140,7 @@ $message["username"] = "Имя пользователя";
 $message["confirm_pass"] = "Подтверждение пароля";
 $message["readonly"] = "Только для чтения?";
 $message["addreplace"] = "Добавить или заменить";
-	
+
 /** Manual links **/
 $message["querying"] = "Запросы";
 $message["updating"] = "Изменение";
@@ -168,7 +168,7 @@ $message["profiling_level1"] = "0 - выкл";
 $message["profiling_level2"] = "1 - логировать медленные операции (>N ms)";
 $message["profiling_level3"] = "2 - логировать все операции";
 $message["timecost"] = "Стоимость времени";
-	
+
 /** Collection operations **/
 $message["submit_query"] = "Отправить запрос";
 $message["explain"] = "Описать";

@@ -1,7 +1,7 @@
 <?php
 /**
  * de_de
- * 
+ *
  * @since 1.0
  * @package if
  * @subpackage plugin.pager.lang

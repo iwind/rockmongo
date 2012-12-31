@@ -6,7 +6,7 @@
  * @author iwind.liu <iwind.liu@gmail.com>
  * @version 1.0
  */
- 
+
 $message["TRANSLATION_NAME"] = "日本語 - Jananese";
 $message["TRANSLATION_ID"] = 4;
 

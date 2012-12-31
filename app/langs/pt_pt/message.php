@@ -6,7 +6,7 @@
  * @author Luis Romao <zecompadre@gmail.com>
  * @version 1.1
  */
- 
+
 $message["TRANSLATION_NAME"] = "Portugu&ecirc;s - Portugal";
 $message["TRANSLATION_ID"] = 11;
 
