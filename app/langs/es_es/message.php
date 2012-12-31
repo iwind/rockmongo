@@ -9,7 +9,7 @@
 
 $message["TRANSLATION_NAME"] = "Espa&ntilde;ol - Spanish";
 $message["TRANSLATION_ID"] = 7;
- 
+
 /** Login interface **/
 $message["admin"] = "Administrador";
 $message["password"] = "Contrase&ntilde;a";
@@ -136,7 +136,7 @@ $message["username"] = "Nombre de usuario";
 $message["confirm_pass"] = "Confirmar contrase&ntilde;a";
 $message["readonly"] = "S&oacute;lo lectura?";
 $message["addreplace"] = "Agregar o reemplazar";
-	
+
 /** Manual links **/
 $message["querying"] = "Consultas";
 $message["updating"] = "Actualizaciones";
@@ -164,7 +164,7 @@ $message["profiling_level1"] = "0 - apagado";
 $message["profiling_level2"] = "1 - registrar operaciones lentas (>N ms)";
 $message["profiling_level3"] = "2 - registrar todas las operaciones";
 $message["timecost"] = "Costo en tiempo";
-	
+
 /** Collection operations **/
 $message["submit_query"] = "Enviar Consulta";
 $message["explain"] = "Desarrollar";

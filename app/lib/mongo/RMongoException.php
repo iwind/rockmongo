@@ -1,7 +1,8 @@
 <?php
 
-class RMongoException extends MongoException {
-	
+class RMongoException extends MongoException
+{
+
 }
 
 ?>

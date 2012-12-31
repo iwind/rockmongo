@@ -9,7 +9,7 @@
 
 $message["TRANSLATION_NAME"] = "Deutsch - German";
 $message["TRANSLATION_ID"] = 8;
- 
+
 /** Login interface **/
 $message["admin"] = "Benutzer";
 $message["password"] = "Passwort";
@@ -136,7 +136,7 @@ $message["username"] = "Benutzername";
 $message["confirm_pass"] = "Passwort bestätigen";
 $message["readonly"] = "Nur-Lesen?";
 $message["addreplace"] = "Anlegen oder ersetzen";
-	
+
 /** Manual links **/
 $message["querying"] = "Abfrage";
 $message["updating"] = "Updating";
@@ -164,7 +164,7 @@ $message["profiling_level1"] = "0 - aus";
 $message["profiling_level2"] = "1 - logge langsame Vorgänge (>N ms)";
 $message["profiling_level3"] = "2 - logge alle Vorgänge";
 $message["timecost"] = "Time cost";
-	
+
 /** Collection operations **/
 $message["submit_query"] = "Abfrage ausführen";
 $message["explain"] = "Erklären";

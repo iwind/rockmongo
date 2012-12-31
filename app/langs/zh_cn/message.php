@@ -9,7 +9,7 @@
 
 $message["TRANSLATION_NAME"] = "简体中文 - Chinese simplified";
 $message["TRANSLATION_ID"] = 2;
- 
+
 /** login interface **/
 $message["admin"] = "管理员";
 $message["password"] = "密码";

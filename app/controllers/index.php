@@ -2,9 +2,11 @@
 
 import("classes.BaseController");
 
-class IndexController extends BaseController {
+class IndexController extends BaseController
+{
 	/** home **/
-	public function doIndex() {
+	public function doIndex()
+	{
 		$this->redirect("admin.index");
 	}
 }

@@ -1,0 +1,74 @@
+@import "compass/reset";
+@import "compass/css3";
+@import "variables.scss";
+@import "grids.scss";
+@import "mixins.scss";
+
+body {
+	font-family: 'Ubuntu', sans-serif;
+	background: url("http://subtlepatterns.subtlepatterns.netdna-cdn.com/patterns/debut_dark.png");
+	color: $mainColour;
+	text-shadow: 0 1px rgba(13, 13, 13, 0.24);
+	font-size: $baseFontSize;
+}
+
+.box, fieldset {
+	@include border-radius($borderRadius);
+	padding: $padding;
+	margin: $margin;
+	@include box-sizing(border-box);
+	border: 1px solid $borderColour;
+	background: rgba(94, 92, 92, 0.12)
+}
+
+input, button, .btn {
+	padding: $paddingSmall;
+	margin: $margin 0;
+	@include border-radius($borderRadiusSmall);
+}
+
+.btn, button, input[type="button"] {
+	background: url("http://subtlepatterns.subtlepatterns.netdna-cdn.com/patterns/otis_redding.png");
+	cursor: pointer;
+	@include transition(box-shadow $transitionTime);
+	&:hover {
+		@include box-shadow(inset 0 0 $paddingSmall $mainColour, 0 $paddingSmall 3em -$margin #DDD);
+	}
+	@include box-shadow(inset 0 0 $paddingSmall, 0 $paddingSmall 16em -$margin #DDD);
+}
+.centred-form {
+	max-width: 40em;
+	margin: 10% auto;
+}
+
+legend {
+	margin: $margin 0;
+	font-size: 135%;
+	border-bottom: $borderColour;
+	line-height: $multiplier;
+}
+
+input {
+	width: 87%;
+	background: rgba(0, 0, 0, 0.16);
+	color: $mainColour;
+	border: 1px solid $borderColour;
+}
+
+select {
+	width: 92%;
+	background: #494949;
+	color: #B9B9B9;
+	@include border-radius($borderRadius);
+	padding: $borderRadius;
+	text-shadow: 0 1px $mainColour;
+	border: none;
+}
+
+a {
+	color: #CCC;
+}
+
+.form-field {
+	margin-bottom: $margin;
+}

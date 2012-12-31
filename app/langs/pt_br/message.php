@@ -6,7 +6,7 @@
  * @author Klaus Silveira <contato@klaussilveira.com>
  * @version 1.1
  */
- 
+
 $message["TRANSLATION_NAME"] = "Portugu&ecirc;s - Brazilian Portuguese";
 $message["TRANSLATION_ID"] = 5;
 
