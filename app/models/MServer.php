@@ -244,7 +244,7 @@ class MServer {
 				$options["password"] = $password;
 				$options["db"] = $db;
 			}
-			if($this->_controlAuth) {
+			if($this->_controlAuth && !empty($this->_mongoUser) && !empty($this->_mongoPass) && !empty($this->_mongoDb)) {
 				$options["username"] = $this->_mongoUser;
 				$options["password"] = $this->_mongoPass;
 				$options["db"] = $this->_mongoDb;
