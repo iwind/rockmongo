@@ -27,14 +27,10 @@ class MDb {
 		$server = MServer::currentServer();
 		
 		$names = array();
-		try {
-			$names = self::exec($db, 'function (){ return db.getCollectionNames(); }');
-		} catch(Exception $e) {
-			
-		}
-
+		$names = $db->listCollections();
 		$ret = array();
-		foreach ($names as $name) {
+		foreach ($names as $col) {
+			$name = $col->getName();
 			if ($server->shouldHideCollection($name)) {
 				continue;
 			}
