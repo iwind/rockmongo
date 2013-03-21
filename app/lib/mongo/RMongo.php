@@ -1,10 +1,20 @@
 <?php
-
+/**
+ * RMongo for compatibility between Mongo and MongoClient
+ *
+ * @author Liu <q@yun4s.cn>
+ */
 class RMongo {
 	private static $_lastId;
 	
 	private $_mongo;
 	
+	/**
+	 * Contruct a new object
+	 * 
+	 * @param string $server Server definition
+	 * @param array $options Options
+	 */
 	public function __construct($server, array $options = array()) {
 		if (class_exists("MongoClient")) {
 			$this->_mongo = new MongoClient($server, $options);
@@ -145,8 +155,8 @@ class RMongo {
 	/**
 	 * Create persist connection
 	 * 
-	 * @param string $username
-	 * @param string $password
+	 * @param string $username Username
+	 * @param string $password Password
 	 * @return boolean
 	 */
 	public function persistConnect($username = "" , $password = "" ) {

@@ -1,15 +1,21 @@
 <?php
-
+/**
+ * Data filter object
+ * 
+ * See data types that can be filtered here: http://rockmongo.com/wiki/pluginDevelope?lang=en_us#%23%23%23+Supported+Filters%0D
+ *
+ * @author Liu <q@yun4s.cn>
+ */
 class RFilter {
 	private static $_filters = array();
 	private static $_dataTypes = array();
 	
 	/**
-	 * apply filters to data
+	 * Apply filters to data
 	 *
-	 * @param unknown_type $dataType
-	 * @param unknown_type $data
-	 * @param array $params
+	 * @param string $dataType Data Type
+	 * @param mixed $data Data to be filtered
+	 * @param array $params parameters will be passed to "filter callback function"
 	 */
 	public static function apply($dataType, &$data, array $params = array()) {
 		if (empty(self::$_filters[$dataType])) {
@@ -32,10 +38,10 @@ class RFilter {
 	}
 	
 	/**
-	 * add a new filter
+	 * Add a new filter
 	 *
-	 * @param unknown_type $dataType
-	 * @param unknown_type $filter
+	 * @param string $dataType Data type
+	 * @param callback|string $filter Filter function
 	 * @param unknown_type $priority
 	 */
 	public static function add($dataType, $filter, $priority = -1) {
@@ -51,19 +57,19 @@ class RFilter {
 	}
 	
 	/**
-	 * stop filter chain
+	 * Stop filter chain
 	 *
-	 * @param unknown_type $dataType
+	 * @param string $dataType Data type
 	 */
 	public static function stop($dataType) {
 		self::$_dataTypes[$dataType]["enabled"] = false;
 	}
 	
 	/**
-	 * remove a filter
+	 * Remove a filter
 	 *
-	 * @param unknown_type $dataType
-	 * @param unknown_type $filter
+	 * @param string $dataType Data type
+	 * @param callback|string $filter Filter function
 	 */
 	public static function remove($dataType, $filter) {
 		if (empty(self::$_filters[$dataType])) {

@@ -1,14 +1,20 @@
 <?php
-
+/**
+ * Event object
+ * 
+ * See events list here: http://rockmongo.com/wiki/pluginDevelope?lang=en_us#%23%23%23+Events%0D
+ *
+ * @author Liu <q@yun4s.cn>
+ */
 class REvent {
 	private static $_events = array();
 	private static $_listeners = array();
 	
 	/**
-	 * dispatch event
+	 * Dispatch event
 	 * 
-	 * @param string $event Event Name
-	 * @param array $params Parameters
+	 * @param string $event Event name
+	 * @param array $params
 	 */
 	public static function dispatch($event, array $params = array()) {
 		if (empty(self::$_listeners[$event])) {
@@ -26,11 +32,11 @@ class REvent {
 	}
 	
 	/**
-	 * add a event listener
+	 * Add a event listener
 	 *
-	 * @param string $event Event Name
-	 * @param callback $callback Callback
-	 * @param integer $priority Priority
+	 * @param string $event Event name
+	 * @param callback|string $callback Event listener
+	 * @param integer $priority Listener priority
 	 */
 	public static function listen($event, $callback, $priority = -1) {
 		if ($priority == -1) {
@@ -45,19 +51,19 @@ class REvent {
 	}
 	
 	/**
-	 * stop event propagation
+	 * Stop event propagation
 	 *
-	 * @param string $event Event Name
+	 * @param string $event Event name
 	 */
 	public static function stop($event) {
 		self::$_events[$event]["enabled"] = false;
 	}
 	
 	/**
-	 * remove a event listener
+	 * Remove a event listener
 	 *
-	 * @param string $event Event Name
-	 * @param callback $callback Callback
+	 * @param string $event Event name
+	 * @param callback|string $callback Event listener
 	 */
 	public static function remove($event, $callback) {
 		if (empty(self::$_listeners[$event])) {

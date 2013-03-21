@@ -1,7 +1,10 @@
 <?php
-
 /**
- * Plugin definiation
+ * Plugin object
+ * 
+ * See details here: http://rockmongo.com/wiki/pluginDevelope
+ *
+ * @author Liu <q@yun4s.cn>
  */
 class RPlugin {
 	private static $_plugins = array();
@@ -16,7 +19,7 @@ class RPlugin {
 	}
 	
 	/**
-	 * read plugin help
+	 * Read plugin help
 	 *
 	 */
 	public function help() {
@@ -28,7 +31,7 @@ class RPlugin {
 	}
 	
 	/**
-	 * register a plugin
+	 * Register a plugin
 	 * 
 	 * @param string $pluginClass plugin class name
 	 * @param integer $priority priority
@@ -45,7 +48,7 @@ class RPlugin {
 	}
 	
 	/**
-	 * call onBefore() method in plugin
+	 * Call onBefore() method in plugin
 	 *
 	 */
 	public static function callBefore() {
@@ -56,7 +59,7 @@ class RPlugin {
 	}
 	
 	/**
-	 * call onAfter() method in plugin
+	 * Call onAfter() method in plugin
 	 *
 	 */
 	public static function callAfter() {
@@ -67,7 +70,7 @@ class RPlugin {
 	}
 	
 	/**
-	 * load all of plugins
+	 * Load all of plugins
 	 *
 	 */
 	public static function load() {
