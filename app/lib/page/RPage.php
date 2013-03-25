@@ -68,7 +68,7 @@ abstract class RPage {
 	 * @since 2.0
 	 */
 	function __construct() {
-		$this->path = $_SERVER["PHP_SELF"];
+		$this->path = $_SERVER["REQUEST_URI"];
 	}
 	
 	/**

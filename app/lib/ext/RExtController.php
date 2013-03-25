@@ -1,6 +1,6 @@
 <?php
 
-define("__BASE__", rtrim(str_replace(DS, "/", dirname($_SERVER["PHP_SELF"])), "/"));//当前主目录路径
+define("__BASE__", rtrim(str_replace(DS, "/", dirname(__FILE__), "/"));//当前主目录路径
 
 class RExtController extends RController {
 	/**
@@ -41,7 +41,7 @@ class RExtController extends RController {
 		if (!strstr($action, ".")) {
 			$action = $this->name() . "." . $action;
 		}
-		$url = $_SERVER["PHP_SELF"] . "?action=" . $action;
+		$url = $_SERVER["SCRIPT_NAME"] . "?action=" . $action;
 		if (!empty($params)) {
 			$url .= "&" . http_build_query($params);
 		}
