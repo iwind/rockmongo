@@ -320,7 +320,7 @@ class MServer {
 	 */
 	public function listDbs() {
 		$dbs = $this->_mongo->listDBs();
-		if (!$dbs["ok"]) {
+		if (empty($dbs["ok"])) {
 			$user = MUser::userInSession();
 			
 			$dbs = array(
