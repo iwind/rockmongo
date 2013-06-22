@@ -773,6 +773,77 @@ window.parent.frames["left"].location.reload();
 		$this->display();
 	}
 	
+	/** create a collection index **/
+	public function doCreate2DIndex() {
+		$this->db = x("db");
+		$this->collection = xn("collection");
+		$this->nativeFields = MCollection::fields($this->_mongo->selectDB($this->db), $this->collection);
+		if ($this->isPost()) {
+			$db = $this->_mongo->selectDB($this->db);
+			$collection = $this->_mongo->selectCollection($db, $this->collection);
+			
+			$attrs = array();
+			
+			//Location Field
+			$locationField = trim(xn("location_field"));
+			$attrs[$locationField] = "2d";
+				
+			//Other Fields
+			$fields = xn("field");
+			if (!is_array($fields)) {
+				$this->message = "Index contains one field at least.";
+				$this->display();
+				return;
+			}
+			$orders = xn("order");
+			
+			foreach ($fields as $index => $field) {
+				$field = trim($field);
+				if (!empty($field)) {
+					$attrs[$field] = ($orders[$index] == "asc") ? 1 : -1;
+				}
+			}
+			if (empty($attrs)) {
+				$this->message = "Index contains one field at least.";
+				$this->display();
+				return;
+			}
+				
+			//Options
+			$options = array();
+			$minBound = x("min_bound");
+			if (is_numeric($minBound)) {
+				$minBound = floatval($minBound);
+				$options["min"] = $minBound;
+			}
+			$maxBound = x("max_bound");
+			if (is_numeric($maxBound)) {
+				$maxBound = floatval($maxBound);
+				$options["max"] = $maxBound;
+			}
+			$bits = x("bits");
+			if (is_numeric($bits)) {
+				$bits = intval($bits);
+				$options["bits"] = $bits;
+			}
+				
+				
+			//name
+			$name = trim(xn("name"));
+			if (!empty($name)) {
+				$options["name"] = $name;
+			}
+			$collection->ensureIndex($attrs, $options);
+				
+			$this->redirect("collection.collectionIndexes", array(
+					"db" => $this->db,
+					"collection" => $this->collection
+			));
+		}
+	
+		$this->display();
+	}
+	
 	/** collection statistics **/
 	public function doCollectionStats() {
 		$this->db = x("db");

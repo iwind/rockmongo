@@ -43,7 +43,7 @@ $(function() {
 <?php endif; ?>
 		
 <p>	
-	[<a href="http://docs.mongodb.org/manual/indexes/" target="_blank">Here is official documents</a>]
+	[<a href="http://docs.mongodb.org/manual/core/2d/" target="_blank">Here is official documents</a>]
 </p>			
 			
 <form method="post">
@@ -53,16 +53,24 @@ $(function() {
 		<td><input type="text" name="name"/></td>
 	</tr>
 	<tr>
-		<td valign="top"><?php hm("fields"); ?></td>
+		<td valign="top"><?php hm("2d_index_location_field") ?></td>
+		<td><input type="text" name="location_field" size="30"/></td>
+	</tr>
+	<tr>
+		<td valign="top"><?php hm("other_fields"); ?></td>
 		<td><div id="fields"><input type="text" name="field[]" size="30"/> <select name="order[]"><option value="asc">ASC</option><option value="desc">DESC</option></select> <input type="button" value="+" onclick="addNewField()"/></div></td>
 	</tr>
 	<tr>
-		<td><?php hm("unique"); ?></td>
-		<td><input type="checkbox" name="is_unique" value="1" onclick="clickUniqueKey(this)"/></td>
+		<td><?php hm("2d_index_min_bound") ?></td>
+		<td><input type="text" name="min_bound" size="15"/> * <?php hm("default") ?>: -180</td>
 	</tr>
-	<tr id="duplicate_tr" style="display:none">
-		<td><?php hm("removeduplicates"); ?></td>
-		<td><input type="checkbox" name="drop_duplicate" value="1"/></td>
+	<tr>
+		<td><?php hm("2d_index_max_bound") ?></td>
+		<td><input type="text" name="max_bound" size="15"/> * <?php hm("default") ?>: 180</td>
+	</tr>
+	<tr>
+		<td><?php hm("2d_index_bit_precision") ?></td>
+		<td><input type="text" name="bits" size="15"/> * <?php hm("default") ?>: 26</td>
 	</tr>
 	<tr>
 		<td colspan="2"><input type="submit" value="<?php hm("create"); ?>"/></td>
