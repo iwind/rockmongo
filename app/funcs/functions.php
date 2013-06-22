@@ -53,6 +53,10 @@ function json_format_html($json)
     $new_json = "";
     $indent_level = 0;
     $in_string = false;
+    $worthItLimit = 4 * 1024;
+    
+	// If we have to wait forever, it's not worth it.
+	$worthIt = (strlen($json) > $worthItLimit) ? false : true;
 
 /*
  commented out by monk.e.boy 22nd May '08
@@ -66,7 +70,8 @@ function json_format_html($json)
 
     $json = json_encode($json_obj);
 */
-    $len = strlen($json);
+    $len = ($worthIt) ? strlen($json) : $worthItLimit;
+    // Alternatively, we could show the monochrome version we see when we click on "text" (in the browser)
 
     for($c = 0; $c < $len; $c++)
     {
@@ -144,6 +149,9 @@ function json_format_html($json)
                 break;
         }
     }
+	
+	if (!$worthIt) $new_json.= "<br /><br />---- Trimmed ----";
+	
     $new_json = preg_replace_callback("{(<font color=\"blue\">([\da-zA-Z_\.]+)</font>)+}", create_function('$match','
     	$string = str_replace("<font color=\"blue\">", "", $match[0]);
     	$string = str_replace("</font>", "", $string);
