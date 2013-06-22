@@ -8,7 +8,7 @@
 				)));
 			?>"><?php hm("createindex"); ?></a>] 
 	[<a href="<?php 
-				h(url("collection.create2DIndex", array( 
+				h(url("collection.create2dIndex", array( 
 					"db" => $db, 
 					"collection" => $collection
 				)));

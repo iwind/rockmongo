@@ -1,6 +1,6 @@
 <?php
 
-define("__BASE__", rtrim(str_replace(DS, "/", dirname($_SERVER["PHP_SELF"])), "/"));//当前主目录路径
+define("__BASE__", rtrim(str_replace(DS, "/", dirname($_SERVER["PHP_SELF"])), "/"));//Current App Directory
 
 class RExtController extends RController {
 	/**

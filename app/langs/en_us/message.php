@@ -180,7 +180,7 @@ $message["new_field"] = "New Field";
 
 /** Index Creation **/
 $message["warningindex"] = "Are you sure to drop the index";
-$message["createindex"] = "Create new Index";
+$message["createindex"] = "Create normal Index";
 $message["create_2d_index"] = "Create 2D Index";
 $message["2d_index_location_field"] = "Location Field";
 $message["2d_index_min_bound"] = "Min Bound";
