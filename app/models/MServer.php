@@ -319,7 +319,12 @@ class MServer {
 	 * @return array
 	 */
 	public function listDbs() {
-		$dbs = $this->_mongo->listDBs();
+		$dbs = array();
+		try {
+			$dbs = $this->_mongo->listDBs();
+		} catch (Exception $e) {
+			$dbs["ok"] = false;
+		}
 		if (!$dbs["ok"]) {
 			$user = MUser::userInSession();
 			
@@ -332,9 +337,7 @@ class MServer {
 				$dbs["databases"][] = array( "name" => $db, "empty" => false, "sizeOnDisk" => 0);
 			}
 		}
-		
 		//@todo: should we show user input databases only?
-		
 		$onlyDbs = $this->uiOnlyDbs();
 		$hideDbs = $this->uiHideDbs();
 		foreach ($dbs["databases"] as $index => $database) {

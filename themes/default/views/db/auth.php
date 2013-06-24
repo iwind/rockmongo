@@ -12,16 +12,16 @@
 		<th>Read Only</th>
 		<th>Operation</th>
 	</tr>
-	<?php foreach ($users as $user):?>
+	<?php foreach ($users as $user): ?>
 	<tr bgcolor="#fffeee">
 		<td width="120" ><?php h($user["_id"]);?></td>
 		<td><?php h($user["user"]);?></td>
-		<th><?php h($user["readOnly"] ? "Y":"");?></th>
+		<th><?php if(isset($user["readOnly"])):h($user["readOnly"] ? "Y":""); endif; ?></th>
 		<th><a href="<?php h(url("db.deleteUser", array("db"=>$db,"user"=>$user["user"]))); ?>" onclick="return window.confirm('Are you sure to remove user \'<?php h($user["user"]); ?>\'?')">Remove</a></th>
 	</tr>
 	<?php endforeach; ?>
 </table>
 
 <p style="margin-top:60px">
-	<a href="http://docs.mongodb.org/manual/tutorial/control-access-to-mongodb-with-authentication/" target="_blank">Official Document: Control Access to MongoDB Instances with Authentication</a>
+	<a href="http://docs.mongodb.org/manual/tutorial/enable-authentication/" target="_blank">Official Document: Enable Authentication</a>
 </p>
