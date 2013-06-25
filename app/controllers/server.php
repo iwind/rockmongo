@@ -241,7 +241,7 @@ class ServerController extends BaseController {
 		foreach ($query as $one) {
 			foreach ($one as $param=>$value) {
 				if ($param == "syncedTo") {
-					$one[$param] = date("Y-m-d H:i:s", $value->inc) . "." . $value->sec;
+					$one[$param] = date("Y-m-d H:i:s", $value->sec) . "." . $value->inc;
 				}
 			}
 			$this->slaves[] = $one;
@@ -254,7 +254,7 @@ class ServerController extends BaseController {
 			foreach ($one as $param=>$value) {
 				if ($param == "syncedTo" || $param == "localLogTs") {
 					if ($value->inc > 0) {
-						$one[$param] = date("Y-m-d H:i:s", $value->inc) . "." . $value->sec;
+						$one[$param] = date("Y-m-d H:i:s", $value->sec) . "." . $value->inc;
 					}
 				}
 			}
