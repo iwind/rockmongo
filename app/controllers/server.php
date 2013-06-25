@@ -5,7 +5,7 @@ import("classes.BaseController");
 class ServerController extends BaseController {
 	/** server infomation **/
 	public function doIndex() {
-		$db = $this->_mongo->selectDB($_SESSION['login']['db']);
+		$db = $this->_mongo->selectDB( empty($_SESSION['login']['db']) ? 'admin' : $_SESSION['login']['db'] );
 		
 		//command line
 		$query = $db->command(array("getCmdLineOpts" => 1));
