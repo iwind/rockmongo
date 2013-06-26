@@ -119,7 +119,7 @@ function json_format_html($json)
                 if($c > 0 && $json[$c-1] != '\\') {
                     $in_string = !$in_string;
                     if ($in_string) {
-                    	$new_json .= "<font color=\"#DD0000\">" . $char;
+                    	$new_json .= "<font color=\"#DD0000\" class=\"string_var\">" . $char;
                     }
                     else {
                     	$new_json .= $char . "</font>";
@@ -144,7 +144,7 @@ function json_format_html($json)
                 break;
         }
     }
-    $new_json = preg_replace_callback("{(<font color=\"blue\">([\da-zA-Z_\.]+)</font>)+}", create_function('$match','
+    $new_json = preg_replace_callback("{(<font color=\"blue\">([\\da-zA-Z_\\.]+)</font>)+}", create_function('$match','
     	$string = str_replace("<font color=\"blue\">", "", $match[0]);
     	$string = str_replace("</font>", "", $string);
     	return "<font color=\"blue\" class=\"no_string_var\">" . $string  . "</font>";
