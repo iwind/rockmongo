@@ -103,18 +103,20 @@ class CollectionController extends BaseController {
 		$params = xn();
 		if ($this->_logQuery && count($params) > 3) {//not only "action", "db" and "collection"
 			$logDir = dirname(__ROOT__) . DS . "logs";
-			if (is_writable($logDir)) {
-				$logFile = $this->_logFile($this->db, $this->collection);
-				$fp = null;
-				if (!is_file($logFile)) {	
-					$fp = fopen($logFile, "a+");
-					fwrite($fp, '<?php exit("Permission Denied"); ?>' . "\n");
+			if (!empty($params["criteria"]) && strlen(trim($params["criteria"], "{} \t\n\r")) > 0) {
+				if (is_writable($logDir)) {
+					$logFile = $this->_logFile($this->db, $this->collection);
+					$fp = null;
+					if (!is_file($logFile)) {	
+						$fp = fopen($logFile, "a+");
+						fwrite($fp, '<?php exit("Permission Denied"); ?>' . "\n");
+					}
+					else {
+						$fp = fopen($logFile, "a+");
+					}
+					fwrite($fp, date("Y-m-d H:i:s") . "\n" . var_export($params, true) . "\n================\n");
+					fclose($fp);
 				}
-				else {
-					$fp = fopen($logFile, "a+");
-				}
-				fwrite($fp, date("Y-m-d H:i:s") . "\n" . var_export($params, true) . "\n================\n");
-				fclose($fp);
 			}
 		}
 		
@@ -124,12 +126,17 @@ class CollectionController extends BaseController {
 		$this->canAddField = !$info["capped"];
 		
 		//field and sort
-		$fields = xn("field");
-		$orders = xn("order");
+		$fields = xn("field");//order fields
+		$orders = xn("order");//order type:asc|desc
 		if (empty($fields)) {
-			$fields = array(
-				($info["capped"]) ? "\$natural": "_id", "", "", ""
-			);
+			if (!$this->_server->docsNatureOrder()) {
+				$fields = array(
+					($info["capped"]) ? "\$natural": "_id", "", "", ""
+				);
+			}
+			else {
+				$fields = array();
+			}
 			$orders = array(
 				"desc", "asc", "asc", "asc"
 			);
@@ -369,6 +376,7 @@ class CollectionController extends BaseController {
 		
 		$logs = array();
 		$criterias = array();
+		$this->error = null;
 		if ($this->_logQuery) {
 			$logFile = $this->_logFile(xn("db"), xn("collection"));
 			$this->logs = array();
@@ -393,11 +401,46 @@ class CollectionController extends BaseController {
 						$criterias[] = $params["criteria"];
 					}
 				}
+				
+				if (!is_writeable($logFile)) {
+					$this->error = "To use log_query feature, please make file '{$logFile}' writeable.";
+				}
+			}
+			else {
+				$dirname = dirname($logFile);
+				if (!is_writeable($dirname)) {
+					$this->error = "To use log_query feature, please make directory '{$dirname}' writeable.";
+				}
 			}
 		}
 		$this->logs = array_slice(array_reverse($logs), 0, 10);
 		$this->display();
 		exit();
+	}
+	
+	/**
+	 * Clear query history
+	 */
+	public function doClearQueryHistory() {
+		if ($this->_logQuery) {
+			$logFile = $this->_logFile(xn("db"), xn("collection"));
+			if (is_file($logFile)) {
+				if (@unlink($logFile)) {
+					$this->_outputJson(array(
+						"code" => 200
+					));
+				}
+				else {
+					$this->_outputJson(array(
+						"code" => 501
+					));
+				}
+			}
+		}
+		
+		$this->_outputJson(array(
+			"code" => 200
+		));
 	}
 	
 	
@@ -643,8 +686,8 @@ class CollectionController extends BaseController {
 		$extension = strtolower($fileinfo["extension"]);
 		import("lib.mime.types", false);
 		ob_end_clean();
-		if (isset($mime_types[$extension])) {
-			header("Content-Type:" . $mime_types[$extension]);
+		if (isset($GLOBALS["mime_types"][$extension])) {
+			header("Content-Type:" . $GLOBALS["mime_types"][$extension]);
 		}
 		else {
 			header("Content-Type:text/plain");

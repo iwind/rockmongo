@@ -20,6 +20,9 @@ class MServer {
 	private $_uiHideCollections;
 	private $_uiHideSystemCollections = false;
 	
+	private $_docsNatureOrder = false;
+	private $_docsRender = "default";
+	
 	/**
 	 * the server you are operating
 	 * 
@@ -85,6 +88,12 @@ class MServer {
 					break;
 				case "ui_hide_system_collections":
 					$this->_uiHideSystemCollections = $value;
+					break;
+				case "docs_nature_order":
+					$this->_docsNatureOrder = $value;
+					break;
+				case "docs_render":
+					$this->_docsRender = $value;
 					break;
 			}
 		}
@@ -222,6 +231,53 @@ class MServer {
 	
 	public function setUIHideSystemCollections($bool) {
 		$this->_uiHideSystemCollections = $bool;
+	}
+	
+
+	/**
+	 * Set whether documents nature order
+	 * 
+	 * @param boolean $bool true or false
+	 * @since 1.1.6
+	 */
+	public function setDocsNatureOrder($bool) {
+		$this->_docsNatureOrder = $bool;
+	}
+	
+	/**
+	 * Whether documents are in nature order
+	 * @return boolean
+	 * @since 1.1.6
+	 */
+	public function docsNatureOrder() {
+		return $this->_docsNatureOrder;
+	}
+	
+	/**
+	 * Set documents highlight render
+	 * 
+	 * @param string $render can be "default" or "plain"
+	 * @since 1.1.6
+	 */
+	public function setDocsRender($render) {
+		$renders = array( "default", "plain" );
+		
+		if (in_array($render, $renders)) {
+			$this->_docsRender = $render;
+		}
+		else {
+			exit("docs_render should be either 'default' or 'plain'");
+		}
+	}
+	
+	/**
+	 * Get documents highlight render
+	 * 
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function docsRender() {
+		return $this->_docsRender;
 	}
 	
 	public function auth($username, $password, $db = "admin") {

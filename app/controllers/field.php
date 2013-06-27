@@ -239,6 +239,8 @@ class FieldController extends BaseController {
 					$type = "string";
 					break;
 				case "array":
+					$type = "mixed";
+					break;
 				case "object":
 					// int64 is returned as object (Kyryl Bilokurov <kyryl.bilokurov@gmail.com>)
 					if (get_class($data) == "MongoInt64") {

@@ -262,6 +262,7 @@ function initDataMenu() {
 		var text = font.text();
 		var matches;
 		if (matches = text.match(/^"(\w+:\/\/.+)"$/)) {//URI
+			font.next("a").remove();
 			font.after("<a href=\"#\" style=\"font-size:11px;\" title=\"View AS\" onclick=\"showDataMenu(this,'" + escape(matches[1]) + "');return false\" class=\"menu_arrow\">▼</a>");
 		}
 		else if (matches = text.match(/^"([\w\._]+@[\w\.-]+)"$/)) {//Mail
@@ -272,6 +273,7 @@ function initDataMenu() {
 		var font = $(this);
 		var text = font.text();
 		if (text.match(/^[\d\.]+$/)) {
+			font.next("a").remove();
 			font.after("<a href=\"#\" style=\"font-size:11px;\" title=\"View AS\" onclick=\"showDataMenu(this,'" + escape(text) + "');return false\" class=\"menu_arrow\">▼</a>");
 		}
 	});
@@ -294,7 +296,12 @@ function showDataMenu(link, text) {
 		//Date format
 		if (text.length >= 10) {
 			var date =  new Date();
-			date.setTime(n * 1000);
+			if (text.length >= 13) {
+				date.setTime(n * 1);
+			}
+			else {
+				date.setTime(n * 1000);
+			}
 			menu.push("ToDate: " + date.getFullYear() + "-" + r_pad_zero(date.getMonth() + 1, 2) + "-" + r_pad_zero(date.getDate(), 2) + " " + r_pad_zero(date.getHours(), 2) + ":" + r_pad_zero(date.getMinutes(), 2) + ":" + r_pad_zero(date.getSeconds(), 2));
 			width = 200;
 		}
@@ -1125,6 +1132,29 @@ function clickUniqueKey(box) {
  */
 function showQueryHistory() {
 	var div = $("#field_dialog_history");
+	var buttons = {
+		/** Clear history **/	
+		"Clear": function () {
+			if (window.confirm("Are you sure to clear all the query history?")) {
+				jQuery.ajax({
+					"data": { "db":currentDb, "collection":currentCollection },
+					"dataType": "json",
+					"url": "index.php?action=collection.clearQueryHistory",
+					"success": function (data) {
+						if (data.code == 200) {
+							div.find(".no_history").show();
+							div.find(".has_history").hide();
+						}
+						else {
+							alert("Fail to clear query history. Please check directory \"$rockmongo/logs/\" permission.");
+						}
+					}
+				});
+			}
+		}
+	};
+	
+	/** Retrieve history **/
 	jQuery.ajax({
 		"data": { "db":currentDb, "collection":currentCollection },
 		"dataType": "html",
@@ -1134,7 +1164,7 @@ function showQueryHistory() {
 			div.dialog({
 				"modal": true,
 				"title": "Query History",
-				//"buttons":buttons,
+				"buttons":buttons,
 				"width": 450
 			});
 		}

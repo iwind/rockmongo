@@ -68,7 +68,7 @@ class VarExportor {
 		$ret = array();
 		$cutLength = 150;
 		foreach ($array as $key => $value) {
-			if (is_string($key) || is_int($key) || is_float($key)) {
+			if (is_string($key)) {
 				$newKey = $prev . ($prev === ""?"":".") . "rockfield." . $key;
 				if (is_string($value) && strlen($value) > $cutLength) {
 					$value = $this->_utf8_substr($value, 0, $cutLength);

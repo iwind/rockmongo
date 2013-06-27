@@ -209,20 +209,39 @@ class BaseController extends RExtController {
 	protected function _highlight($var, $format = "array", $label = false) {
 		import("classes.VarExportor");
 		$exportor = new VarExportor($this->_mongo->selectDB("admin"), $var);
-		$varString = $exportor->export($format, $label);
+		$varString = null;
+		$highlight = true;
+		switch ($this->_server->docsRender()) {
+			case "default":
+				$varString = $exportor->export($format, $label);
+				break;
+			case "plain":
+				$varString = $exportor->export($format, false);
+				$label = false;
+				$highlight = false;
+				break;
+			default:
+				$varString = $exportor->export($format, $label);
+				break;
+		}
 		$string = null;
-		if ($format == "array") {
-			$string = highlight_string("<?php " . $varString, true);
-			$string = preg_replace("/" . preg_quote('<span style="color: #0000BB">&lt;?php&nbsp;</span>', "/") . "/", '', $string, 1);
+		if ($highlight) {
+			if ($format == "array") {
+				$string = highlight_string("<?php " . $varString, true);
+				$string = preg_replace("/" . preg_quote('<span style="color: #0000BB">&lt;?php&nbsp;</span>', "/") . "/", '', $string, 1);
+			}
+			else {
+				$string =  json_format_html($varString);
+			}
 		}
 		else {
-			$string =  json_format_html($varString);
+			$string = "<div><xmp style='width:600px;overflow:auto'>" . $varString . "</xmp></div>";
 		}
 		if ($label) {
 			$id = addslashes(isset($var["_id"]) ? rock_id_string($var["_id"]) : "");
-			$string = preg_replace_callback("/(['\"])rockfield\.(.+)\.rockfield(['\"])/U", create_function('$match', '	$fields = explode(".rockfield.", $match[2]);
+			$string = preg_replace_callback("/(['\"])rockfield\\.(.+)\\.rockfield(['\"])/U", create_function('$match', '	$fields = explode(".rockfield.", $match[2]);
 					return "<span class=\"field\" field=\"" . implode(".", $fields) . "\">" . $match[1] . array_pop($fields) . $match[3] . "</span>";'), $string);
-			$string = preg_replace_callback("/__rockmore\.(.+)\.rockmore__/U", create_function('$match', '
+			$string = preg_replace_callback("/__rockmore\\.(.+)\\.rockmore__/U", create_function('$match', '
 			$field = str_replace("rockfield.", "", $match[1]);
 			return "<a href=\"#\" onclick=\"fieldOpMore(\'" . $field . "\',\'' . $id . '\');return false;\" title=\"More text\">[...]</a>";'), $string);
 		}
@@ -285,7 +304,7 @@ class BaseController extends RExtController {
 	
 	protected function _logFile($db, $collection) {
 		$logDir = dirname(__ROOT__) . DS . "logs";
-		return $logDir . DS . urlencode($this->_admin) . "-query-" . urlencode($db) . "-" . urlencode($collection) . ".php";
+		return $logDir . DS . urlencode($this->_admin->username()) . "-query-" . urlencode($db) . "-" . urlencode($collection) . ".php";
 	}
 	
 	/**
