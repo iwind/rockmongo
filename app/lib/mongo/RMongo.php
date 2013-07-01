@@ -123,6 +123,8 @@ class RMongo {
 	 * @return array
 	 */
 	public function listDBs() {
+		// Not possible with auth in new version of mongodb
+		return array();
 		return $this->_mongo->listDBs();
 	}
 	

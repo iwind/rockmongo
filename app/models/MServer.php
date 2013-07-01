@@ -381,7 +381,7 @@ class MServer {
 		} catch (Exception $e) {
 			$dbs["ok"] = false;
 		}
-		if (!$dbs["ok"]) {
+		if (empty($dbs["ok"])) {
 			$user = MUser::userInSession();
 			
 			$dbs = array(

@@ -5,7 +5,7 @@ import("classes.BaseController");
 class ServerController extends BaseController {
 	/** server infomation **/
 	public function doIndex() {
-		$db = $this->_mongo->selectDB("admin");
+		$db = $this->_mongo->selectDB($_SESSION['login']['db']);
 		
 		//command line
 		try {
@@ -45,8 +45,8 @@ class ServerController extends BaseController {
 		
 		//connection
 		$this->connections = array(
-			"Host" => $this->_server->mongoHost(),
-			"Port" => $this->_server->mongoPort(),
+			"Host" => 'localhost',
+			"Port" => 27017,
 			"Username" => "******",
 			"Password" => "******"
 		);
