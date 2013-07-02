@@ -45,8 +45,8 @@ class ServerController extends BaseController {
 		
 		//connection
 		$this->connections = array(
-			"Host" => 'localhost',
-			"Port" => 27017,
+			"Host" => $this->_server->mongoHost(),
+			"Port" => $this->_server->mongoPort(),
 			"Username" => "******",
 			"Password" => "******"
 		);

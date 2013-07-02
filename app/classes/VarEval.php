@@ -141,17 +141,12 @@ class VarEval {
 			}
 			return ' . $this->_source . ';}'
 		);
-		
 		date_default_timezone_set($timezone);
-		
 		if ($ret["ok"]) {
 			return $ret["retval"];
-
-		} elseif( $ret["errmsg"] === "unauthorized" ) { 
-
+		} elseif($ret["errmsg"] === "unauthorized") { 
 			return $this->parseBson($this->_source);
 		}
-
 		return false;
 	}
 

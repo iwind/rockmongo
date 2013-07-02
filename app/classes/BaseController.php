@@ -53,7 +53,7 @@ class BaseController extends RExtController {
 		global $MONGO;
 		
 		//exception handler
-		//set_exception_handler(array($this, "exceptionHandler"));
+		set_exception_handler(array($this, "exceptionHandler"));
 		
 		$this->_admin = MUser::userInSession();
 		if (!$this->_admin) {
@@ -78,7 +78,9 @@ class BaseController extends RExtController {
 			$this->redirect("login.index", array( "host" => $this->_admin->hostIndex() ));
 		}
 		$this->_server = MServer::serverWithIndex($this->_admin->hostIndex());
-		$this->_mongo = $this->_server->mongo();		
+		$this->_mongo = $this->_server->mongo();
+		
+		//log query
 		if (isset($MONGO["features"]["log_query"]) && $MONGO["features"]["log_query"] == "on") {
 			$this->_logQuery = true;
 		}

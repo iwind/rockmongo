@@ -10,7 +10,6 @@ class MDb {
 	 * @return array 
 	 */
 	static function exec(MongoDB $db, $code, array $params = array()) {
-		return $db->getCollectionNames();
 		$query = $db->execute($code, $params);
 		if (!$query["ok"]) {
 			exit("Execute failed:<font color=\"red\">" . $query["errmsg"] . "</font><br/>\n<pre>" . $code . "</pre>");
@@ -29,7 +28,7 @@ class MDb {
 		
 		$names = array();
 		try {
-			$names = self::exec($db, 'function (){ return db.getCollectionNames(); }');
+			$names = $db->getCollectionNames();
 		} catch(Exception $e) {
 			
 		}

@@ -17,16 +17,16 @@ class RMongo {
 	 */
 	public function __construct($server, array $options = array()) {
 		if (class_exists("MongoClient")) {
-			try {
-				$this->_mongo = new MongoClient("mongodb://{$server}", $options);
-			} catch ( Exception $e ) {
-				$options['db'] = 'admin';
-				try {
-					$this->_mongo = new MongoClient("mongodb://{$server}", $options);
-				} catch ( Exception $tmp ) {
-					throw $e;
-				}
-			}
+	    try {
+	      $this->_mongo = new MongoClient($server, $options);
+	    } catch ( Exception $e ) {
+	      $options['db'] = 'admin';
+	      try {
+	        $this->_mongo = new MongoClient($server, $options);
+	      } catch ( Exception $tmp ) {
+	        throw $e;
+	      }
+	    }
 		}
 		else {
 			$this->_mongo = new Mongo($server, $options);
@@ -132,8 +132,6 @@ class RMongo {
 	 * @return array
 	 */
 	public function listDBs() {
-		// Not possible with auth in new version of mongodb
-		// return array();
 		try {
 			return $this->_mongo->listDBs();
 		} catch( Exception $e ) {
