@@ -5,7 +5,7 @@ import("classes.BaseController");
 class ServerController extends BaseController {
 	/** server infomation **/
 	public function doIndex() {
-		$db = $this->_mongo->selectDB("admin");
+		$db = $this->_mongo->selectDB( empty($_SESSION['login']['db']) ? 'admin' : $_SESSION['login']['db'] );
 		
 		//command line
 		try {
@@ -267,7 +267,7 @@ class ServerController extends BaseController {
 			foreach ($query as $one) {
 				foreach ($one as $param=>$value) {
 					if ($param == "syncedTo") {
-						$one[$param] = date("Y-m-d H:i:s", $value->inc) . "." . $value->sec;
+						$one[$param] = date("Y-m-d H:i:s", $value->sec) . "." . $value->inc;
 					}
 				}
 				$this->slaves[] = $one;
@@ -284,7 +284,7 @@ class ServerController extends BaseController {
 				foreach ($one as $param=>$value) {
 					if ($param == "syncedTo" || $param == "localLogTs") {
 						if ($value->inc > 0) {
-							$one[$param] = date("Y-m-d H:i:s", $value->inc) . "." . $value->sec;
+							$one[$param] = date("Y-m-d H:i:s", $value->sec) . "." . $value->inc;
 						}
 					}
 				}

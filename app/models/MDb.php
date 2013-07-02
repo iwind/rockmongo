@@ -28,7 +28,7 @@ class MDb {
 		
 		$names = array();
 		try {
-			$names = self::exec($db, 'function (){ return db.getCollectionNames(); }');
+			$names = $db->getCollectionNames();
 		} catch(Exception $e) {
 			
 		}
