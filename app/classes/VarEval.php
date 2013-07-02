@@ -92,7 +92,8 @@ class VarEval {
 								"true",
 								"false",
 								"null",
-								"__set_state"
+								"__set_state",
+								"stdclass"
 							))) {
 							continue;
 						}
@@ -138,14 +139,51 @@ class VarEval {
 				    }
 				    return new Date(time);
 				};
-			}
-			return ' . $this->_source . ';}'
+			};
+				
+			function r_util_convert_empty_object_to_string(obj) {
+				if (r_util_is_empty(obj)) {
+					return "__EMPTYOBJECT__";
+				}
+				if (typeof(obj) == "object") {
+					for (var k in obj) {
+						obj[k] = r_util_convert_empty_object_to_string(obj[k]);
+					}
+				}
+				return obj;
+			};
+				
+			function r_util_is_empty(obj) {
+				if (typeof(obj) != "object" || (obj.constructor != Object)) {
+					return false;
+				}
+			    for(var k in obj) {
+			        if(obj.hasOwnProperty(k)) {
+			            return false;
+					}
+			    }
+			
+			    return true;
+			};
+			var o = ' . $this->_source . '; return r_util_convert_empty_object_to_string(o); }'
 		);
+		$this->_fixEmptyObject($ret);
 		date_default_timezone_set($timezone);
 		if ($ret["ok"]) {
 			return $ret["retval"];
 		}
 		return false;
+	}
+	
+	private function _fixEmptyObject(&$object) {
+		if (is_array($object)) {
+			foreach ($object as &$v) {
+				$this->_fixEmptyObject($v);
+			}
+		}
+		else if (is_string($object) && $object === "__EMPTYOBJECT__") {
+			$object = new stdClass();
+		}
 	}
 }
 

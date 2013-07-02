@@ -199,7 +199,7 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> est un outil
 <li><a href="http://rockmongo.com/wiki/plugin" target="_blank">Plug-in</a></li>
 <li><a href="http://rockmongo.com/wiki/faq" target="_blank">FAQ</a></li>
 <li><a href="http://rockmongo.com/donation" target="_blank">Donation<br/><img src="http://www.paypal.com/en_US/i/btn/x-click-but04.gif"/></a></li>
-<li><a href="http://code.google.com/p/rock-php/issues/list" target="_blank">Report an Issue</li>
+<li><a href="https://github.com/iwind/rockmongo/issues" target="_blank">Report an Issue</li>
 </ul></p>
 ';
 
