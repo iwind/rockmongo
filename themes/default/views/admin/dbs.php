@@ -48,6 +48,24 @@ $(function () {
 		window.parent.frames['right'].location=template.replace('__DB__', $('#db').val());
 	    }
 	});
+
+	//search collection in box with keyword
+	$(".r_search_box").keyup(function () {
+		var value = $(this).val().trim()
+			.replace(/[^\w]/g, "");
+		var collectionNameRows = $(this).parents(".collections:first").find(".collection");
+		collectionNameRows.each(function (k, row) {
+			var name = $(row).find("a:first").attr("cname");
+			if (value.length == 0 || (new RegExp(value, "i")).test(name)) {
+				$(row).show();
+				var nameText = $(row).find(".name_text");
+				nameText.html(name.replace(new RegExp("(" + value + ")", "i"), "<font color=\"red\">$1</font>"));
+			}
+			else {
+				$(row).hide();
+			}
+		});
+	});
 });
 
 
@@ -64,8 +82,9 @@ $(function () {
 			<ul class="collections">
 				<?php if($db["name"] == x("db")): ?>
 					<?php if (!empty($tables)):?>
+						<li><input type="text" class="r_search_box" placeholder="keyword"/></li>
 						<?php foreach ($tables as $table => $count) :?>
-						<li><a href="<?php h(url("collection.index", array( "db" => $db["name"], "collection" => $table ))); ?>" target="right" cname="<?php h($table);?>"><img src="<?php render_theme_path() ?>/images/<?php if(preg_match("/\.(files|chunks)$/",$table)){h("grid");}else{h("table");} ?>.png" width="14" align="absmiddle"/> <?php h($table);?></a> (<span class="count"><?php h($count);?></span>)</li>
+						<li class="collection"><a href="<?php h(url("collection.index", array( "db" => $db["name"], "collection" => $table ))); ?>" target="right" cname="<?php h($table);?>"><img src="<?php render_theme_path() ?>/images/<?php if(preg_match("/\\.(files|chunks)$/",$table)){h("grid");}else{h("table");} ?>.png" width="14" align="absmiddle"/> <span class="name_text"><?php h($table);?></span></a> (<span class="count"><?php h($count);?></span>)</li>
 						<?php endforeach; ?>
 					<?php else:?>
 						<li><?php hm("nocollections2"); ?></li>
