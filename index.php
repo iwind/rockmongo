@@ -11,7 +11,7 @@
 */
 define("ROCK_MONGO_VERSION", "1.1.6");
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_DEPRECATED);
 
 /**
 * Environment detection
