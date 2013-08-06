@@ -154,7 +154,7 @@ class VarEval {
 			};
 				
 			function r_util_is_empty(obj) {
-				if (typeof(obj) != "object" || (obj.constructor != Object)) {
+				if (obj == null || typeof(obj) != "object" || (obj.constructor != Object)) {
 					return false;
 				}
 			    for(var k in obj) {
@@ -167,6 +167,7 @@ class VarEval {
 			};
 			var o = ' . $this->_source . '; return r_util_convert_empty_object_to_string(o); }'
 		);
+
 		$this->_fixEmptyObject($ret);
 		date_default_timezone_set($timezone);
 		if ($ret["ok"]) {

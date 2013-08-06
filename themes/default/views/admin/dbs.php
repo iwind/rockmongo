@@ -50,10 +50,20 @@ $(function () {
 	});
 
 	//search collection in box with keyword
-	$(".r_search_box").keyup(function () {
+	$(".r_search_box").keyup(function (event) {
 		var value = $(this).val().trim()
-			.replace(/[^\w]/g, "");
+			.replace(/[^\w\.]/g, "");
 		var collectionNameRows = $(this).parents(".collections:first").find(".collection");
+		if (event.which == 13) {
+			if (collectionNameRows.length > 0) {
+				var link = collections.find(".collection:visible .name_text").parent("a:first");
+				if (link.length > 0) {
+					highlightCollection(link.attr("cname"));
+					link[0].click();
+				}
+				return;
+			}
+		}
 		collectionNameRows.each(function (k, row) {
 			var name = $(row).find("a:first").attr("cname");
 			if (value.length == 0 || (new RegExp(value, "i")).test(name)) {
