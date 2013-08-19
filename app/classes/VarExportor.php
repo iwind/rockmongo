@@ -68,7 +68,7 @@ class VarExportor {
 		$ret = array();
 		$cutLength = 150;
 		foreach ($array as $key => $value) {
-			if (is_string($key) || is_int($key) || is_float($key)) {
+			if (is_string($key)) {
 				$newKey = $prev . ($prev === ""?"":".") . "rockfield." . $key;
 				if (is_string($value) && strlen($value) > $cutLength) {
 					$value = $this->_utf8_substr($value, 0, $cutLength);
@@ -87,8 +87,8 @@ class VarExportor {
 	}
 
 	private function _exportJSON() {
-		if (function_exists('json_encode')) {
-		    $service = 'json_encode';
+		if (function_exists("json_encode")) {
+		    $service = "json_encode";
 		} else {
 		    import("classes.Services_JSON");
 		    $json = new Services_JSON();
@@ -96,6 +96,10 @@ class VarExportor {
 		}
 		$var = $this->_formatVarAsJSON($this->_var, $service);
 		$string = call_user_func($service, $var);
+		
+		//Remove "\/" escape
+		$string = str_replace('\/', "/", $string);
+		
 		$params = array();
 		foreach ($this->_jsonParams as $index => $value) {
 			$params['"' . $this->_param($index) . '"'] = $value;

@@ -1,6 +1,6 @@
 <?php
 /** came from http://snipplr.com/view.php?codeview&id=1937 **/
-$mime_types = array("323" => "text/h323",
+$GLOBALS["mime_types"] = array("323" => "text/h323",
 "acx" => "application/internet-property-stream",
 "ai" => "application/postscript",
 "aif" => "audio/x-aiff",

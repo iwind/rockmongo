@@ -247,8 +247,7 @@ function render_collection_menu($dbName, $collectionName) {
 	//plugin
 	if (class_exists("RFilter")) {
 		RFilter::apply("COLLECTION_MENU_FILTER", $menuItems, array( "dbName" => $dbName, "collectionName" => $collectionName ));
-	}	
-	
+	}
 	$displayCount = 6;
 	$hasMore = false;
 	

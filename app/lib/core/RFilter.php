@@ -28,7 +28,7 @@ class RFilter {
 		foreach ($params as $param) {
 			$newParams[] = $param;
 		}
-		
+	
 		foreach (rock_array_sort(self::$_filters[$dataType], "priority") as $index => $filter) {
 			call_user_func_array($filter["callback"], $newParams);
 			if (isset(self::$_dataTypes[$dataType]["enabled"]) && !self::$_dataTypes[$dataType]["enabled"]) {

@@ -8,11 +8,15 @@ class ServerController extends BaseController {
 		$db = $this->_mongo->selectDB("admin");
 		
 		//command line
-		$query = $db->command(array("getCmdLineOpts" => 1));
-		if (isset($query["argv"])) {
-			$this->commandLine = implode(" ", $query["argv"]);
-		}
-		else {
+		try {
+			$query = $db->command(array("getCmdLineOpts" => 1));
+			if (isset($query["argv"])) {
+				$this->commandLine = implode(" ", $query["argv"]);
+			}
+			else {
+				$this->commandLine = "";
+			}
+		} catch (Exception $e) {
 			$this->commandLine = "";
 		}
 		
@@ -28,11 +32,15 @@ class ServerController extends BaseController {
 		$this->directives = ini_get_all("mongo");
 		
 		//build info
-		$ret = $db->command(array("buildinfo" => 1));
 		$this->buildInfos = array();
-		if ($ret["ok"]) {
-			unset($ret["ok"]);
-			$this->buildInfos = $ret;
+		try {
+			$ret = $db->command(array("buildinfo" => 1));
+			if ($ret["ok"]) {
+				unset($ret["ok"]);
+				$this->buildInfos = $ret;
+			}
+		} catch (Exception $e) {
+			
 		}
 		
 		//connection
@@ -48,22 +56,27 @@ class ServerController extends BaseController {
 	
 	/** Server Status **/
 	public function doStatus() {
-		//status
-		$db = $this->_mongo->selectDB("admin");
-		$ret = $db->command(array("serverStatus" => 1));
 		$this->status = array();
-		if ($ret["ok"]) {
-			unset($ret["ok"]);
-			$this->status = $ret;
-			foreach ($this->status as $index => $_status) {
-				$json = $this->_highlight($_status, "json");
-				if ($index == "uptime") {//we convert it to days
-					if ($_status >= 86400) {
-						$json .= "s (" . ceil($_status/86400) . "days)";
+		
+		try {
+			//status
+			$db = $this->_mongo->selectDB("admin");
+			$ret = $db->command(array("serverStatus" => 1));
+			if ($ret["ok"]) {
+				unset($ret["ok"]);
+				$this->status = $ret;
+				foreach ($this->status as $index => $_status) {
+					$json = $this->_highlight($_status, "json");
+					if ($index == "uptime") {//we convert it to days
+						if ($_status >= 86400) {
+							$json .= "s (" . ceil($_status/86400) . "days)";
+						}
 					}
+					$this->status[$index] =  $json;
 				}
-				$this->status[$index] =  $json;
 			}
+		} catch (Exception $e) {
+			
 		}
 		
 		$this->display();
@@ -161,20 +174,26 @@ class ServerController extends BaseController {
 	
 	/** processlist **/
 	public function doProcesslist() {
-		$query = $this->_mongo->selectDB("admin")->execute('function (){ 
-			return db.$cmd.sys.inprog.find({ $all:1 }).next();
-		}');
-
 		$this->progs = array();
-		if ($query["ok"]) {
-			$this->progs = $query["retval"]["inprog"];
-		}
-		foreach ($this->progs as $index => $prog) {
-			foreach ($prog as $key=>$value) {
-				if (is_array($value)) {
-					$this->progs[$index][$key] = $this->_highlight($value, "json");
+	
+		try {
+			$query = $this->_mongo->selectDB("admin")->execute('function (){ 
+				return db.$cmd.sys.inprog.find({ $all:1 }).next();
+			}');
+	
+			
+			if ($query["ok"]) {
+				$this->progs = $query["retval"]["inprog"];
+			}
+			foreach ($this->progs as $index => $prog) {
+				foreach ($prog as $key=>$value) {
+					if (is_array($value)) {
+						$this->progs[$index][$key] = $this->_highlight($value, "json");
+					}
 				}
 			}
+		} catch (Exception $e) {
+			
 		}
 		$this->display();
 	}
@@ -209,60 +228,78 @@ class ServerController extends BaseController {
 	
 	/** replication status **/
 	public function doReplication() {
-		$ret = $this->_mongo->selectDB("local")->execute('function () { return db.getReplicationInfo(); }');
 		$this->status = array();
-		$status = isset($ret["retval"]) ? $ret["retval"] : array();
-		if (isset($ret["retval"]["errmsg"])) {
-			$this->status["errmsg"] = $ret["retval"]["errmsg"];
-		}
-		else {
-			foreach ($status as $param => $value) {
-				if ($param == "logSizeMB") {
-					$this->status["Configured oplog size"] = $value . "m";
-				}
-				else if ($param == "timeDiff") {
-					$this->status["Log length start to end"] = $value . "secs (" . $status["timeDiffHours"] . "hrs)";
-				}
-				else if ($param == "tFirst") {
-					$this->status["Oplog first event time"] = $value;
-				}
-				else if ($param == "tLast") {
-					$this->status["Oplog last event time"] = $value;
-				}
-				else if ($param == "now") {
-					$this->status["Now"] = $value;
+		
+		try {
+			$ret = $this->_mongo->selectDB("local")->execute('function () { return db.getReplicationInfo(); }');
+			$status = isset($ret["retval"]) ? $ret["retval"] : array();
+			if (isset($ret["retval"]["errmsg"])) {
+				$this->status["errmsg"] = $ret["retval"]["errmsg"];
+			}
+			else {
+				foreach ($status as $param => $value) {
+					if ($param == "logSizeMB") {
+						$this->status["Configured oplog size"] = $value . "m";
+					}
+					else if ($param == "timeDiff") {
+						$this->status["Log length start to end"] = $value . "secs (" . $status["timeDiffHours"] . "hrs)";
+					}
+					else if ($param == "tFirst") {
+						$this->status["Oplog first event time"] = $value;
+					}
+					else if ($param == "tLast") {
+						$this->status["Oplog last event time"] = $value;
+					}
+					else if ($param == "now") {
+						$this->status["Now"] = $value;
+					}
 				}
 			}
+		} catch (Exception $e) {
+			
 		}
 		
 		//slaves
 		$this->slaves = array();
-		$query = $this->_mongo->selectDB("local")->selectCollection("slaves")->find();
-		foreach ($query as $one) {
-			foreach ($one as $param=>$value) {
-				if ($param == "syncedTo") {
-					$one[$param] = date("Y-m-d H:i:s", $value->inc) . "." . $value->sec;
+		
+		try {
+			$query = $this->_mongo->selectDB("local")->selectCollection("slaves")->find();
+			foreach ($query as $one) {
+				foreach ($one as $param=>$value) {
+					if ($param == "syncedTo") {
+						$one[$param] = date("Y-m-d H:i:s", $value->sec) . "." . $value->inc;
+					}
 				}
+				$this->slaves[] = $one;
 			}
-			$this->slaves[] = $one;
+		} catch (Exception $e) {
+			
 		}
 		
 		//masters
 		$this->masters = array();
-		$query = $this->_mongo->selectDB("local")->selectCollection("sources")->find();
-		foreach ($query as $one) {
-			foreach ($one as $param=>$value) {
-				if ($param == "syncedTo" || $param == "localLogTs") {
-					if ($value->inc > 0) {
-						$one[$param] = date("Y-m-d H:i:s", $value->inc) . "." . $value->sec;
+		try {
+			$query = $this->_mongo->selectDB("local")->selectCollection("sources")->find();
+			foreach ($query as $one) {
+				foreach ($one as $param=>$value) {
+					if ($param == "syncedTo" || $param == "localLogTs") {
+						if ($value->inc > 0) {
+							$one[$param] = date("Y-m-d H:i:s", $value->sec) . "." . $value->inc;
+						}
 					}
 				}
+				$this->masters[] = $one;
 			}
-			$this->masters[] = $one;
+		} catch (Exception $e) {
+			
 		}
-		
+			
 		//me
-		$this->me = $this->_mongo->selectDB("local")->selectCollection("me")->findOne();
+		try {
+			$this->me = $this->_mongo->selectDB("local")->selectCollection("me")->findOne();
+		} catch (Exception $e) {
+			$this->me = array();
+		}
 		
 		$this->display();
 	}	

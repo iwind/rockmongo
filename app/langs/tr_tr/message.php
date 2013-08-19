@@ -198,7 +198,7 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> PHP 5 ile ko
 <li><a href="http://rockmongo.com/wiki/plugin" target="_blank">Eklentiler</a></li>
 <li><a href="http://rockmongo.com/wiki/faq" target="_blank">Sık Sorulan Sorular</a></li>
 <li><a href="http://rockmongo.com/donation" target="_blank">Bağış<br/><img src="http://www.paypal.com/en_US/i/btn/x-click-but04.gif"/></a></li>
-<li><a href="http://code.google.com/p/rock-php/issues/list" target="_blank">Problem Bildir</li>
+<li><a href="https://github.com/iwind/rockmongo/issues" target="_blank">Problem Bildir</li>
 </ul></p>
 ';
 

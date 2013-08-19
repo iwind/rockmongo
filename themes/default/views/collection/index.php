@@ -19,6 +19,8 @@ currentFields.push("<?php h(addslashes($field));?>");
 <link rel="stylesheet" href="<?php render_theme_path() ?>/css/jquery-ui-1.8.4.smoothness.css" media="all"/>
 
 <a name="page_top"></a>
+
+<!-- Navigation & Menu -->
 <h3><?php render_navigation($db, $collection, false);?></h3>
 <div class="operation">
 	<strong><?php hm("query"); ?></strong>[<a href="<?php h($arrayLink);?>" <?php if(x("format")=="array"):?>style="text-decoration:underline"<?php endif;?>>Array</a>|<a href="<?php h($jsonLink); ?>" <?php if(x("format")!="array"):?>style="text-decoration:underline"<?php endif;?>>JSON</a></a>] |  <?php if ($_logQuery): ?><a href="#" onclick="showQueryHistory();return false;">History</a> | <?php endif;?>
@@ -26,6 +28,7 @@ currentFields.push("<?php h(addslashes($field));?>");
 	<?php render_collection_menu($db, $collection) ?>
 </div>
 
+<!-- Query box -->
 <div class="query">
 <form method="get" id="query_form">
 <input type="hidden" name="db" value="<?php h_escape($db);?>"/>
@@ -43,7 +46,7 @@ currentFields.push("<?php h(addslashes($field));?>");
 		</td>
 		<td valign="top" class="field_orders">
 			<!-- fields will be used in sorting -->
-			<p><input type="text" name="field[]" value="<?php h(rock_array_get(x("field"),0));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),0)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),0)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
+			<p><input type="text" name="field[]" value="<?php h_escape(rock_array_get(x("field"),0));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),0)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),0)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
 			<p><input type="text" name="field[]" value="<?php h_escape(rock_array_get(x("field"),1));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),1)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),1)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
 			<p><input type="text" name="field[]" value="<?php h_escape(rock_array_get(x("field"),2));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),2)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),2)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select></p>
 			<p><input type="text" name="field[]" value="<?php h_escape(rock_array_get(x("field"),3));?>" /> <select name="order[]"><option value="asc" <?php if (rock_array_get(x("order"),3)=="asc"):?>selected="selected"<?php endif;?>>ASC</option><option value="desc" <?php if (rock_array_get(x("order"),3)=="desc"):?>selected="selected"<?php endif;?>>DESC</option></select> </p>
@@ -76,7 +79,11 @@ currentFields.push("<?php h(addslashes($field));?>");
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2"><input type="submit" value="<?php hm("submit_query"); ?>"/> <input type="button" value="<?php hm("explain"); ?>" onclick="explainQuery(this.form)" /> <input type="button" value="<?php hm("clear_conditions"); ?>" onclick="window.location='<?php h(url("collection.index", array( "db"=>$db, "collection" => $collection, "format" => xn("format") ))); ?>'"/>
+		<td colspan="2">
+			<input type="submit" value="<?php hm("submit_query"); ?>"/> 
+			<input type="button" value="<?php hm("explain"); ?>" onclick="explainQuery(this.form)" /> 
+			<input type="button" value="<?php hm("clear_conditions"); ?>" onclick="window.location='<?php h(url("collection.index", array( "db"=>$db, "collection" => $collection, "format" => xn("format") ))); ?>'"/>
+			[<a href="http://rockmongo.com/wiki/queryExamples?lang=en_us" target="_blank">Query Examples</a>]
 			<?php if(isset($cost)):?>Cost <?php h(round($cost, 6));?>s<?php endif;?>
 			<?php if(isset($message)):?><p class="error"><?php h($message);?></p><?php endif;?></td>
 	</tr>
@@ -199,7 +206,7 @@ currentFields.push("<?php h(addslashes($field));?>");
 					</div>	
 					
 					<!-- display record -->
-					<div id="text_<?php h($index);?>" style="max-height:150px;overflow-y:hidden;width:99%" ondblclick="expandText('<?php h($index);?>');" class="record_row" record_id="<?php if(isset($row["_id"])){h(rock_id_string($row["_id"]));} ?>" record_index="<?php h($index); ?>">
+					<div id="text_<?php h($index);?>" style="max-height:150px;overflow-y:hidden;width:99%;" ondblclick="expandText('<?php h($index);?>');" class="record_row" record_id="<?php if(isset($row["_id"])){h(rock_id_string($row["_id"]));} ?>" record_index="<?php h($index); ?>">
 						
 						<?php h($row["data"]); ?>
 					</div>

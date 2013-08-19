@@ -1,11 +1,19 @@
 <h3><?php render_navigation($db,$collection,false); ?> &raquo; <?php hm("indexes");?> [<a href="<?php h($_SERVER["REQUEST_URI"]);?>"><?php hm("refresh"); ?></a>]</h3>
 
-<div class="operation"><a href="<?php 
+<div class="operation">
+	[<a href="<?php 
 				h(url("collection.createIndex", array( 
 					"db" => $db, 
 					"collection" => $collection
 				)));
-			?>"><?php hm("createindex"); ?></a></div>
+			?>"><?php hm("createindex"); ?></a>] 
+	[<a href="<?php 
+				h(url("collection.create2dIndex", array( 
+					"db" => $db, 
+					"collection" => $collection
+				)));
+			?>"><?php hm("create_2d_index"); ?></a>]
+</div>
 
 <table width="600" cellpadding="2" cellspacing="1" bgcolor="#cccccc">
 	<tr bgcolor="#eeefff" align="center">

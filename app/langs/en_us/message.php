@@ -25,6 +25,7 @@ $message["can_not_connect"] = "MongoDB connection exception: %s. Please check yo
 $message["can_not_auth"] = "MongoDB authenticate failed. Please check your username and password from your mongo administrator.";
 
 /** Buttons and titles **/
+$message["default"] = "Default";
 $message["overview"] = "Overview";
 $message["server"] = "Server";
 $message["status"] = "Status";
@@ -116,6 +117,7 @@ $message["port"] = "Port";
 $message["copyindexes"] = "Copy Indexes?";
 $message["confirm"] = "Confirm";
 $message["fields"] = "Fields";
+$message["other_fields"] = "Other Fields";
 $message["unique"] = "Unique";
 $message["key"] = "Key";
 $message["operation"] = "Operation";
@@ -126,8 +128,6 @@ $message["execute_command"] = "Execute Command";
 $message["validate"] = "Validate";
 $message["dropifexists"] = "Drop if exists?";
 $message["warningprops"] = "<strong>Notice</strong>: To change collection options, we will create a new collection, copy all data from old one, then drop old one. This will spend a long time to complete when you have a large collection.";
-$message["warningindex"] = "Are you sure to drop the index";
-$message["createindex"] = "Create new Index";
 $message["copycollection"] = "Copy Collection";
 $message["to"] = "To";
 $message["removeifexists"] = "Remove target if exists?";
@@ -178,6 +178,15 @@ $message["action"] = "Action";
 $message["limit"] = "Limit";
 $message["new_field"] = "New Field";
 
+/** Index Creation **/
+$message["warningindex"] = "Are you sure to drop the index";
+$message["createindex"] = "Create normal Index";
+$message["create_2d_index"] = "Create 2D Index";
+$message["2d_index_location_field"] = "Location Field";
+$message["2d_index_min_bound"] = "Min Bound";
+$message["2d_index_max_bound"] = "Max Bound";
+$message["2d_index_bit_precision"] = "Bit Precision";
+
 /** Top bar **/
 $message["tools"] = "Tools";
 $message["manuals"] = "Manuals";
@@ -198,7 +207,7 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> is a MongoDB
 <li><a href="http://rockmongo.com/wiki/plugin" target="_blank">Plug-in</a></li>
 <li><a href="http://rockmongo.com/wiki/faq" target="_blank">FAQ</a></li>
 <li><a href="http://rockmongo.com/donation" target="_blank">Donation<br/><img src="http://www.paypal.com/en_US/i/btn/x-click-but04.gif"/></a></li>
-<li><a href="http://code.google.com/p/rock-php/issues/list" target="_blank">Report an Issue</li>
+<li><a href="https://github.com/iwind/rockmongo/issues" target="_blank">Report an Issue</li>
 </ul></p>
 ';
 
