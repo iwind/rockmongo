@@ -1,7 +1,7 @@
 <?php
 /**
  * ru_ru的配置
- * 
+ *
  * @since 1.0
  * @package if
  * @subpackage plugin.pager.lang

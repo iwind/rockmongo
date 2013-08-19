@@ -9,7 +9,7 @@
 
 $message["TRANSLATION_NAME"] = "Türkçe - Turkish";
 $message["TRANSLATION_ID"] = 12;
- 
+
 /** Login interface **/
 $message["admin"] = "Yönetici";
 $message["password"] = "Parola";
@@ -140,7 +140,7 @@ $message["username"] = "Kullanıcıadı";
 $message["confirm_pass"] = "Parolayı doğrulayın";
 $message["readonly"] = "Salt okunur?";
 $message["addreplace"] = "Ekle veya Değiştir";
-	
+
 /** Manual links **/
 $message["querying"] = "Sorgulanıyor";
 $message["updating"] = "Güncelleniyor";
@@ -168,7 +168,7 @@ $message["profiling_level1"] = "0 - kapalı";
 $message["profiling_level2"] = "1 - yavaş operasyonları logla (>N ms)";
 $message["profiling_level3"] = "2 - tüm opearsyonları logla";
 $message["timecost"] = "Harcanan zaman";
-	
+
 /** Collection operations **/
 $message["submit_query"] = "Sorguyu Gönder";
 $message["explain"] = "Sorguyu Açıkla";
