@@ -4,8 +4,9 @@
  *
  * @author Liu <q@yun4s.cn>
  */
-class RMongoException extends MongoException {
-	
+class RMongoException extends MongoException
+{
+
 }
 
 ?>
