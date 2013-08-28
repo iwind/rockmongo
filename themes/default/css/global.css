@@ -35,6 +35,9 @@ img {border:0}
 .query {background-color:#eeefff}
 .field_orders p { height:14px; margin-top:0 }
 
+.query_modify {background-color:#eeef99}
+.query_delete {background-color:#FFECEB}
+
 /** top **/
 .top {border-bottom:1px #666 solid; background-color:#ccc; }
 .top select { height:18px; background-color:#ccc; border:0 }

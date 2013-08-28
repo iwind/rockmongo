@@ -80,7 +80,7 @@ currentFields.push("<?php h(addslashes($field));?>");
 	</tr>
 	<tr>
 		<td colspan="2">
-			<input type="submit" value="<?php hm("submit_query"); ?>"/> 
+			<input type="submit" onclick="return checkSubmitQuery(this);" value="<?php hm("submit_query"); ?>"/>
 			<input type="button" value="<?php hm("explain"); ?>" onclick="explainQuery(this.form)" /> 
 			<input type="button" value="<?php hm("clear_conditions"); ?>" onclick="window.location='<?php h(url("collection.index", array( "db"=>$db, "collection" => $collection, "format" => xn("format") ))); ?>'"/>
 			[<a href="http://rockmongo.com/wiki/queryExamples?lang=en_us" target="_blank">Query Examples</a>]
