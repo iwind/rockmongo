@@ -80,6 +80,34 @@ function changeCommand(select) {
 		$("#pageSetLabel").hide();
 		$("#fieldsAndHints").hide();
 	}
+
+    var queryBox = $('.query');
+    if(value=='modify'){
+        queryBox.removeClass('query_delete');
+        queryBox.addClass('query_modify');
+    } else if(value=='remove'){
+        queryBox.addClass('query_delete');
+        queryBox.removeClass('query_modify');
+    } else {
+        queryBox.removeClass('query_delete');
+        queryBox.removeClass('query_modify');
+    }
+}
+
+function checkSubmitQuery(){
+    var method = $('select[name=command]').val(),
+        isChangeQuery = false;
+    if(method=='modify'){
+        isChangeQuery = true;
+    }
+    if(method=='remove'){
+        isChangeQuery = true;
+    }
+
+    if(isChangeQuery===true){
+        return confirm('Do you really want to run the query in "'+(method.toUpperCase())+'" mode?');
+    }
+    return true;
 }
 
 //switch html and text

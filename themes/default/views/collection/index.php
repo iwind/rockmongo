@@ -80,7 +80,7 @@ currentFields.push("<?php h(addslashes($field));?>");
 	</tr>
 	<tr>
 		<td colspan="2">
-			<input type="submit" value="<?php hm("submit_query"); ?>"/> 
+			<input type="submit" onclick="return checkSubmitQuery(this);" value="<?php hm("submit_query"); ?>"/>
 			<input type="button" value="<?php hm("explain"); ?>" onclick="explainQuery(this.form)" /> 
 			<input type="button" value="<?php hm("clear_conditions"); ?>" onclick="window.location='<?php h(url("collection.index", array( "db"=>$db, "collection" => $collection, "format" => xn("format") ))); ?>'"/>
 			[<a href="http://rockmongo.com/wiki/queryExamples?lang=en_us" target="_blank">Query Examples</a>]
@@ -203,6 +203,23 @@ currentFields.push("<?php h(addslashes($field));?>");
 							"criteria" => $criteria)));
 						?>">Chunks</a>
 						<?php endif;?>
+			                        <?php
+			                        if($row['_id'] instanceof MongoId){
+			                            $mongoIdData = array();
+			                            if(method_exists($row['_id'], 'getTimestamp')){
+			                                $mongoIdData[] = "<span title=\"The timestamp of the creation of this id\">Timestamp</span>: ".date('Y-m-d H:i:s', $row['_id']->getTimestamp());
+			                            }
+			                            if(method_exists($row['_id'], 'getInc')){
+			                                $mongoIdData[] = "<span title=\"The incremented value of this id\">Inc</span>: ".$row['_id']->getInc();
+			                            }
+			                            if(method_exists($row['_id'], 'getPID')){
+			                                $mongoIdData[] = "<span title=\"The ProcessId at creation of this id\">PID</span>: ".$row['_id']->getPID();
+			                            }
+			                            if(count($mongoIdData>0)){
+			                                echo "| (" . implode(' | ', $mongoIdData) .")";
+			                            }
+			                        }
+			                        ?>
 					</div>	
 					
 					<!-- display record -->
