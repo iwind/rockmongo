@@ -446,7 +446,8 @@ function o($config) {
  * @return string
  */
 function rock_name_to_java($name) {
-	$name = preg_replace("/_([a-zA-Z])/e", "strtoupper('\\1')", $name);
+	$name = preg_replace_callback("/_([a-zA-Z])/", create_function('$match', 'return strtoupper($match[1]);'), $name);
+
 	return $name;
 }
 
@@ -464,7 +465,7 @@ function rock_array_get(array $array, $keys) {
 	}
 	if (!is_array($keys)) {
 		if (strstr($keys, "`")) {
-			$keys = preg_replace("/`(.+)`/Ue", "str_replace('.','\.','\\1')", $keys);
+			$keys = preg_replace_callback("/`(.+)`/U", create_function('$match', "return str_replace('.','\.','\$match[1]');"), $keys);
 		}
 		$keys = preg_split("/(?<!\\\)\./", $keys);
 	}
@@ -505,7 +506,7 @@ function rock_array_set(array $array, $keys, $value) {
 	}
 	if (!is_array($keys)) {
 		if (strstr($keys, "`")) {
-			$keys = preg_replace("/`(.+)`/Ue", "str_replace('.','\.','\\1')", $keys);
+			$keys = preg_replace_callback("/`(.+)`/U", create_function('$match', "return str_replace('.','\.','\$match[1]');"), $keys);
 		}
 		$keys = preg_split("/(?<!\\\)\./", $keys);
 	}
