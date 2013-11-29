@@ -89,6 +89,3 @@ class AdminController extends BaseController {
 		header("location:index.php");
 	}	
 }
-
-
-?>

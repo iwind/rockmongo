@@ -257,5 +257,3 @@ function rock_real_value($mongodb, $dataType, $format, $value) {
 	}
 	return $realValue;
 }
-
-?>

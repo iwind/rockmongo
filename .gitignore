@@ -1,6 +1,8 @@
 
 .buildpath
 
+.idea
+
 .project
 
 .settings/org.eclipse.php.core.prefs

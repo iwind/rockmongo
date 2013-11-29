@@ -1072,5 +1072,3 @@ window.parent.frames["left"].location.reload();
 		$this->redirect("db.dbImport", array( "db" => xn("db") ));
 	}	
 }
-
-?>

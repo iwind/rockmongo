@@ -57,5 +57,3 @@ class LoginController extends BaseController {
 		}
 	}	
 }
-
-?>

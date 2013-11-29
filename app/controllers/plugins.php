@@ -12,5 +12,3 @@ class PluginsController extends BaseController {
 		$this->display();
 	}
 }
-
-?>

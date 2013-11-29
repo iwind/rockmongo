@@ -67,5 +67,3 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> is a MongoDB
 <p>See <a href="http://rockmongo.com" target="_blank">http://rockmongo.com</a> for more details.</p>
 
 <p>If you have any questions, please send email to me: <a href="mailto:iwind.liu@gmail.com">iwind.liu@gmail.com</a> .</p>';
-
-?>

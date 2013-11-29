@@ -192,5 +192,3 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> es una herra
 $message["loginandrock"] = "Iniciar sesi&oacute;n and Rock";
 $message["changeconfig"] = "Debe cambiar su nombre de usuario y contrase&ntilde;a en el config.php.";
 $message["rockmongocredits"] = "Desarrollado por RockMongo v" . (ROCK_MONGO_VERSION) . ", <a href=\"http://rockmongo.com/downloads\" target=\"_blank\">echa un vistazo a la nueva versi&oacute;n aqu&iacute;.</a>";
-
-?>

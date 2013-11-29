@@ -14,4 +14,3 @@ $message["pager_input_pageno"] = "Comenzar desde:";
 $message["pager_current_pageno"] = "Actual: %d ";
 $message["pager_total_page"] = "Total: %d ";
 
-?>

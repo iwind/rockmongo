@@ -207,4 +207,3 @@ $message["loginandrock"] = "Login and Rock";
 $message["changeconfig"] = "Kullanıcı adı ve parolanızı config.php dosyasından değiştirebilirsiniz.";
 $message["rockmongocredits"] = "<a href=\"http://rockmongo.com\" target=\"_blank\">RockMongo</a> v" . (ROCK_MONGO_VERSION) . " ile güçlendirilmiştir, <a href=\"http://rockmongo.com/downloads\" target=\"_blank\">yeni sürümü kontrol edin.</a> &nbsp; [<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=iwind%2eliu%40gmail%2ecom&lc=US&amount=10&item_name=RockMongo%20Project%20Donation&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest\">10 Dolar Bağışla</a>]";
 
-?>

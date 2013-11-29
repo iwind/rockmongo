@@ -208,4 +208,3 @@ $message["loginandrock"] = "Connexion & Rock";
 $message["changeconfig"] = "Vous devriez changer votre nom d'utilisateur et mot de passe dans le fichier config.php";
 $message["rockmongocredits"] = "Powered by RockMongo v" . (ROCK_MONGO_VERSION) . ", <a href=\"http://rockmongo.com/downloads\" target=\"_blank\">check out new version here.</a>";
 
-?>

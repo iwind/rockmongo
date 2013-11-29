@@ -8,6 +8,3 @@ class IndexController extends BaseController {
 		$this->redirect("admin.index");
 	}
 }
-
-
-?>

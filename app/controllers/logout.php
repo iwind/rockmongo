@@ -13,5 +13,3 @@ class LogoutController extends BaseController {
 		$this->redirect("login.index");
 	}
 }
-	
-?>

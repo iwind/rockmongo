@@ -430,5 +430,3 @@ class FieldController extends BaseController {
 		}
 	}
 }
-
-?>

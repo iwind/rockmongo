@@ -78,4 +78,3 @@ $message["about_content"] = '<strong class="big">RockMongo</strong>是可視化�
 
 <p>如果有任何問題和反饋，請發送郵件到：<a href="mailto:iwind.liu@gmail.com">iwind.liu@gmail.com</a> .</p>';
 
-?>
