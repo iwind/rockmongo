@@ -99,6 +99,63 @@ class RPlugin {
 		
 		self::$_loaded = true;
 	}
+	
+	/**
+	 * Get all plugins
+	 * 
+	 * @return array
+	 * @since 1.1.6
+	 */
+	public static function plugins() {
+		$configPlugins = array();
+		require(__ROOT__ . DS . "configs" . DS . "rplugin.php");
+		if (empty($plugins) || !is_array($plugins)) {
+			return $configPlugins;
+		}
+		foreach ($plugins as $name => $plugin) {
+			$dir = __ROOT__ . DS . "plugins" . DS . $name;
+			if (!is_dir($dir)) {
+				$dir = dirname(dirname(__ROOT__)) . DS . "plugins" . DS . $name;
+			}
+			$pluginConfig = array(
+				"name" => null,	
+				"dir" => $name,
+				"code" => null,
+				"author" => null,
+				"description" => null,
+				"version" => null,	
+				"url" => null,
+				"enabled" => isset($plugin["enabled"]) ? $plugin["enabled"] : false					
+			);
+			
+			$descFile = $dir . "/desc.php";
+			if (is_file($descFile)) {
+				$config = require($descFile);
+				if (isset($config["name"])) {
+					$pluginConfig["name"] = $config["name"];
+				}
+				if (isset($config["code"])) {
+					$pluginConfig["code"] = $config["code"];
+				}
+				if (isset($config["author"])) {
+					$pluginConfig["author"] = $config["author"];
+				}
+				if (isset($config["description"])) {
+					$pluginConfig["description"] = $config["description"];
+				}
+				if (isset($config["version"])) {
+					$pluginConfig["version"] = $config["version"];
+				}
+				if (isset($config["url"])) {
+					$pluginConfig["url"] = $config["url"];
+				}
+			}
+			
+			$configPlugins[] = $pluginConfig;
+		}
+		
+		return $configPlugins;
+	}
 }
 
 ?>

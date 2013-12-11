@@ -212,6 +212,9 @@ class CollectionController extends BaseController {
 			$row = null;
 			$eval = new VarEval($criteria, $format, $db);
 			$row = $eval->execute();
+			if (is_object($row)) {
+				$row = get_object_vars($row);
+			}
 			if (!is_array($row)) {
 				$this->message = "Criteria must be a valid " . (($format == "json") ? "JSON object" : "array");
 				$this->jsonLink = "#";
@@ -583,7 +586,6 @@ class CollectionController extends BaseController {
 				$this->display();
 				return;
 			}
-			
 			$query = new RQuery($this->_mongo, $this->db, $this->collection);
 			try {
 				$ret = $query->insert($row, true);
