@@ -14,4 +14,3 @@ $message["pager_input_pageno"] = "Перейти:";
 $message["pager_current_pageno"] = "Текущая: %d ";
 $message["pager_total_page"] = "Всего: %d ";
 
-?>

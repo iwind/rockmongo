@@ -77,5 +77,3 @@ $message["about_content"] = '<strong class="big">RockMongo</strong>是可视化�
 <p>请访问 <a href="http://rockmongo.com" target="_blank">http://rockmongo.com</a> 获取更多信息.</p>
 
 <p>如果有任何问题和反馈，请发送邮件到：<a href="mailto:iwind.liu@gmail.com">iwind.liu@gmail.com</a> .</p>';
-
-?>

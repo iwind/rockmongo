@@ -13,5 +13,3 @@ $message["pager_last"] = "尾页";
 $message["pager_input_pageno"] = "输入页数";
 $message["pager_current_pageno"] = "第 %d 页";
 $message["pager_total_page"] = "共 %d 页";
-
-?>

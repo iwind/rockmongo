@@ -290,5 +290,3 @@ class RMongo {
 		return self::$_lastId;
 	}
 }
-
-?>

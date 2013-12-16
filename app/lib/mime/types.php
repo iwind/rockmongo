@@ -186,5 +186,3 @@ $GLOBALS["mime_types"] = array("323" => "text/h323",
 "xwd" => "image/x-xwindowdump",
 "z" => "application/x-compress",
 "zip" => "application/zip");
-
-?>

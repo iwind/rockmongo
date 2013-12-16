@@ -66,5 +66,3 @@ class MDb {
 		return $collections;
 	}
 }
-
-?>

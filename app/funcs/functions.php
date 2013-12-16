@@ -236,5 +236,3 @@ function json_format($json)
 
     return $new_json;
 }
-
-?>

@@ -207,4 +207,3 @@ $message["loginandrock"] = "Войти и отжечь";
 $message["changeconfig"] = "Можно изменить имя пользователя и пароль в config.php.";
 $message["rockmongocredits"] = "Работает на RockMongo v" . (ROCK_MONGO_VERSION) . ", <a href=\"http://rockmongo.com/downloads\" target=\"_blank\">посмотреть новую версию.</a>";
 
-?>

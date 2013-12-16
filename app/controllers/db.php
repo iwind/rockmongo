@@ -498,5 +498,3 @@ window.parent.frames["left"].location.reload();
 		$this->display("dropDatabaseResult");
 	}	
 }
-
-?>

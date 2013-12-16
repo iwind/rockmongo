@@ -304,5 +304,3 @@ class ServerController extends BaseController {
 		$this->display();
 	}	
 }
-
-?>

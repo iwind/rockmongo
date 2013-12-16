@@ -467,5 +467,3 @@ class MServer {
 		return self::$_currentServer;
 	}
 }
-
-?>

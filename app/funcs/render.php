@@ -492,5 +492,3 @@ function render_server_response($response) {
 function render_url($action, array $params = array()) {
 	echo url($action, $params);
 }
-
-?>

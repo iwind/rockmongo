@@ -13,5 +13,3 @@ $message["pager_last"] = "Letzte";
 $message["pager_input_pageno"] = "Springen zu:";
 $message["pager_current_pageno"] = "Aktuell: %d ";
 $message["pager_total_page"] = "Total: %d ";
-
-?>

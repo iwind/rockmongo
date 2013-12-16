@@ -122,5 +122,3 @@ class MUser {
 		return null;
 	}
 }
-
-?>

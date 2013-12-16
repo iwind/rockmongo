@@ -488,5 +488,3 @@ abstract class RPage {
 	}
 }
 
-
-?>

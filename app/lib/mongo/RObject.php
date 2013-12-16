@@ -327,4 +327,3 @@ class RObject extends RModel implements ArrayAccess {
 	}			
 }
 
-?>

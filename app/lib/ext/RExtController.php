@@ -67,4 +67,3 @@ class RExtController extends RController {
 	}
 }
 
-?>

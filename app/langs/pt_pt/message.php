@@ -68,4 +68,3 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> é uma ferra
 
 <p>Se têm alguma dúvida, envie um email para: <a href="mailto:iwind.liu@gmail.com">iwind.liu@gmail.com</a> .</p>';
 
-?>
