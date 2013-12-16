@@ -8,7 +8,7 @@
  
 $MONGO = array();
 $MONGO["features"]["log_query"] = "on";//log queries
-$MONGO["features"]["theme"] = "default";//theme
+$MONGO["features"]["theme"] = "devel";//theme
 $MONGO["features"]["plugins"] = "on";//plugins
 
 $i = 0;
