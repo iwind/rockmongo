@@ -1,3 +1,8 @@
+===========================================================================
+| This version is an effort to provide up-to date version of Rockmongo by |
+| including latest patches from a number of forks found on Github.        |
+===========================================================================
+
 Introduction
 --------------------------------------
 RockMongo is a MongoDB administration tool, written in PHP 5, very easy to install and use.
