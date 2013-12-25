@@ -676,7 +676,13 @@ function rock_check_version() {
  */
 function rock_init_lang() {
 	if (isset($_COOKIE["ROCK_LANG"])) {
-		define("__LANG__", $_COOKIE["ROCK_LANG"]);
+		// Patched by synthomat
+		// as reported in CVE-2013-5107
+		if (preg_match('/^[a-z]{2}_[a-z]{2}$/', $_COOKIE["ROCK_LANG"])) {
+			define("__LANG__",$_COOKIE["ROCK_LANG"]);
+		} else {
+			define("__LANG__", "en_us");
+		}
 		return;
 	}
 	if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
