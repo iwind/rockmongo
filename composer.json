@@ -1,6 +1,7 @@
 {
     "name": "myurasov/rockmongo",
     "license": "BSD-3-Clause",
+    "description": "An up-to date version of Rockmongo that includes latest patches and bug fixes",
     "require": {
     	"php": ">=5.3.0"
     }
