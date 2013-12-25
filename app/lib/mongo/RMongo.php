@@ -17,7 +17,16 @@ class RMongo {
 	 */
 	public function __construct($server, array $options = array()) {
 		if (class_exists("MongoClient")) {
-			$this->_mongo = new MongoClient($server, $options);
+	    try {
+	      $this->_mongo = new MongoClient($server, $options);
+	    } catch ( Exception $e ) {
+	      $options['db'] = 'admin';
+	      try {
+	        $this->_mongo = new MongoClient($server, $options);
+	      } catch ( Exception $tmp ) {
+	        throw $e;
+	      }
+	    }
 		}
 		else {
 			$this->_mongo = new Mongo($server, $options);
@@ -123,7 +132,11 @@ class RMongo {
 	 * @return array
 	 */
 	public function listDBs() {
-		return $this->_mongo->listDBs();
+		try {
+			return $this->_mongo->listDBs();
+		} catch( Exception $e ) {
+			return array();
+		}
 	}
 	
 	/**
