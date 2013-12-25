@@ -28,7 +28,7 @@ class MDb {
 		
 		$names = array();
 		try {
-			$names = $db->getCollectionNames();
+			$names = $db->getCollectionNames(true);
 		} catch(Exception $e) {
 			
 		}
