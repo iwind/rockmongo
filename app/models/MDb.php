@@ -35,8 +35,7 @@ class MDb {
 		}
 
 		$ret = array();
-		foreach ($names as $col) {
-			$name = $col->getName();
+		foreach ($names as $name) {
 			if ($server->shouldHideCollection($name)) {
 				continue;
 			}
