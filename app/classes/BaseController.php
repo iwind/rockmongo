@@ -248,6 +248,38 @@ class BaseController extends RExtController {
 		return $string;
 	}
 	
+	/**
+	 * Export IndexSizes as string.
+	 *
+	 * @param mixed $var variable to be exported
+	 * @return string
+	 */
+		protected function _highlightIndexSizes($var) {
+			$string = "<table cellspacing='0' cellpadding='0' style='width:100%;border:0px solid #cccccc'>";
+			$c = 0;
+			foreach($var as $key => $value) {
+				if ($value < 1024) {
+					$formatted_size = $value . "b";
+				} else if ($value < 1024 * 1024) {
+					$formatted_size = round($value/1024, 2) . " kb";
+				} else if ($value < 1024 * 1024 * 1024) {
+					$formatted_size = round($value/1024/1024, 2) . " mb";
+				} else if ($value < 1024 * 1024 * 1024 * 1024) {
+					$formatted_size = round($value/1024/1024/1024, 2) . " gb";
+				}
+				if (($c%2) == 0) {
+					$bgc = "#fff";
+				} else {
+					$bgc = "#eee";
+				}
+				$string .= "<tr style='background-color: " . $bgc . "'><td style='border:1px solid #cccccc'>" . $key . "</td>";
+				$string .= "<td style='border:1px solid #cccccc' title='(" . $value . " bytes)'>" . $formatted_size . "</td></tr>";
+				$c++;
+			}
+			$string .= "</table>";
+			return $string;
+		}
+
 	/** 
 	 * format bytes to human size 
 	 * 
