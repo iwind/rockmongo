@@ -175,6 +175,11 @@ class VarEval {
 		} elseif($ret["errmsg"] === "unauthorized") {
 			return $this->parseBson($this->_source);
 		}
+		else {
+		// eval can't be ran on a secondary, so it would fail if we're connected to a secondary. in that case
+		// fallback to regular JSON parsing
+		return json_decode($this->_source, true);
+		}
 		return false;
 	}
 

@@ -27,6 +27,7 @@ class MDb {
 		$server = MServer::currentServer();
 		
 		$names = array();
+
 		try {
 			$names = $db->getCollectionNames(true);
 		} catch(Exception $e) {
@@ -34,7 +35,8 @@ class MDb {
 		}
 
 		$ret = array();
-		foreach ($names as $name) {
+		foreach ($names as $col) {
+			$name = $col->getName();
 			if ($server->shouldHideCollection($name)) {
 				continue;
 			}
