@@ -30,7 +30,11 @@ ini_set("mongo.long_as_object", 1);
 /**
 * Initializing configuration files and RockMongo
 */
-require "config.php";
+if (file_exists("config.php")) {
+    require "config.php";
+} else {
+    require "config-sample.php";
+}
 require "rock.php";
 rock_check_version();
 rock_init_lang();
