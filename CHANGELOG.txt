@@ -1,3 +1,9 @@
+v1.1.7 - 2014-02-12
+* Added mixed-mode highlighting
+
+v1.1.6 - 2013
+* Highlighting now optional
+
 v1.1.5 - 2012-12-20
 * Fix authenticate with php_mongo >= 1.3.0
 

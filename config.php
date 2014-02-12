@@ -36,7 +36,8 @@ $MONGO["servers"][$i]["ui_hide_collections"] = "";//collections to hide
 $MONGO["servers"][$i]["ui_hide_system_collections"] = false;//whether hide the system collections
 
 //$MONGO["servers"][$i]["docs_nature_order"] = false;//whether show documents by nature order, default is by _id field
-//$MONGO["servers"][$i]["docs_render"] = "default";//document highlight render, can be "default" or "plain"
+//$MONGO["servers"][$i]["docs_render"] = "mixed";//document highlight render, can be "default", "plain" or "mixed"
+//$MONGO["servers"][$i]["docs_render_limit"] = 2000; //in "mixed" mode, documents smaller than this size will highlighted, rest in plain.
 
 $i ++;
 
