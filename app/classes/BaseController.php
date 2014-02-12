@@ -211,6 +211,7 @@ class BaseController extends RExtController {
 		$exportor = new VarExportor($this->_mongo->selectDB("admin"), $var);
 		$varString = null;
 		$highlight = true;
+		$mixed = false;
 		switch ($this->_server->docsRender()) {
 			case "default":
 				$varString = $exportor->export($format, $label);
@@ -219,6 +220,15 @@ class BaseController extends RExtController {
 				$varString = $exportor->export($format, false);
 				$label = false;
 				$highlight = false;
+				break;
+			case "mixed":
+				$varString = $exportor->export($format, false);
+				if (strlen($varString) > $this->_server->docsRenderLimit())
+					$highlight = false;
+				else
+					$highlight = true;
+				$label = false;
+				$mixed = true;
 				break;
 			default:
 				$varString = $exportor->export($format, $label);
