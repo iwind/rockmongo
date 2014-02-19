@@ -3,6 +3,9 @@
  * RockMongo configuration
  *
  * Defining default options and server configuration
+ *
+ * Copy config-sample.php > config.php and make your changes to the config.php.
+ *
  * @package rockmongo
  */
  
@@ -50,5 +53,3 @@ $MONGO["servers"][$i]["mongo_port"] = "27017";
 $MONGO["servers"][$i]["control_users"]["admin"] = "password";
 $i ++;
 **/
-
-?>
