@@ -22,6 +22,9 @@ if (!version_compare(PHP_VERSION, "5.0")) {
 if (!class_exists("Mongo") && !class_exists("MongoClient")) {
 	exit("To make things right, you must install php_mongo module. <a href=\"http://www.php.net/manual/en/mongo.installation.php\" target=\"_blank\">Here for installation documents on PHP.net.</a>");
 }
+if (!is_readable("config.php")) {
+	exit("To make things right, you must copy 'config.dist.php' to 'config.php' and ajust settings to your needs.");
+}
 
 // enforce Mongo support for int64 data type (Kyryl Bilokurov <kyryl.bilokurov@gmail.com>)
 ini_set("mongo.native_long", 1);
