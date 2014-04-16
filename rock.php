@@ -446,7 +446,10 @@ function o($config) {
  * @return string
  */
 function rock_name_to_java($name) {
-	$name = preg_replace("/_([a-zA-Z])/e", "strtoupper('\\1')", $name);
+	$name = preg_replace_callback("/_([a-z])/i", 
+                function ($matches) {
+                    return $matches[1] & '_'; //bitwise uppercase 1 character
+                }, $name);
 	return $name;
 }
 
