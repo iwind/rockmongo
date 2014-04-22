@@ -35,4 +35,6 @@ function switchFormat(select) {
 <br/>
 <textarea rows="35" cols="70" name="data" id="row_data"><?php echo x("data") ?></textarea><br/>
 <input type="submit" value="<?php hm("save"); ?>"/>
+
+<label>Insert <input type="number" name="count"  value="1" /> times.</label>
 </form>
