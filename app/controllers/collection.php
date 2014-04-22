@@ -589,9 +589,9 @@ class CollectionController extends BaseController {
 			}
 			$query = new RQuery($this->_mongo, $this->db, $this->collection);
 			try {
-                            for ($i = 0; $i <= $count; $i++) {
+                            for ($i = 1; $i <= $count; $i++) {
 				$query->insert($row);
-                                unset($row['_id']);
+				unset($row['_id']);
                             }
 			} catch (Exception $e) {
 				$this->error = $e->getMessage();
