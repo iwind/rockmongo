@@ -4,6 +4,7 @@ import("lib.mongo.RMongo");
 
 class MServer {
 	private $_mongoName = null;
+	private $_mongoSock = null;
 	private $_mongoHost = "127.0.0.1";
 	private $_mongoPort = 27017;
 	private $_mongoUser = "";
@@ -46,6 +47,9 @@ class MServer {
 					break;
 				case "mongo_host":
 					$this->_mongoHost = $value;
+					break;
+				case "mongo_sock":
+					$this->_mongoSock = $value;
 					break;
 				case "mongo_port":
 					$this->_mongoPort = $value;
@@ -414,15 +418,19 @@ class MServer {
 	 * @return string
 	 */
 	public function uri() {
-		$host = $this->_mongoHost . ":" . $this->_mongoPort;
+		if ($this->_mongoSock) {
+			$host = $this->_mongoSock;
+		} else {
+			$host = $this->_mongoHost . ":" . $this->_mongoPort;
+		}
 		if ($this->_mongoAuth) {
 			$user = MUser::userInSession();
 			return $user->username() . ":" . $user->password() . "@" . $host;
 		}
 		if (empty($this->_mongoUser)) {
-			return $host;
+			return 'mongodb://' . $host;
 		}
-		return $this->_mongoUser . ":" . $user->_mongoPass . "@" . $host;
+		return 'mongodb://' . $this->_mongoUser . ":" . $user->_mongoPass . "@" . $host;
 	}
 	
 	/**
