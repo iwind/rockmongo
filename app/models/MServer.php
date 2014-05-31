@@ -293,7 +293,11 @@ class MServer {
 				$db = "admin";
 			}
 		}
-		$server = $this->_mongoHost . ":" . $this->_mongoPort;
+		if ($this->_mongoSock) {
+			$server = $this->_mongoSock;
+		} else {
+			$server = $this->_mongoHost . ":" . $this->_mongoPort;
+		}
 		if (!$this->_mongoPort) {
 			$server = $this->_mongoHost;
 		}

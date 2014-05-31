@@ -92,6 +92,7 @@ class DbController extends BaseController {
 		}
 		else {
 			$this->target_host = trim(xn("target_host"));
+			$this->target_sock = trim(xn("target_sock"));
 			$this->target_port = xi("target_port");
 			$this->target_auth = xi("target_auth");
 			$this->target_username = trim(xn("target_username"));
@@ -106,7 +107,7 @@ class DbController extends BaseController {
 				$this->display();
 				return;
 			}
-			if (empty($this->target_host)) {
+			if (empty($this->target_host) && empty($this->target_sock)) {
 				$this->error = "Target host must not be empty.";
 				$this->display();
 				return;
@@ -124,7 +125,12 @@ class DbController extends BaseController {
 				$targetOptions["username"] = $this->target_username;
 				$targetOptions["password"] = $this->target_password;
 			}
-			$targetConnection = new RMongo("mongodb://" . $this->target_host . ":" . $this->target_port, $targetOptions);
+			if ($this->target_sock) {
+				$uri = "mongodb://" . $this->target_sock;
+			} else {
+				$uri = "mongodb://" . $this->target_host . ":" . $this->target_port;
+			}
+			$targetConnection = new RMongo($uri, $targetOptions);
 			$targetDb = $targetConnection->selectDB($this->db);
 			if ($this->target_auth) {
 				// "authenticate" can only be used between 1.0.1 - 1.2.11
