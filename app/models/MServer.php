@@ -294,9 +294,10 @@ class MServer {
 			}
 		}
 		$server = null;
-		if ($this->_mongoSock) {
+		if ($this->_mongoSock) {//connect through sock
 			$server = $this->_mongoSock;
-		} else {
+		} 
+		else {//connect through host:port
 			$server = $this->_mongoHost . ":" . $this->_mongoPort;
 		}
 		if (!$this->_mongoPort) {
