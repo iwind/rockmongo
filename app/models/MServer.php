@@ -293,6 +293,7 @@ class MServer {
 				$db = "admin";
 			}
 		}
+		$server = null;
 		if ($this->_mongoSock) {
 			$server = $this->_mongoSock;
 		} else {
@@ -424,6 +425,7 @@ class MServer {
 	 * @return string
 	 */
 	public function uri() {
+		$host = null;
 		if ($this->_mongoSock) {
 			$host = $this->_mongoSock;
 		} else {

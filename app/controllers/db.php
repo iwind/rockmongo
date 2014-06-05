@@ -125,9 +125,11 @@ class DbController extends BaseController {
 				$targetOptions["username"] = $this->target_username;
 				$targetOptions["password"] = $this->target_password;
 			}
+			$uri = null;
 			if ($this->target_sock) {
 				$uri = "mongodb://" . $this->target_sock;
-			} else {
+			} 
+			else {
 				$uri = "mongodb://" . $this->target_host . ":" . $this->target_port;
 			}
 			$targetConnection = new RMongo($uri, $targetOptions);
