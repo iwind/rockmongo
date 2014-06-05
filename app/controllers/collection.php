@@ -571,6 +571,7 @@ class CollectionController extends BaseController {
 		//try to deal with data
 		if ($this->isPost()) {
 			$format = x("format");
+                        $count = x("count");
 			$this->last_format = $format;
 			
 			$data = xn("data");
@@ -588,7 +589,10 @@ class CollectionController extends BaseController {
 			}
 			$query = new RQuery($this->_mongo, $this->db, $this->collection);
 			try {
-				$ret = $query->insert($row, true);
+                            for ($i = 1; $i <= $count; $i++) {
+				$query->insert($row);
+				unset($row['_id']);
+                            }
 			} catch (Exception $e) {
 				$this->error = $e->getMessage();
 				$this->display();
