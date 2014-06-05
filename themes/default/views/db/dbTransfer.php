@@ -39,6 +39,10 @@ window.parent.frames["left"].location.reload();
 	<h3><?php hm("target"); ?></h3>
 	<table>
 		<tr>
+			<td width="100"><?php hm("sock"); ?>:</td>
+			<td><input type="text" name="target_sock" value="<?php h($target_sock); ?>" style="width:120px"/></td>
+		</tr>
+		<tr>
 			<td width="100"><?php hm("host"); ?>:</td>
 			<td><input type="text" name="target_host" value="<?php h($target_host); ?>" style="width:120px"/></td>
 		</tr>

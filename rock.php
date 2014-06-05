@@ -639,6 +639,9 @@ function rock_check_version() {
 				case "host":
 					$server["mongo_host"] = $value;
 					break;
+				case "sock":
+					$server["mongo_sock"] = $value;
+					break;
 				case "port":
 					$server["mongo_port"] = $value;
 					$server["mongo_name"] = $server["mongo_host"] . ":" . $server["mongo_port"];
