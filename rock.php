@@ -4,7 +4,6 @@ define("DS", DIRECTORY_SEPARATOR);
 define("__ROOT__", dirname(__FILE__) . DS . "app");
 define("__VERSION__", "0.0.1");
 define("nil", "nil_" . uniqid(microtime(true)));
-define("PHP_VERSION_5_3", version_compare(PHP_VERSION, "5.3.0")>=0);
 if (!defined("__ENV__")) {
 	define("__ENV__", "dev");
 }

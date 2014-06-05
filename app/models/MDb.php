@@ -27,11 +27,16 @@ class MDb {
 		$server = MServer::currentServer();
 		
 		$names = array();
-		try {
-			$names = self::exec($db, 'function (){ return db.getCollectionNames(); }');
-		} catch(Exception $e) {
-			
-		}
+		$query = $db->execute("function (){ return db.getCollectionNames(); }", array());
+        if ($query["ok"]) {
+            $names= $query["retval"];
+        } 
+        else{
+            $colls = $db->listCollections(true);
+            foreach($colls as $coll){
+                $names[] = $coll->getName();
+            }               
+        }
 
 		$ret = array();
 		foreach ($names as $name) {

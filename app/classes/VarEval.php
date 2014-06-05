@@ -173,7 +173,7 @@ class VarEval {
 		if ($ret["ok"]) {
 			return $ret["retval"];
 		}
-		return false;
+		return json_decode($this->_source, true);
 	}
 	
 	private function _fixEmptyObject(&$object) {
