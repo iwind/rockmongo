@@ -901,7 +901,11 @@ window.parent.frames["left"].location.reload();
 			$this->stats = $ret;
 			foreach ($this->stats as $index => $stat) {
 				if (is_array($stat)) {
-					$this->stats[$index] = $this->_highlight($stat, "json");
+					if ($index == "indexSizes") {
+						$this->stats[$index] = $this->_highlightIndexSizes($stat, "json");
+					} else {
+						$this->stats[$index] = $this->_highlight($stat);
+					}
 				}
 			}
 		}
