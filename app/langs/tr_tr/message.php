@@ -54,7 +54,7 @@ $message["statistics"] = "İstatistikler";
 $message["export"] = "Dışa Aktar";
 $message["import"] = "İçe Aktar";
 $message["transfer"] = "Transfer";
-$message["drop"] = "Düşür";
+$message["drop"] = "Kaldır";
 $message["more"] = "Daha";
 $message["rename"] = "Yeniden adlandır";
 $message["indexes"] = "Indeksler";
@@ -193,7 +193,7 @@ $message["about_content"] = '<strong class="big">RockMongo</strong> PHP 5 ile ko
 <p>Eğer bir sorunuz olursa, lütfen bana e-posta gönderin: <a href="mailto:iwind.liu@gmail.com">iwind.liu@gmail.com</a> .</p>
 
 <p>Belgeler:<ul>
-<li><a href="http://rockmongo.com/wiki/changeLog" target="_blank">Değişklikler</a></li>
+<li><a href="http://rockmongo.com/wiki/changeLog" target="_blank">Değişiklikler</a></li>
 <li><a href="http://rockmongo.com/wiki/configuration" target="_blank">Konfigürasyon</a></li>
 <li><a href="http://rockmongo.com/wiki/plugin" target="_blank">Eklentiler</a></li>
 <li><a href="http://rockmongo.com/wiki/faq" target="_blank">Sık Sorulan Sorular</a></li>
