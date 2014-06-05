@@ -81,7 +81,7 @@ function json_format_html($json)
                     $indent_level++;
                 }
                 else {
-                    $new_json .= $char;
+                    $new_json .= "[";
                 }
                 break;
             case '}':
@@ -94,7 +94,7 @@ function json_format_html($json)
                 }
                 else
                 {
-                    $new_json .= $char;
+                    $new_json .= "]";
                 }
                 break;
             case ',':
@@ -103,7 +103,7 @@ function json_format_html($json)
                     $new_json .= ",<br/>" . str_repeat($tab, $indent_level);
                 }
                 else {
-                    $new_json .= $char;
+                    $new_json .= ",";
                 }
                 break;
             case ':':
