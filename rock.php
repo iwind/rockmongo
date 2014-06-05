@@ -10,6 +10,9 @@ if (!defined("__ENV__")) {
 if (!defined("__PLATFORM__")) {
 	define("__PLATFORM__", "def");
 }
+if (!isset($_SERVER["PHP_SELF"]) && isset($_SERVER["SCRIPT_NAME"])) {
+	$_SERVER["PHP_SELF"] = $_SERVER["SCRIPT_NAME"];
+}
 
 //merge $_POST and $_GET
 $GLOBALS["ROCK_USER_VARS"] = array();
