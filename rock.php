@@ -446,7 +446,7 @@ function o($config) {
  * @return string
  */
 function rock_name_to_java($name) {
-	$name = preg_replace("/_([a-zA-Z])/e", "strtoupper('\\1')", $name);
+	$name = preg_replace_callback("/_([a-zA-Z])/", create_function('$match', 'return strtoupper($match[1]);'), $name);
 	return $name;
 }
 
@@ -464,9 +464,9 @@ function rock_array_get(array $array, $keys) {
 	}
 	if (!is_array($keys)) {
 		if (strstr($keys, "`")) {
-			$keys = preg_replace("/`(.+)`/Ue", "str_replace('.','\.','\\1')", $keys);
+			$keys = preg_replace_callback("/`(.+)`/U", create_function ('$match', 'return str_replace(".", "\.", $match[1]);'), $keys);
 		}
-		$keys = preg_split("/(?<!\\\)\./", $keys);
+		$keys = preg_split("/(?<!\\\\)\\./", $keys);
 	}
 	if (count($keys) == 1) {
 		$firstKey = array_pop($keys);
@@ -505,21 +505,21 @@ function rock_array_set(array $array, $keys, $value) {
 	}
 	if (!is_array($keys)) {
 		if (strstr($keys, "`")) {
-			$keys = preg_replace("/`(.+)`/Ue", "str_replace('.','\.','\\1')", $keys);
+			$keys = preg_replace_callback("/`(.+)`/U", create_function ('$match', 'return str_replace(".", "\.", $match[1]);'), $keys);
 		}
-		$keys = preg_split("/(?<!\\\)\./", $keys);
+		$keys = preg_split("/(?<!\\\\)\\./", $keys);
 	}
 	if (count($keys) == 1) {
 		$firstKey = array_pop($keys);
-		$firstKey = str_replace("\.", ".", $firstKey);
+		$firstKey = str_replace("\\.", ".", $firstKey);
 		$array[$firstKey] = $value;
 		return $array;
 	}
 	$lastKey = array_pop($keys);
-	$lastKey = str_replace("\.", ".", $lastKey);
+	$lastKey = str_replace("\\.", ".", $lastKey);
 	$lastConfig = &$array;
 	foreach ($keys as $key) {
-		$key = str_replace("\.", ".", $key);
+		$key = str_replace("\\.", ".", $key);
 		if (!isset($lastConfig[$key]) || !is_array($lastConfig[$key])) {
 			$lastConfig[$key] = array();
 		}
@@ -597,6 +597,7 @@ function rock_array_combine($array, $keyName, $valueName = null) {
 function rock_lang($code) {
 	if (!isset($GLOBALS["ROCK_LANGS"])) {
 		$file = __ROOT__ . "/langs/" . __LANG__ . "/message.php";
+		$message = array();
 		require($file);
 		if (isset($message) && is_array($message)) {
 			$GLOBALS["ROCK_LANGS"] = $message;

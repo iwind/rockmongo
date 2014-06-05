@@ -312,7 +312,9 @@ class MServer {
 		}
 		
 		// changing timeout to the new value
-		MongoCursor::$timeout = $this->_mongoTimeout;
+		if (RMongo::compareVersion("1.5.0") < 0) {
+			MongoCursor::$timeout = $this->_mongoTimeout;
+		}
 		
 		//auth by mongo
 		if ($this->_mongoAuth) {

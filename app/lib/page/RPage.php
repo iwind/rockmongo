@@ -132,7 +132,7 @@ abstract class RPage {
 	function setTotal($total) {
 		$this->total =  intval($total);
 		if ($this->total < 0) {
-			throw new IException("content total '{$total}' can't be small than 0", 0x100027, "条目总数 '{$total}' 不能小于 0");
+			throw new Exception("content total '{$total}' can't be small than 0");
 		}
 		return $this;
 	}
@@ -181,7 +181,7 @@ abstract class RPage {
 	function setSize($size) {
 		$this->size = intval($size);
 		if ($this->size < 1) {
-			throw new IException("page size '{$size}' can't be small than 1", 0x100028, "分页尺寸 '{$size}' 不能小于 1");
+			throw new Exception("page size '{$size}' can't be small than 1");
 		}
 		return $this;
 	}
@@ -315,13 +315,19 @@ abstract class RPage {
 	 * @since 1.0.3
 	 */
 	function setAutoQuery($bool = true, $except = "", $only = "") {
+		if (!is_array($except)) {
+			$except = preg_split("/\\s+,\\s+/", $except);
+		}
+		if (!is_array($only)) {
+			$only = preg_split("/\\s+,\\s+/", $only);
+		}
 		if ($bool) {
 			$x = xn();
 			foreach ($x as $name => $value) {
-				if ($except && if_in_array($name, $except)) {
+				if ($except && in_array($name, $except)) {
 					unset($x[$name]);
 				}
-				if ($only && !if_in_array($name, $only)) {
+				if ($only && !in_array($name, $only)) {
 					unset($x[$name]);
 				}
 			}

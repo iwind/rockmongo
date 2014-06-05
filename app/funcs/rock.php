@@ -194,6 +194,9 @@ function rock_load_languages() {
 	while(($file = readdir($handler)) !== false) {
 		$langDir = $dir . DS . $file;
 		if (is_dir($langDir) && preg_match("/^\\w+_\\w+$/", $file)) {
+			$message = array(
+				"TRANSLATION_NAME" => ""
+			);
 			require $langDir . DS . "message.php";
 			$languages[$file] = array( "code" => $file,  "name" => $message["TRANSLATION_NAME"], "id" => $message["TRANSLATION_ID"]);
 		}

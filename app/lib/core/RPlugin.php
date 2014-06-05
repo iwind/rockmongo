@@ -77,6 +77,7 @@ class RPlugin {
 		if (self::$_loaded) {
 			return;
 		}
+		$plugins = array();
 		require(__ROOT__ . DS . "configs" . DS . "rplugin.php");
 		if (empty($plugins) || !is_array($plugins)) {
 			return;
@@ -108,6 +109,7 @@ class RPlugin {
 	 */
 	public static function plugins() {
 		$configPlugins = array();
+		$plugins = array();
 		require(__ROOT__ . DS . "configs" . DS . "rplugin.php");
 		if (empty($plugins) || !is_array($plugins)) {
 			return $configPlugins;
