@@ -1,3 +1,20 @@
+v1.1.6 - 2014-06-05
+* Turkish translation thanks for M. Yılmaz SÜSLÜ <yilmazsuslu@gmail.com>
+* 2d index support
+* Compatible with php_mongo 1.4.x & 1.5.x
+* Compatible with PHP 5.5.x
+* Add URI, E-mail, Picture URLs field value recognition
+* Open log_query feature, can log your query to file, execute them later
+* Add docs_render option:http://rockmongo.com/wiki/configuration?lang=en_us#%23%23%23%23docs_render%0D
+* Bug Fix: array display as object
+* Bug Fix: update array or object field
+* View microtime as date string
+* Add "Query Examples" link under query box
+* Support empty object
+* Support unix domain sockets
+* Fix $_SERVER["PHP_SELF"] under nginx cgi
+* Fixed cookie vulnerability as reported in CVE-2013-5107 (thanks for synthomat)
+
 v1.1.5 - 2012-12-20
 * Fix authenticate with php_mongo >= 1.3.0
 
