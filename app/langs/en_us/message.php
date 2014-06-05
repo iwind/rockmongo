@@ -9,7 +9,7 @@
 
 $message["TRANSLATION_NAME"] = "English";
 $message["TRANSLATION_ID"] = 1;
- 
+
 /** Login interface **/
 $message["admin"] = "Admin";
 $message["password"] = "Password";
@@ -55,6 +55,7 @@ $message["statistics"] = "Statistics";
 $message["export"] = "Export";
 $message["import"] = "Import";
 $message["transfer"] = "Transfer";
+$message["sock"] = "Socket";
 $message["drop"] = "Drop";
 $message["more"] = "More";
 $message["rename"] = "Rename";
@@ -140,7 +141,7 @@ $message["username"] = "UserName";
 $message["confirm_pass"] = "Confirm Password";
 $message["readonly"] = "Read Only?";
 $message["addreplace"] = "Add or Replace";
-	
+
 /** Manual links **/
 $message["querying"] = "Querying";
 $message["updating"] = "Updating";
@@ -168,7 +169,7 @@ $message["profiling_level1"] = "0 - off";
 $message["profiling_level2"] = "1 - log slow operations (>N ms)";
 $message["profiling_level3"] = "2 - log all operations";
 $message["timecost"] = "Time cost";
-	
+
 /** Collection operations **/
 $message["submit_query"] = "Submit Query";
 $message["explain"] = "Explain";
