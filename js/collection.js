@@ -1151,6 +1151,9 @@ function showQueryHistory() {
 					}
 				});
 			}
+		},
+		"Close": function () {
+			$(this).dialog("close");
 		}
 	};
 	
@@ -1165,7 +1168,10 @@ function showQueryHistory() {
 				"modal": true,
 				"title": "Query History",
 				"buttons":buttons,
-				"width": 450
+				"width": 450,
+				"open": function(event, ui) {
+			        $("button").blur();
+			    }
 			});
 		}
 		
