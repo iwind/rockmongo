@@ -28,8 +28,8 @@ $(function () {
 		var li = $(this);
 		var a = $(this).find("a");
 		var name = a.attr("cname");
-		
-		li.click(function () {	
+
+		li.click(function () {
 			window.location.hash = "#" + name;
 		});
 
@@ -94,7 +94,7 @@ $(function () {
 					<?php if (!empty($tables)):?>
 						<li><input type="text" class="r_search_box" placeholder="keyword"/></li>
 						<?php foreach ($tables as $table => $count) :?>
-						<li class="collection"><a href="<?php h(url("collection.index", array( "db" => $db["name"], "collection" => $table ))); ?>" target="right" cname="<?php h($table);?>"><img src="<?php render_theme_path() ?>/images/<?php if(preg_match("/\\.(files|chunks)$/",$table)){h("grid");}else{h("table");} ?>.png" width="14" align="absmiddle"/> <span class="name_text"><?php h($table);?></span></a> (<span class="count"><?php h($count);?></span>)</li>
+						<li class="collection"><a href="<?php h(url("collection.index", array( "db" => $db["name"], "collection" => $table ))); ?>" target="right" cname="<?php h($table);?>"><img src="<?php render_theme_path() ?>/images/<?php echo r_get_collection_icon($table) ?>.png" width="14" align="absmiddle"/> <span class="name_text"><?php h($table);?></span></a> (<span class="count"><?php h($count);?></span>)</li>
 						<?php endforeach; ?>
 					<?php else:?>
 						<li><?php hm("nocollections2"); ?></li>
