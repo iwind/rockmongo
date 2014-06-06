@@ -22,16 +22,16 @@ class DbController extends BaseController {
 		$ret = array_merge($ret, $db->command(array("dbstats" => 1)));
 		$ret["diskSize"] = "-";
 		if (isset($ret["sizeOnDisk"])) {
-			$ret["diskSize"] = $this->_formatBytes($ret["sizeOnDisk"]);
+			$ret["diskSize"] = r_human_bytes($ret["sizeOnDisk"]);
 		}
 		if(isset($ret["dataSize"])) {
-			$ret["dataSize"] = $this->_formatBytes($ret["dataSize"]);
+			$ret["dataSize"] = r_human_bytes($ret["dataSize"]);
 		}
 		if(isset($ret["storageSize"])) {
-			$ret["storageSize"] = $this->_formatBytes($ret["storageSize"]);
+			$ret["storageSize"] = r_human_bytes($ret["storageSize"]);
 		}
 		if(isset($ret["indexSize"])) {
-			$ret["indexSize"] = $this->_formatBytes($ret["indexSize"]);
+			$ret["indexSize"] = r_human_bytes($ret["indexSize"]);
 		}
 
 
@@ -444,8 +444,13 @@ class DbController extends BaseController {
 
 		if ($this->isPost()) {
 			$db = $this->_mongo->selectDB($this->db);
-			$db->createCollection($this->name, $this->isCapped, $this->size, $this->max);
-			$this->message = "New collection is created.";
+
+			MCollection::createCollection($db, $this->name, array(
+				"capped" => $this->isCapped,
+				"size" => $this->size,
+				"max" => $this->max
+			));
+			$this->message = "New collection is created. <a href=\"?action=collection.index&db={$this->db}&collection={$this->name}\">[GO &raquo;]</a>";
 
 			//add index
 			if (!$this->isCapped) {

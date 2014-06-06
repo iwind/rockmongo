@@ -249,28 +249,6 @@ class BaseController extends RExtController {
 	}
 
 	/**
-	 * format bytes to human size
-	 *
-	 * @param integer $bytes size in byte
-	 * @return string size in k, m, g..
-	 **/
-	protected function _formatBytes($bytes) {
-		if ($bytes < 1024) {
-			return $bytes;
-		}
-		if ($bytes < 1024 * 1024) {
-			return round($bytes/1024, 2) . "k";
-		}
-		if ($bytes < 1024 * 1024 * 1024) {
-			return round($bytes/1024/1024, 2) . "m";
-		}
-		if ($bytes < 1024 * 1024 * 1024 * 1024) {
-			return round($bytes/1024/1024/1024, 2) . "g";
-		}
-		return $bytes;
-	}
-
-	/**
 	 * Enter description here...
 	 *
 	 * @param MongoDB $db

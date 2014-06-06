@@ -7,13 +7,13 @@
 <?php foreach ($stats as $name => $stat):?>
 	<tr bgcolor="#ffffff">
 		<td width="150" bgcolor="#fffeee" valign="top"><?php h($name);?></td>
-		<td><?php 
+		<td><?php
 			if (is_array($stat)) {
-				h("<xmp>" . var_export($stat, true) . "</xmp>"); 
+				h("<xmp>" . var_export($stat, true) . "</xmp>");
 			}
 			else {
-				if (in_array($name, array( "size", "storageSize", "lastExtentSize", "totalIndexSize" ))) {
-					$stat = round($stat/1024/1024, 2) . "m";
+				if (in_array($name, array( "size", "storageSize", "lastExtentSize", "totalIndexSize", "avgObjSize" ))) {
+					$stat = "<span title=\"{$stat}bytes\">" . r_human_bytes($stat) . "</span>";
 				}
 				h($stat);
 			}
@@ -27,7 +27,7 @@
 	<?php foreach ($top as $name => $stat):?>
 		<tr bgcolor="#ffffff">
 			<td width="150" bgcolor="#fffeee" valign="top"><?php h($name);?></td>
-			<td><?php 
+			<td><?php
 				h($stat);
 				?></td>
 		</tr>

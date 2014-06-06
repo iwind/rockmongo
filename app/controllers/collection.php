@@ -904,7 +904,7 @@ window.parent.frames["left"].location.reload();
 		if ($ret["ok"]) {
 			$this->stats = $ret;
 			foreach ($this->stats as $index => $stat) {
-				if (is_array($stat)) {
+				if (is_array($stat) || is_bool($stat)) {
 					$this->stats[$index] = $this->_highlight($stat, "json");
 				}
 			}
@@ -961,7 +961,7 @@ window.parent.frames["left"].location.reload();
  			$this->ret = $this->_mongo->selectDB($this->db)->execute('function (coll, newname, dropExists) { db.getCollection(coll).renameCollection(newname, dropExists);}', array( $oldname, $newname, (bool)$removeExists ));
  			if ($this->ret["ok"]) {
  				$this->realName = $newname;
- 				$this->message = "Operation success.";
+ 				$this->message = "Operation success. <a href=\"?action=collection.index&db={$this->db}&collection={$newname}\">[GO &raquo;]</a>";
  			}
  			else {
  				$this->error = "Operation failure";
@@ -976,23 +976,20 @@ window.parent.frames["left"].location.reload();
 		$this->db = xn("db");
 		$this->collection = xn("collection");
 
-		$ret = $this->_mongo->selectDB($this->db)->command(array( "collStats" => $this->collection ));
-
-		if (!$ret["ok"]) {
-			exit("There is something wrong:<font color=\"red\">{$ret['errmsg']}</font>, please refresh the page to try again.");
-		}
+		$ret = $this->_mongo->selectDB($this->db)->selectCollection("system.namespaces")->findOne(array(
+			"name" => $this->db . "." . $this->collection
+		));
 		$this->isCapped = 0;
 		$this->size = 0;
 		$this->max = 0;
-		$options = $ret;
-		if (isset($options["capped"])) {
-			$this->isCapped = $options["capped"];
+		if (isset($ret["options"]["capped"])) {
+			$this->isCapped = $ret["options"]["capped"];
 		}
-		if (isset($options["size"])) {
-			$this->size = $options["size"];
+		if (isset($ret["options"]["size"])) {
+			$this->size = $ret["options"]["size"];
 		}
-		if (isset($options["max"])) {
-			$this->max = $options["max"];
+		if (isset($ret["options"]["max"])) {
+			$this->max = $ret["options"]["max"];
 		}
 		if ($this->isPost()) {
 			$this->isCapped = xi("is_capped");
@@ -1010,7 +1007,11 @@ window.parent.frames["left"].location.reload();
 
 			//create new collection
 			$db = $this->_mongo->selectDB($this->db);
-			$db->createCollection($this->collection, $this->isCapped, $this->size, $this->max);
+			MCollection::createCollection($db, $this->collection, array(
+				"capped" => $this->isCapped,
+				"size" => $this->size,
+				"max" => $this->max
+			));
 
 			//copy data to new collection
 			if (!$this->_copyCollection($db, $bkCollection, $this->collection, true)) {
