@@ -53,13 +53,16 @@ class DbController extends BaseController {
 		if(isset($ret["objects"])) {
 			$this->stats["Objects"] = $ret["objects"];
 		}
+		if (isset($ret["avgObjSize"])) {
+			$this->stats["Avg Object Size"] = $ret["avgObjSize"];
+		}
 		if(isset($ret["dataSize"])) {
 			$this->stats["Data Size"] = $ret["dataSize"];
 		}
 		if(isset($ret["storageSize"])) {
 			$this->stats["Storage Size"] = $ret["storageSize"];
 		}
-		if(isset($ret["numEvents"])) {
+		if(isset($ret["numExtents"])) {
 			$this->stats["Extents"] = $ret["numExtents"];
 		}
 		if(isset($ret["indexes"])) {
@@ -67,6 +70,18 @@ class DbController extends BaseController {
 		}
 		if(isset($ret["indexSize"])) {
 			$this->stats["Index Size"] = $ret["indexSize"];
+		}
+		if (isset($ret["fileSize"])) {
+			$this->stats["Total File Size"] = r_human_bytes($ret["fileSize"]);
+		}
+		if (isset($ret["nsSizeMB"])) {
+			$this->stats["Namespace Size"] = $ret["nsSizeMB"] . "m";
+		}
+		if (isset($ret["dataFileVersion"])) {
+			$this->stats["Data File Version"] = $this->_highlight($ret["dataFileVersion"], "json");
+		}
+		if (isset($ret["extentFreeList"])) {
+			$this->stats["Extent Free List"] = $this->_highlight($ret["extentFreeList"], "json");
 		}
 
 		$this->display();

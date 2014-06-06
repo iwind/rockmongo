@@ -23,7 +23,7 @@ function setManualPosition(className, x, y) {
 		});
 	}
 }
- 
+
 /** hide menus **/
 function hideMenus() {
 	$(".menu").hide();
@@ -41,6 +41,9 @@ $(function () {
 </div>
 
 <table bgcolor="#cccccc" cellpadding="2" cellspacing="1" width="600">
+	<tr>
+		<td colspan="2" style="text-align:center;font-weight:bold"><a href="http://docs.mongodb.org/manual/reference/command/dbStats/#dbcmd.dbStats" target="_blank">Database Statistics</a> ({dbStats:1})</td>
+	</tr>
 	<?php foreach ($stats as $param=>$value):?>
 	<tr bgcolor="#fffeee">
 		<td width="120" valign="top"><?php h($param);?></td>
