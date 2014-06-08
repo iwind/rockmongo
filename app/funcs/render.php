@@ -175,7 +175,15 @@ function render_db_menu($dbName) {
 			$string .= "<div class=\"menu\">";
 		}
 
-		if (!empty($op["action"])) {
+		if (is_string($op)) {
+			if ($op == "-") {
+				$string .= "-----------";
+			}
+			else {
+				$string .= $op;
+			}
+		}
+		else if (!empty($op["action"])) {
 			$string .= '<a href="' . url($op["action"], isset($op["params"]) ? $op["params"] : array()) . '"';
 			if (__CONTROLLER__ . "." . __ACTION__ == $op["action"]) {
 				$string .= ' class="current"';
@@ -335,7 +343,15 @@ function render_doc_menu($dbName, $collectionName, $docId, $docIndex) {
 			$string .= "<div class=\"doc_menu doc_menu_{$docIndex}\">";
 		}
 
-		if (!empty($op["action"])) {
+		if (is_string($op)) {
+			if ($op == "-") {
+				$string .= "-----------";
+			}
+			else {
+				$string .= $op;
+			}
+		}
+		else if (!empty($op["action"])) {
 			$string .= '<a href="' . url($op["action"], isset($op["params"]) ? $op["params"] : array()) . '"';
 			if (__CONTROLLER__ . "." . __ACTION__ == $op["action"]) {
 				$string .= ' class="current"';
