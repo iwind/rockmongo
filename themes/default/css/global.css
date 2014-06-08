@@ -24,23 +24,10 @@ ul.list { list-style:none; width:600px; margin:0; padding:0; }
 ul.list li {float:left; width:200px;}
 img {border:0}
 
-/** left **/
-.dbs { margin:0; padding:0; list-style:none; }
-.dbs li { background-color:#eeefff; padding-left:20px;  }
-.dbs ul {padding:0;margin:0;list-style:none;}
-.dbs ul li {padding-left:20;border-bottom:0}
-
 
 /** collection **/
 .query {background-color:#eeefff}
 .field_orders p { height:14px; margin-top:0 }
-
-/** top **/
-.top {border-bottom:1px #666 solid; background-color:#ccc; }
-.top select { height:18px; background-color:#ccc; border:0 }
-.top .left {float:left}
-.top .right {float:right}
-
 
 .menu, #field_menu, .doc_menu {
   float:right;
@@ -57,3 +44,20 @@ img {border:0}
   display:none;
   min-width:100px;
 }
+
+/** leftbar **/
+.leftbar-page { background-color:#eeefff;height:100%; }
+.leftbar-page .server-btn { margin-left:20px; }
+.leftbar-page .world-btn { margin-left:20px; margin-bottom:3px; }
+.leftbar-page .line { margin-bottom:10px; border-bottom:1px #ccc solid; }
+.leftbar-page .dbs { margin:0; padding:0; list-style:none; }
+.leftbar-page .dbs li { background-color:#eeefff; padding-left:20px;  }
+.leftbar-page .dbs ul {padding:0;margin:0;list-style:none;}
+.leftbar-page .dbs ul li {padding-left:20;border-bottom:0}
+.leftbar-page .dbs .collections { }
+
+/** topbar **/
+.top-page {border-bottom:1px #666 solid; background-color:#ccc; }
+.top-page select { height:18px; background-color:#ccc; border:0 }
+.top-page .left {float:left}
+.top-page .right {float:right}
