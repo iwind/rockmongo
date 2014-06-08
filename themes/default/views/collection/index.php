@@ -128,7 +128,7 @@ currentFields.push("<?php h(addslashes($field));?>");
 
 		<!-- list all records -->
 		<?php foreach ($rows as $index => $row):?>
-		<div style="border:2px #ccc solid;margin-bottom:5px;" onmouseover="showOperationButtons('<?php h($index);?>')" onmouseout="hideOperationButtons('<?php h($index);?>')" class="record">
+		<div style="border:2px #ccc solid;margin-bottom:5px;" onmouseover="showOperationButtons('<?php h($index);?>')" onmouseout="hideOperationButtons('<?php h($index);?>')" class="record" <?php if(MCollection::isFile($row)): ?>r-is-file="yes" r-file-name="<?php h($row["filename"]) ?>"<?php endif; ?>>
 			<table width="100%" border="0" id="object_<?php h($index);?>">
 				<tr>
 					<td valign="top" width="50">#<?php echo $page->total() - $page->offset() - $index; ?></td>
