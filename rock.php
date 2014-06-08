@@ -608,7 +608,7 @@ function rock_lang($code) {
 			$GLOBALS["ROCK_LANGS"] = array();
 		}
 	}
-	$ret = isset($GLOBALS["ROCK_LANGS"][$code]) ? $GLOBALS["ROCK_LANGS"][$code] : null;
+	$ret = isset($GLOBALS["ROCK_LANGS"][$code]) ? $GLOBALS["ROCK_LANGS"][$code] : $code;
 	if (is_null($ret)) {
 		require __ROOT__ . "/langs/en_us/message.php";
 		if (isset($message[$code])) {
