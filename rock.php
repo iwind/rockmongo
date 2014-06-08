@@ -608,13 +608,17 @@ function rock_lang($code) {
 			$GLOBALS["ROCK_LANGS"] = array();
 		}
 	}
-	$ret = isset($GLOBALS["ROCK_LANGS"][$code]) ? $GLOBALS["ROCK_LANGS"][$code] : $code;
+	$ret = isset($GLOBALS["ROCK_LANGS"][$code]) ? $GLOBALS["ROCK_LANGS"][$code] : null;
 	if (is_null($ret)) {
 		require __ROOT__ . "/langs/en_us/message.php";
 		if (isset($message[$code])) {
 			$ret = $message[$code];
 		}
 		$GLOBALS["ROCK_LANGS"] = array_merge($message, $GLOBALS["ROCK_LANGS"]);
+	}
+
+	if (is_null($ret)) {
+		$ret = $code;
 	}
 
 	$args = func_get_args();
