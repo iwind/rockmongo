@@ -28,7 +28,7 @@ $(function () {
 		var box = $(this).parent();
 		var collectionsBox = box.find(".collections");
 		if (collectionsBox.is(":visible") && collectionsBox.find("li").length > 0) {
-			box.find(".collections").slideUp();
+			box.find(".collections").slideUp(100);
 			return false;
 		}
 
