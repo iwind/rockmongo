@@ -312,7 +312,7 @@ class MServer {
 			}
 
 			//after 1.2.11 use options to authenticate
-			if($this->_controlAuth && !empty($this->_mongoUser) && !empty($this->_mongoPass) && RMongo::compareVersion("1.2.11") > 0) {
+			if(!$this->_mongoAuth && !empty($this->_mongoUser) && !empty($this->_mongoPass) && RMongo::compareVersion("1.2.11") > 0) {
 				$options["username"] = $this->_mongoUser;
 				$options["password"] = $this->_mongoPass;
 
