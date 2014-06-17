@@ -23,7 +23,8 @@ class MServer {
 	private $_docsNatureOrder = false;
 	private $_docsRender = "default";
 	private $_docsRenderLimit = 2000;
-	
+
+    private $_mongoClientMajorVersion = 1.5;
 	/**
 	 * the server you are operating
 	 * 
@@ -104,6 +105,10 @@ class MServer {
 		if (empty($this->_mongoName)) {
 			$this->_mongoName = $this->_mongoHost . ":" . $this->_mongoPort;
 		}
+
+        $version = explode(".", MongoClient::VERSION,3);
+        array_pop($version);
+        $this->_mongoClientMajorVersion = (float) join("." , $version);
 	}
 	
 	public function mongoName() {
@@ -314,6 +319,12 @@ class MServer {
 				$options["password"] = $password;
 				$options["db"] = $db;
 			}
+            // changing timeout to the new value
+            if ($this->_mongoClientMajorVersion >= 1.5){
+                $options['socketTimeoutMS'] = $this->_mongoTimeout;
+            } else {
+                MongoCursor::$timeout = $this->_mongoTimeout;
+            }
 			$this->_mongo = new RMongo($server, $options);
 			$this->_mongo->setSlaveOkay(true);
 		}
@@ -324,10 +335,7 @@ class MServer {
 			echo "Unable to connect MongoDB, please check your configurations. MongoDB said:" . $e->getMessage() . ".";
 			exit();
 		}
-		
-		// changing timeout to the new value
-		MongoCursor::$timeout = $this->_mongoTimeout;
-		
+
 		//auth by mongo
 		if ($this->_mongoAuth) {
 			// "authenticate" can only be used between 1.0.1 - 1.2.11
