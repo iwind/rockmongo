@@ -1,5 +1,5 @@
 <?php if(empty($plugins)): ?>
-<p>There is no plugins, [<a href="http://rockmongo.com/plugins" target="_blank">Go and download plugins here</a>] &nbsp; [<a href="http://rockmongo.com/wiki/pluginUsage?lang=en_us" target="_blank">How to install plugins?</a>] &nbsp; [<a href="http://rockmongo.com/wiki/pluginDevelop?lang=en_us" target="_blank">Develop New plugins</a>]</p>
+<p>There are no plugins installed, [<a href="http://rockmongo.com/plugins" target="_blank">Go and download plugins here</a>] &nbsp; [<a href="http://rockmongo.com/wiki/pluginUsage?lang=en_us" target="_blank">How to install plugins?</a>] &nbsp; [<a href="http://rockmongo.com/wiki/pluginDevelop?lang=en_us" target="_blank">Develop New plugins</a>]</p>
 <?php else: ?>
 <div style="margin-top:20px"></div>
 <p>[<a href="http://rockmongo.com/plugins" target="_blank">Go and download more plugins here</a>] &nbsp; [<a href="http://rockmongo.com/wiki/pluginUsage?lang=en_us" target="_blank">How to install plugins?</a>] &nbsp; [<a href="http://rockmongo.com/wiki/pluginDevelop?lang=en_us" target="_blank">Develop New plugins</a>]</p>
