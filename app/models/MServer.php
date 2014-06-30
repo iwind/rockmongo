@@ -24,6 +24,8 @@ class MServer {
 	private $_docsNatureOrder = false;
 	private $_docsRender = "default";
 
+	private $_pagesize = 10;
+
 	/**
 	 * the server you are operating
 	 *
@@ -99,6 +101,9 @@ class MServer {
 				case "docs_render":
 					$this->_docsRender = $value;
 					break;
+				case "pagesize":
+					$this->_pagesize = $value;
+					break;					
 			}
 		}
 		if (empty($this->_mongoName)) {
@@ -282,6 +287,16 @@ class MServer {
 	 */
 	public function docsRender() {
 		return $this->_docsRender;
+	}
+
+	/**
+	 * Get documents for page
+	 *
+	 * @return integer
+	 * @since 1.1.8
+	 */
+	public function pageSize() {
+		return $this->_pagesize;
 	}
 
 	public function auth($username, $password, $db = "admin") {

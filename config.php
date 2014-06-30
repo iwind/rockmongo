@@ -39,6 +39,8 @@ $MONGO["servers"][$i]["ui_hide_system_collections"] = false;//whether hide the s
 //$MONGO["servers"][$i]["docs_nature_order"] = false;//whether show documents by nature order, default is by _id field
 //$MONGO["servers"][$i]["docs_render"] = "default";//document highlight render, can be "default" or "plain"
 
+$MONGO["servers"][$i]["pagesize"] = 10;//docs for page
+
 $i ++;
 
 /**
