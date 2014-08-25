@@ -28,7 +28,7 @@ function removeArgument(link) {
 <?php endif;?>
 
 <form method="post">
-<textarea name="code" rows="20" cols="80"><?php h(x("code"));?></textarea>
+<textarea name="code" rows="20" cols="80" class="code-editor"><?php h(x("code"));?></textarea>
 <br/>
 <div id="arguments" <?php if(empty($arguments)):?>style="display:none"<?php endif;?>>
 <?php if(!empty($arguments)):?>

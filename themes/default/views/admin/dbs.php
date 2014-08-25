@@ -23,13 +23,26 @@ function highlightCollection(name, count) {
 }
 
 $(function () {
+	//dbs click
+	$(".dbs .db-box .db-btn").click(function () {
+		var box = $(this).parent();
+		var collectionsBox = box.find(".collections");
+		if (collectionsBox.is(":visible") && collectionsBox.find("li").length > 0) {
+			box.find(".collections").slideUp(100);
+			return false;
+		}
+
+		window.parent.frames["right"].location = $(this).attr("r-target-url");
+	});
+
+	//collections click
 	var collections = $(".collections");
 	collections.find("li").each(function () {
 		var li = $(this);
 		var a = $(this).find("a");
 		var name = a.attr("cname");
-		
-		li.click(function () {	
+
+		li.click(function () {
 			window.location.hash = "#" + name;
 		});
 
@@ -78,23 +91,22 @@ $(function () {
 	});
 });
 
-
-
 </script>
 
-<div style="background-color:#eeefff;height:100%">
-	<div style="margin-left:20px"><img src="<?php render_theme_path() ?>/images/server.png" align="absmiddle" width="14"/> <a href="<?php h(url("server.index"));?>" target="right"><?php hm("server"); ?></a></div>
-	<div style="margin-left:20px;margin-bottom:3px;"><img src="<?php render_theme_path() ?>/images/world.png" align="absmiddle" width="14"/> <a href="<?php h(url("server.databases"));?>" target="right"><?php hm("overview"); ?></a></div>
-	<div style="margin-bottom:10px;border-bottom:1px #ccc solid"></div>
+<div class="leftbar-page">
+	<div class="server-btn"><img src="<?php render_theme_path() ?>/images/server.png" align="absmiddle" width="14"/> <a href="<?php h(url("server.index"));?>" target="right"><?php hm("server"); ?></a></div>
+	<div class="world-btn"><img src="<?php render_theme_path() ?>/images/world.png" align="absmiddle" width="14"/> <a href="<?php h(url("server.databases"));?>" target="right"><?php hm("overview"); ?></a></div>
+	<div class="line"></div>
 	<ul class="dbs">
 		<?php foreach ($dbs as $db) : ?>
-		<li><a href="<?php echo $baseUrl;?>&db=<?php h($db["name"]);?>" <?php if ($db["name"] == x("db")): ?>style="font-weight:bold"<?php endif;?> onclick="window.parent.frames['right'].location='<?php h(url("db.index",array("db"=>$db["name"])));?>'"><img src="<?php render_theme_path() ?>/images/database.png" align="absmiddle" width="14"/> <?php echo $db["name"];?></a><?php if($db["collectionCount"]>0):?> (<?php h($db["collectionCount"]); ?>)<?php endif;?>
+		<li class="db-box">
+			<a class="db-btn" href="<?php echo $baseUrl;?>&db=<?php h($db["name"]);?>" <?php if ($db["name"] == x("db")): ?>style="font-weight:bold"<?php endif;?> r-target-url="<?php h(url("db.index",array("db"=>$db["name"])));?>"><img src="<?php render_theme_path() ?>/images/database.png" align="absmiddle" width="14"/> <?php echo $db["name"];?></a><?php if($db["collectionCount"]>0):?> (<?php h($db["collectionCount"]); ?>)<?php endif;?>
 			<ul class="collections">
 				<?php if($db["name"] == x("db")): ?>
 					<?php if (!empty($tables)):?>
 						<li><input type="text" class="r_search_box" placeholder="keyword"/></li>
 						<?php foreach ($tables as $table => $count) :?>
-						<li class="collection"><a href="<?php h(url("collection.index", array( "db" => $db["name"], "collection" => $table ))); ?>" target="right" cname="<?php h($table);?>"><img src="<?php render_theme_path() ?>/images/<?php if(preg_match("/\\.(files|chunks)$/",$table)){h("grid");}else{h("table");} ?>.png" width="14" align="absmiddle"/> <span class="name_text"><?php h($table);?></span></a> (<span class="count"><?php h($count);?></span>)</li>
+						<li class="collection"><a href="<?php h(url("collection.index", array( "db" => $db["name"], "collection" => $table ))); ?>" target="right" cname="<?php h($table);?>"><img src="<?php render_theme_path() ?>/images/<?php echo r_get_collection_icon($table) ?>.png" width="14" align="absmiddle"/> <span class="name_text"><?php h($table);?></span></a> (<span class="count"><?php h($count);?></span>)</li>
 						<?php endforeach; ?>
 					<?php else:?>
 						<li><?php hm("nocollections2"); ?></li>

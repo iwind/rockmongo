@@ -28,14 +28,14 @@ if (class_exists("RFilter")) {
 class BaseController extends RExtController {
 	/**
 	 * Enter description here...
-	 * 
+	 *
 	 * @var MServer
 	 */
 	protected $_server;
-	
+
 	/**
 	 * Enter description here ...
-	 * 
+	 *
 	 * @var RMongo
 	 */
 	protected $_mongo;
@@ -47,24 +47,24 @@ class BaseController extends RExtController {
 	 */
 	protected $_admin;
 	protected $_logQuery = false;
-	
+
 	/** called before any actions **/
 	public function onBefore() {
 		global $MONGO;
-		
+
 		//exception handler
 		set_exception_handler(array($this, "exceptionHandler"));
-		
+
 		$this->_admin = MUser::userInSession();
 		if (!$this->_admin) {
 			//if user is loged in?
 			$server = MServer::serverWithIndex(xi("host"));
-			
+
 			//filter server plugins
 			if (class_exists("RFilter")) {
 				RFilter::apply("SERVER_FILTER", $server);
 			}
-			
+
 			//if auth is disabled
 			if ($server && !$server->mongoAuth() && !$server->controlAuth()) {
 				MUser::login("rockmongo_memo", "rockmongo_memo", xi("host"), "admin", 10800);
@@ -79,12 +79,12 @@ class BaseController extends RExtController {
 		}
 		$this->_server = MServer::serverWithIndex($this->_admin->hostIndex());
 		$this->_mongo = $this->_server->mongo();
-		
+
 		//log query
 		if (isset($MONGO["features"]["log_query"]) && $MONGO["features"]["log_query"] == "on") {
 			$this->_logQuery = true;
 		}
-		
+
 		//render header
 		if (!$this->isAjax()) {
 			render_view("header");
@@ -97,7 +97,7 @@ class BaseController extends RExtController {
 			render_view("footer");
 		}
 	}
-	
+
 	/**
 	 * handle exception in runtime
 	 *
@@ -109,7 +109,7 @@ class BaseController extends RExtController {
 		render_view("footer");
 		exit();
 	}
-	
+
 	/**
 	 * convert variable from string values
 	 *
@@ -167,7 +167,7 @@ class BaseController extends RExtController {
 		}
 		return $realValue;
 	}
-	
+
 	protected function _encodeJson($var) {
 		if (function_exists("json_encode")) {
 			return json_encode($var);
@@ -176,7 +176,7 @@ class BaseController extends RExtController {
 		$service = new Services_JSON();
 		return $service->encode($var);
 	}
-	
+
 	/**
 	 * Output variable as JSON
 	 *
@@ -189,15 +189,15 @@ class BaseController extends RExtController {
 			exit();
 		}
 	}
-	
+
 	protected function _decodeJson($var) {
 		import("classes.Services_JSON");
 		$service = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 		$ret = array();
 		$decode = $service->decode($var);
 		return $decode;
-	}	
-	
+	}
+
 	/**
 	 * Export var as string then highlight it.
 	 *
@@ -247,29 +247,7 @@ class BaseController extends RExtController {
 		}
 		return $string;
 	}
-	
-	/** 
-	 * format bytes to human size 
-	 * 
-	 * @param integer $bytes size in byte
-	 * @return string size in k, m, g..
-	 **/
-	protected function _formatBytes($bytes) {
-		if ($bytes < 1024) {
-			return $bytes;
-		}
-		if ($bytes < 1024 * 1024) {
-			return round($bytes/1024, 2) . "k";
-		}
-		if ($bytes < 1024 * 1024 * 1024) {
-			return round($bytes/1024/1024, 2) . "m";
-		}
-		if ($bytes < 1024 * 1024 * 1024 * 1024) {
-			return round($bytes/1024/1024/1024, 2) . "g";
-		}
-		return $bytes;
-	}
-	
+
 	/**
 	 * Enter description here...
 	 *
@@ -300,13 +278,13 @@ class BaseController extends RExtController {
 		}
 		$ret = $db->execute('function (coll, coll2) { return db.getCollection(coll).copyTo(coll2);}', array( $from, $to ));
 		return $ret["ok"];
-	}		
-	
+	}
+
 	protected function _logFile($db, $collection) {
 		$logDir = dirname(__ROOT__) . DS . "logs";
 		return $logDir . DS . urlencode($this->_admin->username()) . "-query-" . urlencode($db) . "-" . urlencode($collection) . ".php";
 	}
-	
+
 	/**
 	 * remember data format choice
 	 *

@@ -6,7 +6,7 @@ class ServerController extends BaseController {
 	/** server infomation **/
 	public function doIndex() {
 		$db = $this->_mongo->selectDB("admin");
-		
+
 		//command line
 		try {
 			$query = $db->command(array("getCmdLineOpts" => 1));
@@ -19,7 +19,7 @@ class ServerController extends BaseController {
 		} catch (Exception $e) {
 			$this->commandLine = "";
 		}
-		
+
 		//web server
 		$this->webServers = array();
 		if (isset($_SERVER["SERVER_SOFTWARE"])) {
@@ -28,9 +28,9 @@ class ServerController extends BaseController {
 		}
 		$this->webServers["<a href=\"http://www.php.net\" target=\"_blank\">PHP version</a>"] = "PHP " . PHP_VERSION;
 		$this->webServers["<a href=\"http://www.php.net/mongo\" target=\"_blank\">PHP extension</a>"] = "<a href=\"http://pecl.php.net/package/mongo\" target=\"_blank\">mongo</a>/" . RMongo::getVersion();
-			
+
 		$this->directives = ini_get_all("mongo");
-		
+
 		//build info
 		$this->buildInfos = array();
 		try {
@@ -40,9 +40,9 @@ class ServerController extends BaseController {
 				$this->buildInfos = $ret;
 			}
 		} catch (Exception $e) {
-			
+
 		}
-		
+
 		//connection
 		$this->connections = array(
 			"Host" => $this->_server->mongoHost(),
@@ -50,14 +50,14 @@ class ServerController extends BaseController {
 			"Username" => "******",
 			"Password" => "******"
 		);
-		
+
 		$this->display();
 	}
-	
+
 	/** Server Status **/
 	public function doStatus() {
 		$this->status = array();
-		
+
 		try {
 			//status
 			$db = $this->_mongo->selectDB("admin");
@@ -76,12 +76,12 @@ class ServerController extends BaseController {
 				}
 			}
 		} catch (Exception $e) {
-			
+
 		}
-		
+
 		$this->display();
-	}	
-	
+	}
+
 	/** show databases **/
 	public function doDatabases() {
 		$ret = $this->_server->listDbs();
@@ -91,34 +91,34 @@ class ServerController extends BaseController {
 			$ret = $mongodb->command(array("dbstats" => 1));
 			$ret["collections"] = count(MDb::listCollections($mongodb));
 			if (isset($db["sizeOnDisk"])) {
-				$ret["diskSize"] = $this->_formatBytes($db["sizeOnDisk"]);
-				$ret["dataSize"] = $this->_formatBytes($ret["dataSize"]);
+				$ret["diskSize"] = r_human_bytes($db["sizeOnDisk"]);
+				$ret["dataSize"] = r_human_bytes($ret["dataSize"]);
 			}
 			else {
 				$ret["diskSize"] = "-";
 				$ret["dataSize"] = "-";
 			}
-			$ret["storageSize"] = $this->_formatBytes($ret["storageSize"]);
-			$ret["indexSize"] = $this->_formatBytes($ret["indexSize"]);
+			$ret["storageSize"] = r_human_bytes($ret["storageSize"]);
+			$ret["indexSize"] = r_human_bytes($ret["indexSize"]);
 			$this->dbs[$index] = array_merge($this->dbs[$index], $ret);
-			
+
 		}
 		$this->dbs = rock_array_sort($this->dbs, "name");
 		$this->display();
-	}	
-	
+	}
+
 	/** execute command **/
 	public function doCommand() {
 		$ret = $this->_server->listDbs();
-		$this->dbs = $ret["databases"]; 
-		
+		$this->dbs = $ret["databases"];
+
 		if (!$this->isPost()) {
 			x("command", json_format("{listCommands:1}"));
 			if (!x("db")) {
 				x("db", "admin");
 			}
 		}
-		
+
 		if ($this->isPost()) {
 			$command = xn("command");
 			$format = x("format");
@@ -138,11 +138,11 @@ class ServerController extends BaseController {
 		}
 		$this->display();
 	}
-	
+
 	/** execute code **/
 	public function doExecute() {
 		$ret = $this->_server->listDbs();
-		$this->dbs = $ret["databases"]; 
+		$this->dbs = $ret["databases"];
 		if (!$this->isPost()) {
 			if (!x("db")) {
 				x("db", "admin");
@@ -171,17 +171,17 @@ class ServerController extends BaseController {
 		}
  		$this->display();
 	}
-	
+
 	/** processlist **/
 	public function doProcesslist() {
 		$this->progs = array();
-	
+
 		try {
-			$query = $this->_mongo->selectDB("admin")->execute('function (){ 
+			$query = $this->_mongo->selectDB("admin")->execute('function (){
 				return db.$cmd.sys.inprog.find({ $all:1 }).next();
 			}');
-	
-			
+
+
 			if ($query["ok"]) {
 				$this->progs = $query["retval"]["inprog"];
 			}
@@ -193,7 +193,7 @@ class ServerController extends BaseController {
 				}
 			}
 		} catch (Exception $e) {
-			
+
 		}
 		$this->display();
 	}
@@ -210,7 +210,7 @@ class ServerController extends BaseController {
 		$this->ret = $this->_highlight($query, "json");
 		$this->display();
 	}
-	
+
 	/** create databse **/
 	public function doCreateDatabase() {
 		if ($this->isPost()) {
@@ -225,11 +225,11 @@ class ServerController extends BaseController {
 		}
 		$this->display();
 	}
-	
+
 	/** replication status **/
 	public function doReplication() {
 		$this->status = array();
-		
+
 		try {
 			$ret = $this->_mongo->selectDB("local")->execute('function () { return db.getReplicationInfo(); }');
 			$status = isset($ret["retval"]) ? $ret["retval"] : array();
@@ -256,12 +256,12 @@ class ServerController extends BaseController {
 				}
 			}
 		} catch (Exception $e) {
-			
+
 		}
-		
+
 		//slaves
 		$this->slaves = array();
-		
+
 		try {
 			$query = $this->_mongo->selectDB("local")->selectCollection("slaves")->find();
 			foreach ($query as $one) {
@@ -273,9 +273,9 @@ class ServerController extends BaseController {
 				$this->slaves[] = $one;
 			}
 		} catch (Exception $e) {
-			
+
 		}
-		
+
 		//masters
 		$this->masters = array();
 		try {
@@ -291,18 +291,18 @@ class ServerController extends BaseController {
 				$this->masters[] = $one;
 			}
 		} catch (Exception $e) {
-			
+
 		}
-			
+
 		//me
 		try {
 			$this->me = $this->_mongo->selectDB("local")->selectCollection("me")->findOne();
 		} catch (Exception $e) {
 			$this->me = array();
 		}
-		
+
 		$this->display();
-	}	
+	}
 }
 
 ?>

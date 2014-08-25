@@ -1,13 +1,13 @@
 <?php
 
 /**
- * convert unicode in json to utf-8
+ * Convert unicode in json to utf-8 chars
  *
- * @param string $json string to convert
+ * @param string $json String to convert
  * @return string utf-8 string
  */
 function json_unicode_to_utf8($json){
-	$json = preg_replace_callback("/\\\u([0-9a-f]{4})/", create_function('$match', '
+	$json = preg_replace_callback("/\\\\u([0-9a-f]{4})/", create_function('$match', '
 		$val = intval($match[1], 16);
 		$c = "";
 		if($val < 0x7F){        // 0000-007F
@@ -26,26 +26,11 @@ function json_unicode_to_utf8($json){
 }
 
 /**
- * PHP Integration of Open Flash Chart
- * Copyright (C) 2008 John Glazebrook <open-flash-chart@teethgrinder.co.uk>
+ * Format JSON to pretty html
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * @param string $json JSON to format
+ * @return string
  */
-
-// Pretty print some JSON
-//modified by iwind
 function json_format_html($json)
 {
 	$json = json_unicode_to_utf8($json);
@@ -54,18 +39,6 @@ function json_format_html($json)
     $indent_level = 0;
     $in_string = false;
 
-/*
- commented out by monk.e.boy 22nd May '08
- because my web server is PHP4, and
- json_* are PHP5 functions...
-
-    $json_obj = json_decode($json);
-
-    if($json_obj === false)
-        return false;
-
-    $json = json_encode($json_obj);
-*/
     $len = strlen($json);
 
     for($c = 0; $c < $len; $c++)
@@ -81,7 +54,7 @@ function json_format_html($json)
                     $indent_level++;
                 }
                 else {
-                    $new_json .= $char;
+                    $new_json .= "[";
                 }
                 break;
             case '}':
@@ -94,7 +67,7 @@ function json_format_html($json)
                 }
                 else
                 {
-                    $new_json .= $char;
+                    $new_json .= "]";
                 }
                 break;
             case ',':
@@ -103,7 +76,7 @@ function json_format_html($json)
                     $new_json .= ",<br/>" . str_repeat($tab, $indent_level);
                 }
                 else {
-                    $new_json .= $char;
+                    $new_json .= ",";
                 }
                 break;
             case ':':
@@ -153,6 +126,32 @@ function json_format_html($json)
 }
 
 
+/**
+ * PHP Integration of Open Flash Chart
+ * Copyright (C) 2008 John Glazebrook <open-flash-chart@teethgrinder.co.uk>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+
+/**
+ * Format JSON to pretty style
+ *
+ * @param string $json JSON to format
+ * @return string
+ */
 function json_format($json)
 {
     $tab = "  ";
@@ -235,6 +234,50 @@ function json_format($json)
     }
 
     return $new_json;
+}
+
+/**
+ * Format bytes to human size
+ *
+ * @param integer $bytes Size in byte
+ * @param integer $precision Precision
+ * @return string size in k, m, g..
+ * @since 1.1.7
+ */
+function r_human_bytes($bytes, $precision = 2) {
+	if ($bytes == 0) {
+		return 0;
+	}
+	if ($bytes < 1024) {
+		return $bytes . "B";
+	}
+	if ($bytes < 1024 * 1024) {
+		return round($bytes/1024, $precision) . "k";
+	}
+	if ($bytes < 1024 * 1024 * 1024) {
+		return round($bytes/1024/1024, $precision) . "m";
+	}
+	if ($bytes < 1024 * 1024 * 1024 * 1024) {
+		return round($bytes/1024/1024/1024, $precision) . "g";
+	}
+	return $bytes;
+}
+
+/**
+ * Get collection display icon
+ *
+ * @param string $collectionName Collection name
+ * @return string
+ * @since 1.1.8
+ */
+function r_get_collection_icon($collectionName) {
+	if (preg_match("/\\.(files|chunks)$/", $collectionName)){
+		return "grid";
+	}
+	if (preg_match("/^system\\.js$/", $collectionName)) {
+		return "table-systemjs";
+	}
+	return "table";
 }
 
 ?>

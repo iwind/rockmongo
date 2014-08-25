@@ -6,7 +6,7 @@ class DbController extends BaseController {
 	/** database **/
 	public function doIndex() {
 		$this->db = trim(xn("db"));
-		
+
 		$dbs = $this->_server->listDbs();
 		$ret = array();
 		foreach ($dbs["databases"] as $db) {
@@ -14,27 +14,27 @@ class DbController extends BaseController {
 				$ret = $db;
 			}
 		}
-		
+
 		//collections
 		$db = $this->_mongo->selectDB($this->db);
 		$collections = MDb::listCollections($db);
-		
+
 		$ret = array_merge($ret, $db->command(array("dbstats" => 1)));
 		$ret["diskSize"] = "-";
 		if (isset($ret["sizeOnDisk"])) {
-			$ret["diskSize"] = $this->_formatBytes($ret["sizeOnDisk"]);
+			$ret["diskSize"] = r_human_bytes($ret["sizeOnDisk"]);
 		}
 		if(isset($ret["dataSize"])) {
-			$ret["dataSize"] = $this->_formatBytes($ret["dataSize"]);
+			$ret["dataSize"] = r_human_bytes($ret["dataSize"]);
 		}
 		if(isset($ret["storageSize"])) {
-			$ret["storageSize"] = $this->_formatBytes($ret["storageSize"]);
+			$ret["storageSize"] = r_human_bytes($ret["storageSize"]);
 		}
 		if(isset($ret["indexSize"])) {
-			$ret["indexSize"] = $this->_formatBytes($ret["indexSize"]);
+			$ret["indexSize"] = r_human_bytes($ret["indexSize"]);
 		}
 
-		
+
 		$this->stats = array();
 		$this->stats["Size"] = $ret["diskSize"];
 		$this->stats["Is Empty?"] = $ret["empty"] ? "Yes" : "No";
@@ -46,12 +46,15 @@ class DbController extends BaseController {
 			$key = "Collections<br/>[<a href=\"" . $this->path("db.dropDbCollections", array( "db" => $this->db )) . "\" onclick=\"return window.confirm('Are you sure to drop all collections in the db?')\"><u>Drop All</u></a>]<br/>[<a href=\"" . $this->path("clearDbCollections", array( "db" => $this->db )) . "\" onclick=\"return window.confirm('Are you sure to clear all records in all collections?')\"><u>Clear All</u></a>]";
 			$this->stats[$key] = count($collections) . " collections:";
 			foreach ($collections as $collection) {
-				$this->stats[$key] .= "<br/><a href=\"" 
+				$this->stats[$key] .= "<br/><a href=\""
 					. $this->path("collection.index", array( "db" => $this->db, "collection" => $collection->getName())) . "\">" . $collection->getName() . "</a>";
 			}
 		}
 		if(isset($ret["objects"])) {
 			$this->stats["Objects"] = $ret["objects"];
+		}
+		if (isset($ret["avgObjSize"])) {
+			$this->stats["Avg Object Size"] = r_human_bytes($ret["avgObjSize"]);
 		}
 		if(isset($ret["dataSize"])) {
 			$this->stats["Data Size"] = $ret["dataSize"];
@@ -59,32 +62,45 @@ class DbController extends BaseController {
 		if(isset($ret["storageSize"])) {
 			$this->stats["Storage Size"] = $ret["storageSize"];
 		}
-		if(isset($ret["numEvents"])) {
+		if(isset($ret["numExtents"])) {
 			$this->stats["Extents"] = $ret["numExtents"];
 		}
 		if(isset($ret["indexes"])) {
 			$this->stats["Indexes"] = $ret["indexes"];
 		}
-		if(isset($ret["indexSize"])) { 
-			$this->stats["Index Size"] = $ret["indexSize"];
+		if(isset($ret["indexSize"])) {
+			$this->stats["Index Size"] = r_human_bytes($ret["indexSize"]);
+		}
+		if (isset($ret["fileSize"])) {
+			$this->stats["Total File Size"] = r_human_bytes($ret["fileSize"]);
+		}
+		if (isset($ret["nsSizeMB"])) {
+			$this->stats["Namespace Size"] = $ret["nsSizeMB"] . "m";
+		}
+		if (isset($ret["dataFileVersion"])) {
+			$this->stats["Data File Version"] = $this->_highlight($ret["dataFileVersion"], "json");
+		}
+		if (isset($ret["extentFreeList"])) {
+			$this->stats["Extent Free List"] = $this->_highlight($ret["extentFreeList"], "json");
 		}
 
 		$this->display();
 	}
-	
+
 	/** transfer db collections from one server to another **/
 	public function doDbTransfer() {
 		$this->db = xn("db");
-		
+
 		$db = $this->_mongo->selectDB($this->db);
 		$this->collections = $db->listCollections();
 		$this->servers = $this->_admin->servers();
-		
+
 		$this->selectedCollections = array();
 		if (!$this->isPost()) {
 			$this->selectedCollections[] = xn("collection");
 			x("copy_indexes", 1);
 			$this->target_host = "";
+			$this->target_sock = "";
 			$this->target_port = 27017;
 			$this->target_auth = 0;
 			$this->target_username = "";
@@ -92,11 +108,12 @@ class DbController extends BaseController {
 		}
 		else {
 			$this->target_host = trim(xn("target_host"));
+			$this->target_sock = trim(xn("target_sock"));
 			$this->target_port = xi("target_port");
 			$this->target_auth = xi("target_auth");
 			$this->target_username = trim(xn("target_username"));
 			$this->target_password = trim(xn("target_password"));
-			
+
 			$checkeds = xn("checked");
 			if (is_array($checkeds)) {
 				$this->selectedCollections = array_keys($checkeds);
@@ -106,7 +123,7 @@ class DbController extends BaseController {
 				$this->display();
 				return;
 			}
-			if (empty($this->target_host)) {
+			if (empty($this->target_host) && empty($this->target_sock)) {
 				$this->error = "Target host must not be empty.";
 				$this->display();
 				return;
@@ -117,14 +134,21 @@ class DbController extends BaseController {
 				$this->display();
 				return;
 			}**/
-			
+
 			//start to transfer
 			$targetOptions = array();
 			if ($this->target_auth) {
 				$targetOptions["username"] = $this->target_username;
 				$targetOptions["password"] = $this->target_password;
 			}
-			$targetConnection = new RMongo("mongodb://" . $this->target_host . ":" . $this->target_port, $targetOptions);
+			$uri = null;
+			if ($this->target_sock) {
+				$uri = "mongodb://" . $this->target_sock;
+			}
+			else {
+				$uri = "mongodb://" . $this->target_host . ":" . $this->target_port;
+			}
+			$targetConnection = new RMongo($uri, $targetOptions);
 			$targetDb = $targetConnection->selectDB($this->db);
 			if ($this->target_auth) {
 				// "authenticate" can only be used between 1.0.1 - 1.2.11
@@ -149,17 +173,17 @@ class DbController extends BaseController {
 				$this->display();
 				return;
 			}
-			
+
 			$this->message = "All data were transfered to '{$this->target_host}' successfully.";
-		}		
-		
+		}
+
 		$this->display();
 	}
-	
+
 	/** export db **/
 	public function doDbExport() {
 		$this->db = xn("db");
-		
+
 		$db = $this->_mongo->selectDB($this->db);
 		$this->collections = MDb::listCollections($db);
 		$this->selectedCollections = array();
@@ -172,13 +196,13 @@ class DbController extends BaseController {
 			if (is_array($checkeds)) {
 				$this->selectedCollections = array_keys($checkeds);
 			}
-			
+
 			sort($this->selectedCollections);
-			
+
 			import("classes.VarExportor");
 			$this->contents =  "";
 			$this->countRows = 0;
-			
+
 			//indexes
 			foreach ($this->selectedCollections as $collection) {
 				$collObj = $db->selectCollection($collection);
@@ -193,7 +217,7 @@ class DbController extends BaseController {
 					$this->contents .= "\n/** {$collection} indexes **/\ndb.getCollection(\"" . addslashes($collection) . "\").ensureIndex(" . $exportor->export(MONGO_EXPORT_JSON) . "," . $exportor2->export(MONGO_EXPORT_JSON) . ");\n";
 				}
 			}
-			
+
 			//data
 			foreach ($this->selectedCollections as $collection) {
 				$cursor = $db->selectCollection($collection)->find();
@@ -208,12 +232,12 @@ class DbController extends BaseController {
 			}
 			if (x("can_download")) {
 				$prefix = "mongo-" . urlencode($this->db) . "-" . date("Ymd-His");
-			
+
 				//gzip
 				if (x("gzip")) {
 					ob_end_clean();
 					header("Content-type: application/x-gzip");
-					header("Content-Disposition: attachment; filename=\"{$prefix}.gz\""); 
+					header("Content-Disposition: attachment; filename=\"{$prefix}.gz\"");
 					echo gzcompress($this->contents, 9);
 					exit();
 				}
@@ -226,19 +250,19 @@ class DbController extends BaseController {
 				}
 			}
 		}
-		
+
 		$this->display();
 	}
-	
+
 	/** import db **/
 	public function doDbImport() {
 		$this->db = xn("db");
-		
+
 		if ($this->isPost()) {
 			$format = x("format");
 			if (!empty($_FILES["json"]["tmp_name"])) {
 				$tmp = $_FILES["json"]["tmp_name"];
-				
+
 				//read file by it's format
 				$body = "";
 				if (preg_match("/\\.gz$/", $_FILES["json"]["name"])) {
@@ -247,13 +271,13 @@ class DbController extends BaseController {
 				else {
 					$body = file_get_contents($tmp);
 				}
-				
+
 				//check format
-				
+
 				$ret = array("ok" => 0);
 				if ($format == "js") {
 					$ret = $this->_mongo->selectDB($this->db)->execute('function (){ ' . $body . ' }');
-					
+
 					if (!$ret["ok"]) {
 						$this->error = $ret["errmsg"];
 					}
@@ -274,8 +298,8 @@ class DbController extends BaseController {
 								$ret = $this->_mongo->selectDB($this->db)->execute('function (c, o){ o=eval("(" + o + ")"); db.getCollection(c).insert(o); }', array( $collection, $line ));
 							}
 						}
-						
-						
+
+
 						if (!$ret["ok"]) {
 							$this->error2 = $ret["errmsg"];
 						}
@@ -284,7 +308,7 @@ class DbController extends BaseController {
 						}
 					}
 				}
-				
+
 			}
 			else {
 				if ($format == "js") {
@@ -295,14 +319,14 @@ class DbController extends BaseController {
 				}
 			}
 		}
-		
+
 		$this->display();
-	}	
-	
+	}
+
 	/** db profiling **/
 	public function doProfile() {
 		$this->db = xn("db");
-	
+
 		import("lib.mongo.RQuery");
 		import("lib.page.RPageStyle1");
 		$query = new RQuery($this->_mongo, $this->db, "system.profile");
@@ -311,7 +335,7 @@ class DbController extends BaseController {
 		$page->setSize(10);
 		$page->setAutoQuery();
 		$this->page = $page;
-		
+
 		$this->rows = $query
 			->offset($page->offset())
 			->limit($page->size())
@@ -320,10 +344,10 @@ class DbController extends BaseController {
 		foreach ($this->rows as $index => $row) {
 			$this->rows[$index]["text"] = $this->_highlight($row, "json");
 		}
-			
+
 		$this->display();
 	}
-	
+
 	/** change db profiling level **/
 	public function doProfileLevel() {
 		$this->db = xn("db");
@@ -342,28 +366,28 @@ class DbController extends BaseController {
 		}
 		$this->display();
 	}
-	
+
 	/** clear profiling data **/
 	public function doClearProfile() {
 		$this->db = xn("db");
 		$db = $this->_mongo->selectDB($this->db);
-		
+
 		$query1 = $db->execute("function (){ return db.getProfilingLevel(); }");
 		$oldLevel = $query1["retval"];
 		$db->execute("function(level) { db.setProfilingLevel(level); }", array(0));
 		$ret = $db->selectCollection("system.profile")->drop();
 		$db->execute("function(level) { db.setProfilingLevel(level); }", array($oldLevel));
 
-		$this->redirect("db.profile", array( 
+		$this->redirect("db.profile", array(
 			"db" => $this->db
 		));
 	}
-	
+
 	/** authentication **/
 	public function doAuth() {
 		$this->db = xn("db");
 		$db = $this->_mongo->selectDB($this->db);
-		
+
 		//users
 		$collection = $db->selectCollection("system.users");
 		$cursor = $collection->find();
@@ -371,30 +395,30 @@ class DbController extends BaseController {
 		while($cursor->hasNext()) {
 			$this->users[] = $cursor->getNext();
 		}
-		
+
 		$this->display();
 	}
-	
+
 	/** delete user **/
 	public function doDeleteUser() {
 		$this->db = xn("db");
 		$db = $this->_mongo->selectDB($this->db);
-		
+
 		$db->execute("function (username){ db.removeUser(username); }", array(xn("user")));
 		$this->redirect("db.auth", array(
 			"db" => $this->db
 		));
 	}
-	
+
 	/** add user **/
 	public function doAddUser() {
 		$this->db = xn("db");
-		
+
 		if (!$this->isPost()) {
 			$this->display();
 			return;
 		}
-		
+
 		$username = trim(xn("username"));
 		$password = trim(xn("password"));
 		$password2 = trim(xn("password2"));
@@ -419,12 +443,12 @@ class DbController extends BaseController {
 			$password,
 			x("readonly") ? true : false
 		));
-		
+
 		$this->redirect("auth", array(
 			"db" => $this->db
 		));
 	}
-	
+
 	/** create new collection **/
 	public function doNewCollection() {
 		$this->db = xn("db");
@@ -432,21 +456,26 @@ class DbController extends BaseController {
 		$this->isCapped = xi("is_capped");
 		$this->size = xi("size");
 		$this->max = xi("max");
-		
+
 		if ($this->isPost()) {
 			$db = $this->_mongo->selectDB($this->db);
-			$db->createCollection($this->name, $this->isCapped, $this->size, $this->max);
-			$this->message = "New collection is created.";
-			
+
+			MCollection::createCollection($db, $this->name, array(
+				"capped" => $this->isCapped,
+				"size" => $this->size,
+				"max" => $this->max
+			));
+			$this->message = "New collection is created. <a href=\"?action=collection.index&db={$this->db}&collection={$this->name}\">[GO &raquo;]</a>";
+
 			//add index
 			if (!$this->isCapped) {
 				$db->selectCollection($this->name)->ensureIndex(array( "_id" => 1 ));
 			}
 		}
-		
+
 		$this->display();
 	}
-	
+
 	/** drop all collections in a db **/
 	public function doDropDbCollections() {
 		$this->db = xn("db");
@@ -459,7 +488,7 @@ window.parent.frames["left"].location.reload();
 </script>';
 		$this->redirect("db.index", array( "db" => $this->db ), true);
 	}
-	
+
 	/** clear all records in all collections **/
 	public function doClearDbCollections() {
 		$this->db = xn("db");
@@ -472,31 +501,31 @@ window.parent.frames["left"].location.reload();
 </script>';
 		$this->redirect("db.index", array( "db" => $this->db ), true);
 	}
-	
+
 	/** repair dataase **/
 	public function doRepairDatabase() {
 		$this->db = xn("db");
-		
+
 		$db = $this->_mongo->selectDB($this->db);
 		$ret = $db->command(array( "repairDatabase" => 1 ));
 		//$ret = $db->execute('function (){ return db.repairDatabase(); }'); //occure error in current version, we did not know why?
 		$this->ret = $this->_highlight($ret, "json");
 		$this->display();
 	}
-	
+
 	/** drop database **/
 	public function doDropDatabase() {
 		$this->db = xn("db");
-		
+
 		if (!x("confirm")) {
 			$this->display();
 			return;
 		}
-		
+
 		$ret = $this->_mongo->dropDB($this->db);
 		$this->ret = $this->_highlight($ret, "json");
 		$this->display("dropDatabaseResult");
-	}	
+	}
 }
 
 ?>

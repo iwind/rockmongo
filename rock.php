@@ -4,12 +4,14 @@ define("DS", DIRECTORY_SEPARATOR);
 define("__ROOT__", dirname(__FILE__) . DS . "app");
 define("__VERSION__", "0.0.1");
 define("nil", "nil_" . uniqid(microtime(true)));
-define("PHP_VERSION_5_3", version_compare(PHP_VERSION, "5.3.0")>=0);
 if (!defined("__ENV__")) {
 	define("__ENV__", "dev");
 }
 if (!defined("__PLATFORM__")) {
 	define("__PLATFORM__", "def");
+}
+if (!isset($_SERVER["PHP_SELF"]) && isset($_SERVER["SCRIPT_NAME"])) {
+	$_SERVER["PHP_SELF"] = $_SERVER["SCRIPT_NAME"];
 }
 
 //merge $_POST and $_GET
@@ -22,7 +24,7 @@ $GLOBALS["ROCK_HTTP_VARS"] = array_merge($_GET, $_POST);
  */
 class Rock {
 	private static $_controller;
-	
+
 	/**
 	 * Start application
 	 *
@@ -71,7 +73,7 @@ class Rock {
 		if (!($obj instanceof RController)) {
 			trigger_error("controller class '{$class}' must be a subclass of RController", E_USER_ERROR);
 		}
-		
+
 		define("__ACTION__", $action);
 		$obj->setRoot($mainRoot);
 		$obj->setAction($action);
@@ -80,11 +82,11 @@ class Rock {
 		$obj->setInPlugin($isInPlugin);
 		$obj->exec();
 	}
-	
+
 	public static function setController($controller) {
 		self::$_controller = $controller;
-	}	
-	
+	}
+
 	/**
 	 * get current running controller object
 	 *
@@ -92,7 +94,7 @@ class Rock {
 	 */
 	public static function controller() {
 		return self::$_controller;
-	}	
+	}
 }
 
 /**
@@ -104,16 +106,16 @@ class RController {
 	private $_path;
 	private $_name;
 	private $_inPlugin = false;
-	
+
 	/**
-	 * set current action name 
+	 * set current action name
 	 *
 	 * @param string $action action name
 	 */
 	public function setAction($action) {
 		$this->_action = $action;
 	}
-	
+
 	/**
 	 * Get action name
 	 *
@@ -122,15 +124,15 @@ class RController {
 	public function action() {
 		return $this->_action;
 	}
-	
+
 	public function setRoot($root) {
 		$this->_root = $root;
 	}
-	
+
 	public function root() {
 		return $this->_root;
-	}	
-	
+	}
+
 	/**
 	 * Set controller file path
 	 *
@@ -139,7 +141,7 @@ class RController {
 	public function setPath($path) {
 		$this->_path = $path;
 	}
-	
+
 	/**
 	 * Set controller name
 	 *
@@ -148,7 +150,7 @@ class RController {
 	public function setName($name) {
 		$this->_name = $name;
 	}
-	
+
 	/**
 	 * Get controller name
 	 *
@@ -157,7 +159,7 @@ class RController {
 	public function name() {
 		return $this->_name;
 	}
-	
+
 	/**
 	 * Set if the controller is in a plugin
 	 *
@@ -166,35 +168,35 @@ class RController {
 	public function setInPlugin($isInPlugin) {
 		$this->_inPlugin = $isInPlugin;
 	}
-	
+
 	/**
 	 * Call before actions
 	 *
 	 */
 	public function onBefore() {
-		
+
 	}
-	
+
 	/**
 	 * Call after actions
 	 *
 	 */
 	public function onAfter() {
-		
+
 	}
-	
+
 	/**
 	 * Execute action
 	 *
 	 */
 	public function exec() {
 		Rock::setController($this);
-		
+
 		if (class_exists("RPlugin")) {
 			RPlugin::callBefore();
 		}
 		$this->onBefore();
-		
+
 		$method = "do" . $this->_action;
 		if (!method_exists($this, $method)) {
 			trigger_error("can not find action '{$this->_action}' in class '" . get_class($this) . "'", E_USER_ERROR);
@@ -203,13 +205,13 @@ class RController {
 		if (is_object($ret) && ($ret instanceof RView)) {
 			$ret->display();
 		}
-		
+
 		$this->onAfter();
 		if (class_exists("RPlugin")) {
 			RPlugin::callAfter();
 		}
 	}
-	
+
 	/**
 	 * Display View
 	 *
@@ -238,7 +240,7 @@ class RController {
  *
  */
 class RModel {
-	
+
 }
 
 /**
@@ -251,13 +253,13 @@ class RView {
 	 *
 	 */
 	public function display() {
-		
+
 	}
 }
 
 /**
  * print data to screen
- * 
+ *
  * @param mixed $data1 data to be printed
  */
 function p($data1 = null) {
@@ -316,7 +318,7 @@ function rock_filter_param($param, $filter = true) {
 
 /**
  * get parameter value
- * 
+ *
  * different from x($name), the value will not be filtered (trim or htmlspecialchars)
  *
  * @param string $name parameter name
@@ -327,7 +329,7 @@ function xn($name = nil) {
 	if ($name == nil) {
 		return array_merge(rock_filter_param($GLOBALS["ROCK_HTTP_VARS"], false), $GLOBALS["ROCK_USER_VARS"]);
 	}
-	
+
 	if (array_key_exists($name, $GLOBALS["ROCK_USER_VARS"])) {
 		return $GLOBALS["ROCK_USER_VARS"][$name];
 	}
@@ -350,7 +352,7 @@ function xi($name) {
 
 /**
  * import a class file
- * 
+ *
  * @param string $class full class name
  * @param boolean $isClass if file is class
  */
@@ -359,7 +361,7 @@ function import($class, $isClass = true) {
 	if ($isClass && class_exists($className, false)) {
 		return $className;
 	}
-	
+
 	$file = null;
 	if (strstr($class, "@")) {
 		$trace = debug_backtrace();
@@ -383,9 +385,9 @@ function import($class, $isClass = true) {
 
 /**
  * get configuration value
- * 
+ *
  * support __PLATFORM__
- * 
+ *
  * o("config.name") - find in app/configs/config.php directory
  * o("@.config") - find config.php in current directory
  * o("@.config.servers") - find config.php in current directory
@@ -397,7 +399,7 @@ function o($config) {
 	if (isset($GLOBALS["ROCK_CONFIGS"][$config])) {
 		return $GLOBALS["ROCK_CONFIGS"][$config];
 	}
-	
+
 	$file = null;
 	$option = null;
 	$pieces = explode(".", $config);
@@ -417,7 +419,7 @@ function o($config) {
 		$filename = array_shift($pieces);
 		$file = __ROOT__ . "/configs/" . $filename . "@" . __PLATFORM__ . ".php";
 	}
-	
+
 	$options = $pieces;
 	$ret = require($file);
 
@@ -431,7 +433,7 @@ function o($config) {
 		return null;
 	}
 	$ret = rock_array_get($ret, $options);
-	
+
 	$GLOBALS["ROCK_CONFIGS"][$config] = $ret;
 	return $ret;
 }
@@ -441,12 +443,12 @@ function o($config) {
  *
  * Example:<br/>
  * load_xml_config --> loadXmlConfig
- * 
+ *
  * @param string $name name to be converted
  * @return string
  */
 function rock_name_to_java($name) {
-	$name = preg_replace("/_([a-zA-Z])/e", "strtoupper('\\1')", $name);
+	$name = preg_replace_callback("/_([a-zA-Z])/", create_function('$match', 'return strtoupper($match[1]);'), $name);
 	return $name;
 }
 
@@ -457,16 +459,16 @@ function rock_name_to_java($name) {
  * @param array|string $keys key or keys, can be a.b.c
  * @return mixed
  * @see rock_array_set
- */	
+ */
 function rock_array_get(array $array, $keys) {
 	if (is_array($keys) && empty($keys)) {
 		return $array;
 	}
 	if (!is_array($keys)) {
 		if (strstr($keys, "`")) {
-			$keys = preg_replace("/`(.+)`/Ue", "str_replace('.','\.','\\1')", $keys);
+			$keys = preg_replace_callback("/`(.+)`/U", create_function ('$match', 'return str_replace(".", "\.", $match[1]);'), $keys);
 		}
-		$keys = preg_split("/(?<!\\\)\./", $keys);
+		$keys = preg_split("/(?<!\\\\)\\./", $keys);
 	}
 	if (count($keys) == 1) {
 		$firstKey = array_pop($keys);
@@ -485,7 +487,7 @@ function rock_array_get(array $array, $keys) {
 			return null;
 		}
 	}
-	
+
 	return (is_array($lastArray) && array_key_exists($lastKey, $lastArray))? $lastArray[$lastKey] : null;
 }
 
@@ -505,21 +507,21 @@ function rock_array_set(array $array, $keys, $value) {
 	}
 	if (!is_array($keys)) {
 		if (strstr($keys, "`")) {
-			$keys = preg_replace("/`(.+)`/Ue", "str_replace('.','\.','\\1')", $keys);
+			$keys = preg_replace_callback("/`(.+)`/U", create_function ('$match', 'return str_replace(".", "\.", $match[1]);'), $keys);
 		}
-		$keys = preg_split("/(?<!\\\)\./", $keys);
+		$keys = preg_split("/(?<!\\\\)\\./", $keys);
 	}
 	if (count($keys) == 1) {
 		$firstKey = array_pop($keys);
-		$firstKey = str_replace("\.", ".", $firstKey);
+		$firstKey = str_replace("\\.", ".", $firstKey);
 		$array[$firstKey] = $value;
 		return $array;
 	}
 	$lastKey = array_pop($keys);
-	$lastKey = str_replace("\.", ".", $lastKey);
+	$lastKey = str_replace("\\.", ".", $lastKey);
 	$lastConfig = &$array;
 	foreach ($keys as $key) {
-		$key = str_replace("\.", ".", $key);
+		$key = str_replace("\\.", ".", $key);
 		if (!isset($lastConfig[$key]) || !is_array($lastConfig[$key])) {
 			$lastConfig[$key] = array();
 		}
@@ -531,17 +533,17 @@ function rock_array_set(array $array, $keys, $value) {
 
 /**
  * pick values from an array, the make it as keys
- * 
+ *
  * <code>
  * $array = array(
  *   array("a" => 11, "b" => 12),
  *   array("a" => 21, "b" => 22)
  *   //...
  * );
- * 
+ *
  * $array2 = rock_array_combine($array, "a", "b");
  * </code>
- * 
+ *
  * then $array2 will be:
  * <code>
  * array(
@@ -549,20 +551,20 @@ function rock_array_set(array $array, $keys, $value) {
  *   21 => 22
  * );
  * </code>
- * 
+ *
  * if $valueName not be set, the element value be "value":
- * 
+ *
  * <code>
  * $array2 = rock_array_combine($array, "a");
- * 
+ *
  * array(
  *   11 => array("a" => 11, "b" => 12),
  *   21 => array("a" => 21, "b" => 22)
  * );
  * </code>
- * 
+ *
  * support dot (.) operator in keyName and valueName:
- * - rock_array_combine($array, "a.b", "a.c"); 
+ * - rock_array_combine($array, "a.b", "a.c");
  * $array[n][a][b] will be "key"，$array[n][a][c] value be"value", here, n is index
  *
  * @param array $array array values to combine from
@@ -597,6 +599,7 @@ function rock_array_combine($array, $keyName, $valueName = null) {
 function rock_lang($code) {
 	if (!isset($GLOBALS["ROCK_LANGS"])) {
 		$file = __ROOT__ . "/langs/" . __LANG__ . "/message.php";
+		$message = array();
 		require($file);
 		if (isset($message) && is_array($message)) {
 			$GLOBALS["ROCK_LANGS"] = $message;
@@ -613,7 +616,11 @@ function rock_lang($code) {
 		}
 		$GLOBALS["ROCK_LANGS"] = array_merge($message, $GLOBALS["ROCK_LANGS"]);
 	}
-	
+
+	if (is_null($ret)) {
+		$ret = $code;
+	}
+
 	$args = func_get_args();
 	unset($args[0]);
 	if (empty($args)) {
@@ -631,13 +638,16 @@ function rock_check_version() {
 	if (!isset($MONGO["servers"][0]["host"])) {
 		return;
 	}
-	
+
 	//version 1.0.x
 	foreach ($MONGO["servers"] as $index => $server) {
 		foreach($server as $param => $value) {
 			switch ($param) {
 				case "host":
 					$server["mongo_host"] = $value;
+					break;
+				case "sock":
+					$server["mongo_sock"] = $value;
 					break;
 				case "port":
 					$server["mongo_port"] = $value;
@@ -675,7 +685,13 @@ function rock_check_version() {
  */
 function rock_init_lang() {
 	if (isset($_COOKIE["ROCK_LANG"])) {
-		define("__LANG__", $_COOKIE["ROCK_LANG"]);
+		// Patched by synthomat
+		// as reported in CVE-2013-5107
+		if (preg_match("/^[a-z]{2}_[a-z]{2}$/", $_COOKIE["ROCK_LANG"])) {
+			define("__LANG__", $_COOKIE["ROCK_LANG"]);
+		} else {
+			define("__LANG__", "en_us");
+		}
 		return;
 	}
 	if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {

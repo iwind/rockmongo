@@ -11,11 +11,11 @@ function showServerMenu(link) {
 }
 </script>
 
-<div class="top">
+<div class="top top-page">
 	<div class="left">
 		<select name="host" onchange="window.parent.location='<?php h(url("admin.changeHost")); ?>&index='+this.value" title="<?php hm("switch_hosts"); ?>">
 		<?php foreach ($servers as $index => $server):?>
-		<option value="<?php h($index);?>" <?php if($index == $serverIndex): ?>selected="selected"<?php endif;?>><?php h(isset($server["mongo_name"]) ? $server["mongo_name"] : "");?></option> 
+		<option value="<?php h($index);?>" <?php if($index == $serverIndex): ?>selected="selected"<?php endif;?>><?php h(isset($server["mongo_name"]) ? $server["mongo_name"] : "");?></option>
 		<?php endforeach; ?>
 		</select>
 		| <a href="#" onclick="showServerMenu(this);return false;"><?php hm("tools");?> <span style="font-size:11px">▼</span></a> <?php if(!is_null($isMaster)): ?>| <?php if($isMaster):?><a href="<?php h(url("server.replication")); ?>" target="right" title="<?php hm("master"); ?>"><?php hm("master"); ?></a><?php else:?><a href="<?php h(url("server.replication")); ?>" target="right" title="<?php hm("slave"); ?>"><?php hm("slave"); ?></a><?php endif;?><?php endif;?>

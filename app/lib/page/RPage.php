@@ -1,6 +1,6 @@
 <?php
 /**
- * 分页抽象类
+ * Pagination abstract class
  *
  * <code>
  * $pager = new RPage();
@@ -12,7 +12,7 @@
  * echo $pager;
  * echo "offset:" . $pager->offset();
  * </code>
- * 
+ *
  * @author iwind <iwind.iwind@gmail.com>
  * @link http://ifphp.cn
  * @version $Id$
@@ -21,8 +21,8 @@
  */
 
 /**
- * 分页抽象类
- * 
+ * Pagination abstract class
+ *
  * 实现了RPage接口的一些方法
  *
  * @version $Id$
@@ -39,7 +39,7 @@ abstract class RPage {
 	private $length;
 	private $pageSetSize = 11;
 	private $rows = array();
-	
+
 	/**
 	 * 是否加载了本地化对象
 	 *
@@ -47,7 +47,7 @@ abstract class RPage {
 	 * @since 1.0
 	 */
 	private $localeLoaded = false;
-	
+
 	/**
 	 * 语言配置
 	 *
@@ -55,13 +55,13 @@ abstract class RPage {
 	 * @since 1.0
 	 */
 	private $messages = array();
-	
+
 	/**
 	 * 分页中代码当前页码的常量
 	 *
 	 */
-	const PAGER_VARIABLE_STRING = "%{PAGE_NO}";		
-	
+	const PAGER_VARIABLE_STRING = "%{PAGE_NO}";
+
 	/**
 	 * 构造器
 	 *
@@ -70,12 +70,12 @@ abstract class RPage {
 	function __construct() {
 		$this->path = $_SERVER["PHP_SELF"];
 	}
-	
+
 	/**
 	 * 取得当前页码，第一页为1
-	 * 
+	 *
 	 * @return integer
-	 */	
+	 */
 	function current() {
 		$keyword = $this->keyword();
 		$pageNo = intval(x($keyword));
@@ -84,7 +84,7 @@ abstract class RPage {
 		}
 		return min($pageNo, $this->length());
 	}
-	
+
 	/**
 	 * 取得下一页页码
 	 *
@@ -95,7 +95,7 @@ abstract class RPage {
 		$current = $this->current();
 		return $current < $length ? ($current + 1) : $length;
 	}
-	
+
 	/**
 	 * 取得上一页页码
 	 *
@@ -106,12 +106,12 @@ abstract class RPage {
 		$current = $this->current();
 		return $current > 1 ? ($current - 1) : 1;
 	}
-	
+
 	/**
 	 * 取得记录开始的偏移量
 	 *
 	 * @return integer
-	 */	
+	 */
 	function offset() {
 		$offset = $this->size() * ($this->current() - 1);
 		if ($offset < 0) {
@@ -122,21 +122,21 @@ abstract class RPage {
         }
 		return $offset;
 	}
-	
+
 	/**
 	 * 设置内容总数
 	 *
 	 * @param integer $total 内容总数
 	 * @return RPage
-	 */	
+	 */
 	function setTotal($total) {
 		$this->total =  intval($total);
 		if ($this->total < 0) {
-			throw new IException("content total '{$total}' can't be small than 0", 0x100027, "条目总数 '{$total}' 不能小于 0");
+			throw new Exception("content total '{$total}' can't be small than 0");
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 数据总数
 	 *
@@ -146,23 +146,23 @@ abstract class RPage {
 	function total() {
 		return $this->total;
 	}
-	
+
 	/**
 	 * 设置分页链接中的关键字
 	 *
 	 * @param string $keyword 关键字
 	 * @return RPage
-	 */	
+	 */
 	function setKeyword($keyword) {
 		$this->keyword = $keyword;
 		return $this;
 	}
-	
+
 	/**
 	 * 取得分页用的关键字
 	 *
 	 * 从1.0开始，如果没有关键字，则默认为page
-	 * 
+	 *
 	 * @return string
 	 */
 	function keyword() {
@@ -171,44 +171,44 @@ abstract class RPage {
 		}
 		return $this->keyword;
 	}
-	
+
 	/**
 	 * 设置每页记录数
 	 *
 	 * @param integer $size 大于0的数字
 	 * @return RPage
-	 */	
+	 */
 	function setSize($size) {
 		$this->size = intval($size);
 		if ($this->size < 1) {
-			throw new IException("page size '{$size}' can't be small than 1", 0x100028, "分页尺寸 '{$size}' 不能小于 1");
+			throw new Exception("page size '{$size}' can't be small than 1");
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 取得每页记录数
 	 *
 	 * @return integer
-	 */	
+	 */
 	function size() {
 		if ($this->size < 1) {
 			$this->size = 10;
 		}
 		return $this->size;
 	}
-	
+
 	/**
 	 * 设置链接的路径
 	 *
 	 * @param string $path 路径
 	 * @return RPage
-	 */	
+	 */
 	function setPath($path) {
 		$this->path = $path;
 		return $this;
 	}
-	
+
 	/**
 	 * 取得程序路径
 	 *
@@ -218,18 +218,18 @@ abstract class RPage {
 	function path() {
 		return $this->path;
 	}
-	
+
 	/**
 	 * 设置属性
 	 *
 	 * @param array $properties 属性列表
 	 * @return RPage
-	 */	
+	 */
 	function setProperties(array $properties) {
 		$this->properties = $properties;
 		return $this;
 	}
-	
+
 	/**
 	 * 取得设置的属性
 	 *
@@ -239,13 +239,13 @@ abstract class RPage {
 	function properties() {
 		return $this->properties;
 	}
-	
+
 	/**
 	 * 设置查询
 	 *
 	 * @param mixed $query string|array
 	 * @return RPage
-	 */	
+	 */
 	function setQuery($query) {
 		if (is_array($query)) {
 			$_query = array();
@@ -267,10 +267,10 @@ abstract class RPage {
 		$this->query = $query;
 		return $this;
 	}
-	
+
 	/**
 	 * 添加查询条件
-	 * 
+	 *
 	 * <code>
 	 * $page->addQuery(array(
 	 *		 "e" => 5,
@@ -282,7 +282,7 @@ abstract class RPage {
 	 * @param mixed $query string|array
 	 * @return RPage
 	 * @since 1.0.3
-	 */		
+	 */
 	function addQuery($query) {
 		if (is_array($query)) {
 			$_query = array();
@@ -304,7 +304,7 @@ abstract class RPage {
 		$this->query .= ($this->query ? "&" : "") . $query;
 		return $this;
 	}
-	
+
 	/**
 	 * 开启自动构造查询条件功能
 	 *
@@ -315,13 +315,19 @@ abstract class RPage {
 	 * @since 1.0.3
 	 */
 	function setAutoQuery($bool = true, $except = "", $only = "") {
+		if (!is_array($except)) {
+			$except = preg_split("/\\s+,\\s+/", $except);
+		}
+		if (!is_array($only) && strlen($only) > 0) {
+			$only = preg_split("/\\s+,\\s+/", $only);
+		}
 		if ($bool) {
 			$x = xn();
 			foreach ($x as $name => $value) {
-				if ($except && if_in_array($name, $except)) {
+				if ($except && in_array($name, $except)) {
 					unset($x[$name]);
 				}
-				if ($only && !if_in_array($name, $only)) {
+				if ($only && !in_array($name, $only)) {
 					unset($x[$name]);
 				}
 			}
@@ -329,7 +335,7 @@ abstract class RPage {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 取得查询
 	 *
@@ -339,7 +345,7 @@ abstract class RPage {
 	function query() {
 		return $this->query;
 	}
-	
+
 	/**
 	 * 取得一个分页好号对应的URL
 	 *
@@ -362,7 +368,7 @@ abstract class RPage {
 		}
 		return $this->path() . "?" . $query;
 	}
-	
+
 	/**
 	 * 取得总分页数
 	 *
@@ -375,7 +381,7 @@ abstract class RPage {
 		}
 		return ceil($this->total()/$this->size());
 	}
-	
+
 	/**
 	 * 添加记录
 	 *
@@ -386,40 +392,40 @@ abstract class RPage {
 		$this->rows[] = $row;
 		return $this;
 	}
-	
+
 	/**
 	 * 添加记录集
 	 *
 	 * @param array $rows 记录集
 	 * @return RPage
-	 */	
+	 */
 	function addRows(array $rows) {
 		foreach ($rows as $row) {
 			$this->rows[] = $row;
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 取得记录集
 	 *
 	 * @return array
-	 */	
+	 */
 	function rows() {
 		return $this->rows;
 	}
-	
+
 	/**
 	 * 设置记录集
 	 *
 	 * @param array|iterable $rows 记录集
 	 * @return RPage
-	 */	
+	 */
 	function setRows($rows) {
 		$this->rows = $rows;
 		return $this;
 	}
-	
+
 	/**
 	 * 取得键值对应的消息文本
 	 *
@@ -433,18 +439,18 @@ abstract class RPage {
 			if (!$locale) {
 				$locale = "default";
 			}
-			
+
 			$message = x("~" . $key);
 			if ($message) {
 				return $message;
 			}
-			
+
 			//简写
 			$dirname = dirname(__FILE__) . "/lang";
 			$langFile = $dirname . "/" . $locale . ".php";
 			if (is_file($langFile)) {
-				require($langFile);		
-				$this->messages = $message;	
+				require($langFile);
+				$this->messages = $message;
 			}
 			$this->localeLoaded = true;
 		}
@@ -453,14 +459,14 @@ abstract class RPage {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 转换成字符串
 	 *
 	 * @return string
-	 */	
+	 */
 	public abstract function __toString();
-	
+
 	/**
 	 * 设置分页集尺寸
 	 *
@@ -472,7 +478,7 @@ abstract class RPage {
 		$this->pageSetSize = $num;
 		return $this;
 	}
-	
+
 	/**
 	 * 取得分页集尺寸
 	 *
@@ -482,7 +488,7 @@ abstract class RPage {
 	function pageSetNum(){
 		return $this->pageSetSize;
 	}
-	
+
 	static function pageWithStyle($style, array $params = null) {
 		exit(__METHOD__ . " need to be implemented.");
 	}

@@ -20,7 +20,7 @@ class VarExportor {
 		$this->_db = $db;
 		$this->_var = $var;
 	}
-	
+
 	/**
 	 * Export the variable to a string
 	 *
@@ -37,7 +37,12 @@ class VarExportor {
 		}
 		return $this->_exportJSON();
 	}
-	
+
+	/**
+	 * Export the variable to PHP
+	 *
+	 * @return string
+	 */
 	private function _exportPHP() {
 		$var = $this->_formatVar($this->_var);
 		$string = var_export($var, true);
@@ -48,9 +53,9 @@ class VarExportor {
 
 		return strtr($string, $params);
 	}
-	
+
 	/**
-	 * Enter description here...
+	 * Substr utf-8 version
 	 *
 	 * @param unknown_type $str
 	 * @param unknown_type $from
@@ -63,7 +68,7 @@ class VarExportor {
             mb_substr($str, $from, $len, 'UTF-8') :
 		    preg_replace('#^(?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'. $from .'}'.'((?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'. $len .'}).*#s','$1', $str);
 	}
-	
+
 	private function _addLabelToArray($array, $prev = "") {
 		$ret = array();
 		$cutLength = 150;
@@ -96,21 +101,21 @@ class VarExportor {
 		}
 		$var = $this->_formatVarAsJSON($this->_var, $service);
 		$string = call_user_func($service, $var);
-		
+
 		//Remove "\/" escape
 		$string = str_replace('\/', "/", $string);
-		
+
 		$params = array();
 		foreach ($this->_jsonParams as $index => $value) {
 			$params['"' . $this->_param($index) . '"'] = $value;
 		}
 		return json_unicode_to_utf8(json_format(strtr($string, $params)));
 	}
-	
+
 	private function _param($index) {
-		return "%{MONGO_PARAM_{$index}}"; 
+		return "%{MONGO_PARAM_{$index}}";
 	}
-	
+
 	private function _formatVar($var) {
 		if (is_scalar($var) || is_null($var)) {
 			switch (gettype($var)) {
@@ -119,8 +124,8 @@ class VarExportor {
 		                // producing MongoInt32 to keep type unchanged (Kyryl Bilokurov <kyryl.bilokurov@gmail.com>)
 		 				$this->_paramIndex ++;
 		 				$this->_phpParams[$this->_paramIndex] = 'new MongoInt32(' . $var . ')';
-		            	return $this->_param($this->_paramIndex);      
-					}                          
+		            	return $this->_param($this->_paramIndex);
+					}
 				default:
 					return $var;
 			}
@@ -134,6 +139,9 @@ class VarExportor {
 		if (is_object($var)) {
 			$this->_paramIndex ++;
 			switch (get_class($var)) {
+				case "stdClass":
+					$this->_phpParams[$this->_paramIndex] = array();
+					return $this->_param($this->_paramIndex);
 				case "MongoId":
 					$this->_phpParams[$this->_paramIndex] = 'new MongoId("' . $var->__toString() . '")';
 					return $this->_param($this->_paramIndex);
@@ -168,8 +176,8 @@ class VarExportor {
 			}
 		}
 		return $var;
-	}	
-	
+	}
+
 	private function _formatVarAsJSON($var, $jsonService) {
 		if (is_scalar($var) || is_null($var)) {
 			switch (gettype($var)) {

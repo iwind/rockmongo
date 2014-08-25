@@ -1,7 +1,7 @@
 <?php
 
 class MCollection {
-	static function fields (MongoDB $db, $collection) {
+	public static function fields (MongoDB $db, $collection) {
 		$one = $db->selectCollection($collection)->findOne();
 		if (empty($one)) {
 			return array();
@@ -10,7 +10,7 @@ class MCollection {
 		self::_fieldsFromRow($fields, $one);
 		return $fields;
 	}
-	
+
 	private static function _fieldsFromRow(&$fields, $row, $prefix = null) {
 		foreach ($row as $field => $value) {
 			if (is_integer($field) || is_float($field)) {
@@ -23,36 +23,36 @@ class MCollection {
 			}
 		}
 	}
-	
+
 	/**
 	 * If a row is GridFS row
 	 *
 	 * @param array $row record data
 	 * @return boolean
 	 */
-	static function isFile(array $row) {
+	public static function isFile(array $row) {
 		return isset($row["filename"]) && isset($row["chunkSize"]);
 	}
-	
+
 	/**
 	 * get .chunks collection name from .files collection name
 	 *
 	 * @param string $filesCollection
 	 * @return string
 	 */
-	static function chunksCollection($filesCollection) {
+	public static function chunksCollection($filesCollection) {
 		return preg_replace("/\\.files$/", ".chunks", $filesCollection);
 	}
-	
+
 	/**
 	 * read collection information
 	 *
 	 * @param MongoDB $db database
 	 * @param string $collection collection name
 	 */
-	static function info(MongoDB $db, $collection) {
+	public static function info(MongoDB $db, $collection) {
 		$ret = $db->command(array( "collStats" => $collection ));
-		
+
 		if (!$ret["ok"]) {
 			exit("There is something wrong:<font color=\"red\">{$ret['errmsg']}</font>, please refresh the page to try again.");
 		}
@@ -73,6 +73,22 @@ class MCollection {
 			$max = $options["max"];
 		}
 		return array( "capped" => $isCapped, "size" => $size, "max" => $max );
+	}
+
+	/**
+	 * Create collection
+	 *
+	 * @param MongoDB $db MongoDB
+	 * @param string $name Collection name
+	 * @param array $options Options, capped, size, max
+	 */
+	public static function createCollection(MongoDB $db, $name, array $options) {
+		if (RMongo::compareVersion("1.4.0") >= 0) {
+			$db->createCollection($name, $options);
+		}
+		else {
+			$db->createCollection($name, isset($options["capped"]) ? $options["capped"] : false, isset($options["size"]) ? $options["size"] : 0, isset($options["max"]) ? $options["max"] : 0);
+		}
 	}
 }
 

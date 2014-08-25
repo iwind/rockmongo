@@ -16,6 +16,6 @@ window.parent.frames["left"].location.reload();
 
 <form method="post">
 <?php hm("name"); ?>:<br/>
-<input type="text" name="name" value="<?php h_escape(x("name"));?>"/><br/>
+<input type="text" name="name" value="<?php h_escape(x("name"));?>" autofocus="autofocus" /><br/>
 <input type="submit" value="<?php hm("create"); ?>" />
 </form>

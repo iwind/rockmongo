@@ -9,7 +9,7 @@
 /**
 * Defining version number and enabling error reporting
 */
-define("ROCK_MONGO_VERSION", "1.1.6");
+define("ROCK_MONGO_VERSION", "1.1.8");
 
 error_reporting(E_ALL);
 
@@ -24,8 +24,10 @@ if (!class_exists("Mongo") && !class_exists("MongoClient")) {
 }
 
 // enforce Mongo support for int64 data type (Kyryl Bilokurov <kyryl.bilokurov@gmail.com>)
-ini_set("mongo.native_long", 1);
-ini_set("mongo.long_as_object", 1);
+if (PHP_INT_SIZE == 8) {
+	ini_set("mongo.native_long", 1);
+	ini_set("mongo.long_as_object", 1);
+}
 
 /**
 * Initializing configuration files and RockMongo

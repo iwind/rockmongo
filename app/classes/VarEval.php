@@ -6,36 +6,36 @@
 class VarEval {
 	/**
 	 * Source to run
-	 * 
+	 *
 	 * @var string
 	 */
 	private $_source;
-	
+
 	/**
 	 * Source Format
-	 * 
+	 *
 	 * @var string
 	 */
 	private $_format;
-	
+
 	/**
 	 * current MongoDB
 	 *
 	 * @var MongoDB
 	 */
 	private $_db;
-	
+
 	function __construct($source, $format = "array", MongoDB $db = null) {
 		$this->_source = $source;
-		
+
 		$this->_format = $format;
 		if (!$this->_format) {
 			$this->_format = "array";
 		}
-		
+
 		$this->_db = $db;
 	}
-	
+
 	/**
 	 * execute the code
 	 *
@@ -49,7 +49,7 @@ class VarEval {
 			return $this->_runJson();
 		}
 	}
-	
+
 	private function _runPHP() {
 		$this->_source = "return " . $this->_source . ";";
 		if (function_exists("token_get_all")) {//tokenizer extension may be disabled
@@ -59,30 +59,30 @@ class VarEval {
 				$type = $token[0];
 				if (is_long($type)) {
 					if (in_array($type, array(
-							T_OPEN_TAG, 
-							T_RETURN, 
-							T_WHITESPACE, 
-							T_ARRAY, 
-							T_LNUMBER, 
+							T_OPEN_TAG,
+							T_RETURN,
+							T_WHITESPACE,
+							T_ARRAY,
+							T_LNUMBER,
 							T_DNUMBER,
-							T_CONSTANT_ENCAPSED_STRING, 
-							T_DOUBLE_ARROW, 
+							T_CONSTANT_ENCAPSED_STRING,
+							T_DOUBLE_ARROW,
 							T_CLOSE_TAG,
 							T_NEW,
 							T_DOUBLE_COLON
 							))) {
 						continue;
 					}
-					
+
 					if ($type == T_STRING) {
 						$func = strtolower($token[1]);
 						if (in_array($func, array(
 								//keywords allowed
-								"mongoid", 
-								"mongocode", 
-								"mongodate", 
-								"mongoregex", 
-								"mongobindata", 
+								"mongoid",
+								"mongocode",
+								"mongodate",
+								"mongoregex",
+								"mongobindata",
 								"mongoint32",
 								"mongoint64",
 								"mongodbref",
@@ -104,7 +104,7 @@ class VarEval {
 		}
 		return eval($this->_source);
 	}
-	
+
 	private function _runJson() {
 		$timezone = @date_default_timezone_get();
 		date_default_timezone_set("UTC");
@@ -140,7 +140,7 @@ class VarEval {
 				    return new Date(time);
 				};
 			};
-				
+
 			function r_util_convert_empty_object_to_string(obj) {
 				if (r_util_is_empty(obj)) {
 					return "__EMPTYOBJECT__";
@@ -152,7 +152,7 @@ class VarEval {
 				}
 				return obj;
 			};
-				
+
 			function r_util_is_empty(obj) {
 				if (obj == null || typeof(obj) != "object" || (obj.constructor != Object)) {
 					return false;
@@ -162,7 +162,7 @@ class VarEval {
 			            return false;
 					}
 			    }
-			
+
 			    return true;
 			};
 			var o = ' . $this->_source . '; return r_util_convert_empty_object_to_string(o); }'
@@ -173,9 +173,9 @@ class VarEval {
 		if ($ret["ok"]) {
 			return $ret["retval"];
 		}
-		return false;
+		return json_decode($this->_source, true);
 	}
-	
+
 	private function _fixEmptyObject(&$object) {
 		if (is_array($object)) {
 			foreach ($object as &$v) {

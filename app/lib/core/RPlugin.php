@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin object
- * 
+ *
  * See details here: http://rockmongo.com/wiki/pluginDevelope
  *
  * @author Liu <q@yun4s.cn>
@@ -9,15 +9,15 @@
 class RPlugin {
 	private static $_plugins = array();
 	private static $_loaded = false;
-	
+
 	public function onBefore() {
-		
+
 	}
-	
+
 	public function onAfter() {
-		
+
 	}
-	
+
 	/**
 	 * Read plugin help
 	 *
@@ -29,10 +29,10 @@ class RPlugin {
 			"version" => "1.0"
 		);
 	}
-	
+
 	/**
 	 * Register a plugin
-	 * 
+	 *
 	 * @param string $pluginClass plugin class name
 	 * @param integer $priority priority
 	 * @throws Exception
@@ -46,37 +46,54 @@ class RPlugin {
 		}
 		self::$_plugins[] = array( "obj" => new $pluginClass, "priority" => $priority );
 	}
-	
+
 	/**
 	 * Call onBefore() method in plugin
 	 *
 	 */
 	public static function callBefore() {
-		$plugins = rock_array_sort(self::$_plugins, "priority"); 
+		$plugins = rock_array_sort(self::$_plugins, "priority");
 		foreach ($plugins as $plugin) {
 			$plugin["obj"]->onBefore();
 		}
 	}
-	
+
 	/**
 	 * Call onAfter() method in plugin
 	 *
 	 */
 	public static function callAfter() {
-		$plugins = rock_array_sort(self::$_plugins, "priority", false); 
+		$plugins = rock_array_sort(self::$_plugins, "priority", false);
 		foreach ($plugins as $plugin) {
 			$plugin["obj"]->onAfter();
 		}
 	}
-	
+
 	/**
 	 * Load all of plugins
 	 *
+	 * You should put all plugins to app/plugins:
+	 * $ROCK-MONGO
+	 *   apps/
+	 *   	plugins/
+	 *   		mapreduce/
+	 *   		ace/
+	 *			systemjs/
+	 *			other plugins ...
+	 *
+	 * But we also support another deploy way:
+	 * $ROCK-MONGO
+	 * 	 apps/
+	 * plugins/
+	 *	 csv/
+	 *   sharding/
+	 *   other plugins ...
 	 */
 	public static function load() {
 		if (self::$_loaded) {
 			return;
 		}
+		$plugins = array();
 		require(__ROOT__ . DS . "configs" . DS . "rplugin.php");
 		if (empty($plugins) || !is_array($plugins)) {
 			return;
@@ -96,18 +113,19 @@ class RPlugin {
 				}
 			}
 		}
-		
+
 		self::$_loaded = true;
 	}
-	
+
 	/**
 	 * Get all plugins
-	 * 
+	 *
 	 * @return array
 	 * @since 1.1.6
 	 */
 	public static function plugins() {
 		$configPlugins = array();
+		$plugins = array();
 		require(__ROOT__ . DS . "configs" . DS . "rplugin.php");
 		if (empty($plugins) || !is_array($plugins)) {
 			return $configPlugins;
@@ -118,16 +136,16 @@ class RPlugin {
 				$dir = dirname(dirname(__ROOT__)) . DS . "plugins" . DS . $name;
 			}
 			$pluginConfig = array(
-				"name" => null,	
+				"name" => null,
 				"dir" => $name,
 				"code" => null,
 				"author" => null,
 				"description" => null,
-				"version" => null,	
+				"version" => null,
 				"url" => null,
-				"enabled" => isset($plugin["enabled"]) ? $plugin["enabled"] : false					
+				"enabled" => isset($plugin["enabled"]) ? $plugin["enabled"] : false
 			);
-			
+
 			$descFile = $dir . "/desc.php";
 			if (is_file($descFile)) {
 				$config = require($descFile);
@@ -150,10 +168,10 @@ class RPlugin {
 					$pluginConfig["url"] = $config["url"];
 				}
 			}
-			
+
 			$configPlugins[] = $pluginConfig;
 		}
-		
+
 		return $configPlugins;
 	}
 }
