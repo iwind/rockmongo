@@ -3,6 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <title>RockMongo</title>
+<?php if (php_sapi_name() === 'cli-server'): ?>
+<base href="/"/>
+<?php endif; ?>
 <script language="javascript" src="js/jquery-1.4.2.min.js"></script>
 <script language="javascript" src="js/jquery.textarea.js"></script>
 <link rel="stylesheet" href="<?php render_theme_path() ?>/css/global.css" type="text/css" media="all"/>
