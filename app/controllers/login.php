@@ -21,10 +21,6 @@ class LoginController extends BaseController {
 		$this->db = trim(xn("db"));
 		$this->hostIndex = xi("host");
 		$this->languages = rock_load_languages();
-		$this->expires = array(
-			3 => "3 " . rock_lang("hours"),
-			720 => "1 " . rock_lang("month"),
-		);
 		$this->moreOptions = xi("more");
 		
 		if ($this->isPost()) {
@@ -44,7 +40,7 @@ class LoginController extends BaseController {
 			
 			//remember user
 			import("models.MUser");
-			MUser::login($this->username, $password, $this->hostIndex, $this->db, xi("expire") * 3600);
+			MUser::login($this->username, $password, $this->hostIndex, $this->db);
 			
 			//remember lang
 			setcookie("ROCK_LANG", x("lang"), time() + 365 * 86400);

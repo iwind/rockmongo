@@ -67,7 +67,7 @@ class BaseController extends RExtController {
 
 			//if auth is disabled
 			if ($server && !$server->mongoAuth() && !$server->controlAuth()) {
-				MUser::login("rockmongo_memo", "rockmongo_memo", xi("host"), "admin", 10800);
+				MUser::login("rockmongo_memo", "rockmongo_memo", xi("host"), "admin");
 				$this->_admin = MUser::userInSession();
 			}
 			else {
