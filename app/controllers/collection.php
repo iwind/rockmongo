@@ -104,7 +104,7 @@ class CollectionController extends BaseController {
 		$params = xn();
 		if ($this->_logQuery && count($params) > 3) {//not only "action", "db" and "collection"
 			$logDir = dirname(__ROOT__) . DS . "logs";
-			if (!empty($params["criteria"]) && strlen(trim($params["criteria"], "{} \t\n\r")) > 0) {
+			if (!empty($params["criteria"]) && mb_strlen(trim($params["criteria"], "{} \t\n\r")) > 0) {
 				if (is_writable($logDir)) {
 					$logFile = $this->_logFile($this->db, $this->collection);
 					$fp = null;
