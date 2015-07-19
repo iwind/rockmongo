@@ -69,6 +69,7 @@ class REvent {
 		if (empty(self::$_listeners[$event])) {
 			return;
 		}
+
 		foreach (self::$_listeners[$event] as $index => $listener) {
 			if ($listener["callback"] == $callback) {
 				unset(self::$_listeners[$event][$index]);
