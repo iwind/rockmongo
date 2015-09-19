@@ -69,14 +69,9 @@ class REvent {
 		if (empty(self::$_listeners[$event])) {
 			return;
 		}
-		$indexes = array();
+
 		foreach (self::$_listeners[$event] as $index => $listener) {
 			if ($listener["callback"] == $callback) {
-				$indexes[] = $index;
-			}
-		}
-		if (!empty($indexes)) {
-			foreach (array_reverse($indexes) as $index) {
 				unset(self::$_listeners[$event][$index]);
 			}
 		}
