@@ -69,16 +69,6 @@ function r_show_more_options(btn) {
 			<?php endforeach;?>
 			</select></td>
 		</tr>
-		<tr>
-			<td><?php hm("alive"); ?>:</td>
-			<td>
-			<select name="expire" style="width:150px">
-			<?php foreach ($expires as $long => $name):?>
-			<option value="<?php h($long);?>"><?php h($name);?></option>
-			<?php endforeach;?>
-			</select>
-			</td>
-		</tr>
 		</tbody>
 		<tr>
 			<td colspan="2" align="center"><input type="submit" value="<?php hm("loginandrock"); ?>"/></td>

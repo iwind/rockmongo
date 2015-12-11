@@ -5,7 +5,6 @@ class MUser {
 	private $_password;
 	private $_hostIndex;
 	private $_db;
-	private $_timeout;
 	
 	public function __construct() {
 		
@@ -63,10 +62,6 @@ class MUser {
 		return preg_split("/\\s*,\\s*/", $this->_db);
 	}
 	
-	public function setTimeout($timeout) {
-		$this->_timeout = $timeout;
-	}
-	
 	/**
 	 * Validate User
 	 *
@@ -90,14 +85,13 @@ class MUser {
 		$_SESSION["login"]["index"] = $hostIndex;
 	}
 	
-	public static function login($username, $password, $hostIndex, $db, $timeout) {
+	public static function login($username, $password, $hostIndex, $db) {
 		$_SESSION["login"] = array(
 			"username" => $username,
 			"password" => $password,
 			"index" => $hostIndex,
 			"db" => $db
 		);
-		setcookie(session_name(), session_id(), time() + $timeout);
 	}
 	
 	/**
