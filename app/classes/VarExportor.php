@@ -210,7 +210,7 @@ class VarExportor {
 				case "MongoDate":
 					$timezone = @date_default_timezone_get();
 					date_default_timezone_set("UTC");
-					$this->_jsonParams[$this->_paramIndex] = "ISODate(\"" . date("Y-m-d", $var->sec) . "T" . date("H:i:s.", $var->sec) . ($var->usec/1000) . "Z\")";
+					$this->_jsonParams[$this->_paramIndex] = "ISODate(\"" . date("Y-m-d", $var->sec) . "T" . date("H:i:s.", $var->sec) . sprintf("%03d", $var->usec/1000) . "Z\")";
 					date_default_timezone_set($timezone);
 					return $this->_param($this->_paramIndex);
 				case "MongoTimestamp":
