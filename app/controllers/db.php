@@ -303,7 +303,7 @@ class DbController extends BaseController {
 						}
 
 						if (!$is_ok) {
-							$ret["ok"] = false
+							$ret["ok"] = false;
 							$ret["errmsg"] = $error_str;
 						}
 
