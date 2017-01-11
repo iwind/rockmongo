@@ -12,7 +12,13 @@ window.parent.frames["left"].location.reload();
 
 <form method="post" enctype="multipart/form-data">
 <input type="hidden" name="format" value="js"/>
+
 JS File: <input type="file" style="width:400px" name="json"/><br/>
+
+<input type="hidden" name="split_js" value="0"/>
+<label>Do split JS File by chunks:</label> <input type="checkbox" name="split_js" value="1"/><br/>
+<label>Max documents in chunk:</label> <input type="numeric" name="split_max" value="1000"/><br/>
+
 <input type="submit" value="<?php hm("import"); ?>"/>
 </form>
 

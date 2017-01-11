@@ -260,6 +260,10 @@ class DbController extends BaseController {
 
 		if ($this->isPost()) {
 			$format = x("format");
+			$split_js = x("split_js");
+			$split_max = x("split_max");
+			if (!$split_max) $split_max = 1000;
+
 			if (!empty($_FILES["json"]["tmp_name"])) {
 				$tmp = $_FILES["json"]["tmp_name"];
 
@@ -276,7 +280,38 @@ class DbController extends BaseController {
 
 				$ret = array("ok" => 0);
 				if ($format == "js") {
-					$ret = $this->_mongo->selectDB($this->db)->execute('function (){ ' . $body . ' }');
+
+					if ($split_js) {
+
+						$body = explode('db.getCollection(', $body);
+						$chunks = array_chunk($body, $split_max);
+
+						$is_ok = true;
+						$error_str = '';
+
+						foreach($chunks as $body_chunk) {
+
+							$chunk_str = 'db.getCollection(' . implode('db.getCollection(', $body_chunk);
+
+							$ret = $this->_mongo->selectDB($this->db)->execute('function (){ ' . $chunk_str . ' }');
+
+							if (!$ret["ok"]) {
+								$error_str .= $ret["errmsg"] . PHP_EOL;
+								$is_ok = false;
+							}
+
+						}
+
+						if (!$is_ok) {
+							$ret["ok"] = false
+							$ret["errmsg"] = $error_str;
+						}
+
+					} else {
+
+						$ret = $this->_mongo->selectDB($this->db)->execute('function (){ ' . $body . ' }');
+
+					}
 
 					if (!$ret["ok"]) {
 						$this->error = $ret["errmsg"];
