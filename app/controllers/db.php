@@ -303,7 +303,7 @@ class DbController extends BaseController {
 							$ret = $this->_mongo->selectDB($this->db)->execute('function (){ ' . $chunk_str . ' }');
 
 							if (!$ret["ok"]) {
-								$error_str .= $ret["errmsg"] . PHP_EOL;
+								$error_str .= $ret["errmsg"] . '<br>Chunk with error:<br>' . PHP_EOL . $chunk_str . PHP_EOL;
 								$is_ok = false;
 							}
 
