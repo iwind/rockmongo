@@ -238,7 +238,7 @@ class DbController extends BaseController {
 					ob_end_clean();
 					header("Content-type: application/x-gzip");
 					header("Content-Disposition: attachment; filename=\"{$prefix}.gz\"");
-					echo gzcompress($this->contents, 9);
+					echo gzencode($this->contents, 9);
 					exit();
 				}
 				else {
@@ -268,12 +268,19 @@ class DbController extends BaseController {
 				$tmp = $_FILES["json"]["tmp_name"];
 
 				//read file by it's format
-				$body = "";
+				$body = file_get_contents($tmp);
 				if (preg_match("/\\.gz$/", $_FILES["json"]["name"])) {
-					$body = gzuncompress(file_get_contents($tmp));
-				}
-				else {
-					$body = file_get_contents($tmp);
+					$_body = @gzdecode($body);
+					if (!$_body) {
+						$_body = @gzuncompress($body);
+					}
+					if (!$_body) {
+						$this->error = "Can't decompress file!";
+						$body = '';
+					} else {
+						$body = $_body;
+						unset $_body;
+					}
 				}
 
 				//check format
@@ -303,7 +310,7 @@ class DbController extends BaseController {
 						}
 
 						if (!$is_ok) {
-							$ret["ok"] = false;
+							$ret["ok"] = 0;
 							$ret["errmsg"] = $error_str;
 						}
 
