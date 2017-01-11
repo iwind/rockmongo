@@ -291,6 +291,17 @@ class DbController extends BaseController {
 					if ($split_js) {
 
 						$body = explode('db.getCollection(', $body);
+
+						function filter_js_chunk($item) {
+							if (strpos($item, ').insert({') !== false) {
+								return true;
+							}
+							return false;
+						}
+
+						$body = array_filter($body, "filter_js_chunk");
+
+
 						$chunks = array_chunk($body, $split_max);
 
 						$is_ok = true;
