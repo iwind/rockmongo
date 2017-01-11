@@ -279,7 +279,7 @@ class DbController extends BaseController {
 						$body = '';
 					} else {
 						$body = $_body;
-						unset $_body;
+						unset($_body);
 					}
 				}
 
