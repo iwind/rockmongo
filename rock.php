@@ -617,10 +617,6 @@ function rock_lang($code) {
 		$GLOBALS["ROCK_LANGS"] = array_merge($message, $GLOBALS["ROCK_LANGS"]);
 	}
 
-	if (is_null($ret)) {
-		$ret = $code;
-	}
-
 	$args = func_get_args();
 	unset($args[0]);
 	if (empty($args)) {

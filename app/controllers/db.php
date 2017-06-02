@@ -54,7 +54,7 @@ class DbController extends BaseController {
 			$this->stats["Objects"] = $ret["objects"];
 		}
 		if (isset($ret["avgObjSize"])) {
-			$this->stats["Avg Object Size"] = r_human_bytes($ret["avgObjSize"]);
+			$this->stats["Avg Object Size"] = $ret["avgObjSize"];
 		}
 		if(isset($ret["dataSize"])) {
 			$this->stats["Data Size"] = $ret["dataSize"];
@@ -69,7 +69,7 @@ class DbController extends BaseController {
 			$this->stats["Indexes"] = $ret["indexes"];
 		}
 		if(isset($ret["indexSize"])) {
-			$this->stats["Index Size"] = r_human_bytes($ret["indexSize"]);
+			$this->stats["Index Size"] = $ret["indexSize"];
 		}
 		if (isset($ret["fileSize"])) {
 			$this->stats["Total File Size"] = r_human_bytes($ret["fileSize"]);
