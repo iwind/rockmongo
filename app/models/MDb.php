@@ -32,7 +32,7 @@ class MDb {
             $names= $query["retval"];
         } 
         else{
-            $colls = $db->listCollections(true);
+            $colls = $db->listCollections();
             foreach($colls as $coll){
                 $names[] = $coll->getName();
             }               
