@@ -1,7 +1,3 @@
-Declaration
---------------------------------------
-We protest seriously against the US government's crackdown on China's technology industry for political purposes. The technology is free. [IEEE, a major science publisher, bans Huawei scientists from reviewing papers](https://www.sciencemag.org/news/2019/05/ieee-major-science-publisher-bans-huawei-scientists-reviewing-papers).
-
 Introduction
 --------------------------------------
 RockMongo is a MongoDB administration tool, written in PHP 5, very easy to install and use.
