@@ -139,9 +139,6 @@ class VarExportor {
 		if (is_object($var)) {
 			$this->_paramIndex ++;
 			switch (get_class($var)) {
-				case "stdClass":
-					$this->_phpParams[$this->_paramIndex] = array();
-					return $this->_param($this->_paramIndex);
 				case "MongoId":
 					$this->_phpParams[$this->_paramIndex] = 'new MongoId("' . $var->__toString() . '")';
 					return $this->_param($this->_paramIndex);

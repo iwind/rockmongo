@@ -85,7 +85,6 @@ class CollectionController extends BaseController {
 		else if ($format == "array") {//to array
 			$eval = new VarEval($data, "json", $this->_mongodb);
 			$array = $eval->execute();
-
 			$exportor = new VarExportor($this->_mongodb, $array);
 			$ret = $exportor->export(MONGO_EXPORT_PHP);
 		}

@@ -1,18 +1,24 @@
 Introduction
 --------------------------------------
 RockMongo is a MongoDB administration tool, written in PHP 5, very easy to install and use.
+It has been modified to work with php7.0. Tested on debian 8.
+
+Dependencies
+--------------------------------------
+alcaeus/mongo-php-adapter
 
 
 Installation
 --------------------------------------
 1. Install PHP runtime environment if you don't have one yet, such like Apache Httpd, Nginx ...
-2. Install MongoDB PHP driver (http://us.php.net/manual/en/mongo.installation.php)
-3. Download the package from http://rockmongo.com/downloads
+2. Install MongoDB PHP driver (http://php.net/manual/en/set.mongodb.php)
+3. Download the package
 4. Unzip the files into your disk, under root of your site
-5. Open the config.php with your convenient editor, change host, port, admins and so on to yours
-6. Visit the index.php in your browser, for example: http://localhost/rockmongo/index.php
-7. Login with admin username and password, which is set "admin" and "admin" as default
-8. Play with your MongoDBs!
+5. Run composer install
+6. Open the config.php with your convenient editor, change host, port, admins and so on to yours
+7. Visit the index.php in your browser, for example: http://localhost/rockmongo/index.php
+8. Login with admin username and password, which is set "admin" and "admin" as default
+9. Play with your MongoDBs!
 
 
 Upgrade from old version
@@ -52,7 +58,7 @@ Please feel free to report any bugs and issues to me, my email is: iwind.liu@gma
 
 Source Code Repository
 --------------------------------------
-Repositories are located at 
+Original repositories are located at 
   https://github.com/iwind/rockmongo.git
 
 

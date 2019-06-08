@@ -242,7 +242,6 @@ function json_format($json)
  * @param integer $bytes Size in byte
  * @param integer $precision Precision
  * @return string size in k, m, g..
- * @since 1.1.7
  */
 function r_human_bytes($bytes, $precision = 2) {
 	if ($bytes == 0) {
@@ -261,23 +260,6 @@ function r_human_bytes($bytes, $precision = 2) {
 		return round($bytes/1024/1024/1024, $precision) . "g";
 	}
 	return $bytes;
-}
-
-/**
- * Get collection display icon
- *
- * @param string $collectionName Collection name
- * @return string
- * @since 1.1.8
- */
-function r_get_collection_icon($collectionName) {
-	if (preg_match("/\\.(files|chunks)$/", $collectionName)){
-		return "grid";
-	}
-	if (preg_match("/^system\\.js$/", $collectionName)) {
-		return "table-systemjs";
-	}
-	return "table";
 }
 
 ?>
