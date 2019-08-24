@@ -280,4 +280,12 @@ function r_get_collection_icon($collectionName) {
 	return "table";
 }
 
+// PHP < 5.4
+if (!function_exists('gzdecode')) {
+	// http://php.net/manual/ru/function.gzdecode.php#106397
+	function gzdecode($data) {
+		return gzinflate(substr($data,10,-8));
+	}
+}
+
 ?>
