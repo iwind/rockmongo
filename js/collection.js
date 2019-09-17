@@ -1277,6 +1277,24 @@ function showMoreDocMenus(button, index) {
 		});
 	}
 }
+
+/**
+ *  Add a custom field to query
+ */
+function addCustomFieldToQuery() {
+	var obj = $('#add_custom_field');
+	var field_name = obj.val();
+
+	if (field_name.length === 0) {
+		return;
+	}
+
+	$('#query_fields_list ul').append('<li><label><input type="checkbox" name="query_fields[]" value="' + field_name + '" checked="checked"/> ' + field_name + '</label></li>');
+	obj.val('');
+
+	return false;
+}
+
 $(function () {
 	$(document).click(function () {
 		$(".doc_menu").hide();

@@ -101,6 +101,7 @@ currentFields.push("<?php h(addslashes($field));?>");
 			/> <?php h($field); ?></label></li>
 	<?php endforeach; ?>
 	</ul>
+	<input type="text" value="" placeholder="Custom field" onkeydown="if (event.keyCode == 13) document.getElementById('add_custom_field_button').click()" id="add_custom_field"/> <input type="button" onclick="addCustomFieldToQuery();return false;" id="add_custom_field_button" value="+"/>
 </div>
 <div id="query_hints_list" class="fieldsmenu">
 	<div align="right" style="padding-right:10px;background:#999"><a href="#" onclick="closeQueryHints();return false;" title="Click to close"><img src="<?php render_theme_path() ?>/images/accept.png" width="14"/></a></div>

@@ -163,6 +163,7 @@ class CollectionController extends BaseController {
 		if (!is_array($this->queryFields)) {
 			$this->queryFields = array();
 		}
+		$this->nativeFields = array_unique(array_merge($this->nativeFields, $this->queryFields));
 
 		$this->indexFields = $db->selectCollection($this->collection)->getIndexInfo();
 		$this->recordsCount = $db->selectCollection($this->collection)->count();
