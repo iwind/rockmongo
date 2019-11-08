@@ -318,7 +318,7 @@ abstract class RPage {
 		if (!is_array($except)) {
 			$except = preg_split("/\\s+,\\s+/", $except);
 		}
-		if (!is_array($only) && strlen($only) > 0) {
+		if (!is_array($only) && mb_strlen($only) > 0) {
 			$only = preg_split("/\\s+,\\s+/", $only);
 		}
 		if ($bool) {
