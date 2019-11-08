@@ -6,12 +6,12 @@
  */
 class RMongo {
 	private static $_lastId;
-	
+
 	private $_mongo;
-	
+
 	/**
 	 * Contruct a new object
-	 * 
+	 *
 	 * @param string $server Server definition
 	 * @param array $options Options
 	 */
@@ -23,34 +23,34 @@ class RMongo {
 			$this->_mongo = new Mongo($server, $options);
 		}
 	}
-	
+
 	/**
 	 * Closes this connection
-	 * 
+	 *
 	 * @param boolean|string $connection Connection
 	 * @return boolean
 	 */
 	public function close($connection) {
 		return $this->_mongo->close($connection);
 	}
-	
+
 	/**
 	 * Connects to a database server
 	 */
 	public function connect() {
 		return $this->_mongo->connect();
 	}
-	
+
 	/**
 	 * Drops a database
-	 * 
+	 *
 	 * @param mixed $db The database to drop. Can be a MongoDB object or the name of the database
 	 * @return array
 	 */
 	public function dropDB($db) {
 		if (!is_object($db)) {
 			$db = $this->selectDB($db);
-		} 
+		}
 		if (method_exists($db, "drop")) {
 			return $db->drop();
 		}
@@ -58,7 +58,7 @@ class RMongo {
 			$this->_mongo->dropDB($db);
 		}
 	}
-	
+
 	/**
 	 * Force server to response error
 	 */
@@ -68,20 +68,20 @@ class RMongo {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets a database
-	 * 
+	 *
 	 * @param string $dbname The database name
 	 * @return MongoDB
 	 */
 	public function __get($dbname) {
 		return $this->_mongo->$dbname;
 	}
-	
+
 	/**
 	 * Updates status for all associated hosts
-	 * 
+	 *
 	 * @return array
 	 * @todo implement it under different versions
 	 */
@@ -91,10 +91,10 @@ class RMongo {
 		}
 		return array();
 	}
-	
+
 	/**
 	 * Get the read preference for this connection
-	 * 
+	 *
 	 * @return array
 	 * @todo implement it under different versions
 	 */
@@ -104,7 +104,7 @@ class RMongo {
 		}
 		return array();
 	}
-	
+
 	/**
 	 * Get last erro
 	 *
@@ -116,31 +116,31 @@ class RMongo {
 		}
 		return array();
 	}
-	
+
 	/**
 	 * Lists all of the databases available
-	 * 
+	 *
 	 * @return array
 	 */
 	public function listDBs() {
 		return $this->_mongo->listDBs();
 	}
-	
+
 	/**
 	 * Connect pair servers
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function pairConnect() {
 		if (method_exists($this->_mongo, "pairConnect")) {
 			return $this->_mongo->pairConnect();
-		} 
+		}
 		return false;
 	}
-	
+
 	/**
 	 * Create pair persist connection
-	 * 
+	 *
 	 * @param string $username
 	 * @param string $password
 	 * @return boolean
@@ -151,10 +151,10 @@ class RMongo {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Create persist connection
-	 * 
+	 *
 	 * @param string $username Username
 	 * @param string $password Password
 	 * @return boolean
@@ -165,10 +165,10 @@ class RMongo {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Get previous error
-	 * 
+	 *
 	 * @return array
 	 */
 	public function prevError() {
@@ -177,10 +177,10 @@ class RMongo {
 		}
 		return array();
 	}
-	
+
 	/**
 	 * Reset error
-	 * 
+	 *
 	 * @return array
 	 */
 	public function resetError() {
@@ -189,10 +189,10 @@ class RMongo {
 		}
 		return array();
 	}
-	
+
 	/**
 	 * Gets a database collection
-	 * 
+	 *
 	 * @param string $db The database name
 	 * @param string $collection The collection name
 	 * @return MongoCollection
@@ -200,20 +200,20 @@ class RMongo {
 	public function selectCollection($db, $collection) {
 		return $this->_mongo->selectCollection($db, $collection);
 	}
-	
+
 	/**
 	 * Gets a database
-	 * 
+	 *
 	 * @param string $db The database name
 	 * @return MongoDB
 	 */
 	public function selectDB($db) {
 		return $this->_mongo->selectDB($db);
 	}
-	
+
 	/**
 	 * Set the read preference for this connection
-	 * 
+	 *
 	 * @param int $readPreference The read preference mode: Mongo::RP_PRIMARY, Mongo::RP_PRIMARY_PREFERRED, Mongo::RP_SECONDARY, Mongo::RP_SECONDARY_PREFERRED, or Mongo::RP_NEAREST
 	 * @param array $tags An array of zero or more tag sets, where each tag set is itself an array of criteria used to match tags on replica set members
 	 * @return boolean
@@ -224,7 +224,7 @@ class RMongo {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Change slaveOkay setting for this connection
 	 *
@@ -233,23 +233,29 @@ class RMongo {
 	 */
 	public function setSlaveOkay($ok) {
 		if (method_exists($this->_mongo, "setSlaveOkay")) {
-			return $this->_mongo->setSlaveOkay($ok);
+			$result = $this->_mongo->setSlaveOkay($ok);
 		}
-		return false;
+    elseif (method_exists($this->_mongo, 'setReadPreference')) {
+      $result = $this->_mongo->setReadPreference(MongoClient::RP_PRIMARY_PREFERRED);
+    }
+    else {
+      $result = false;
+    }
+		return $result;
 	}
-	
+
 	/**
 	 * String representation of this connection
-	 * 
+	 *
 	 * @return string
 	 */
 	public function __toString() {
 		return $this->_mongo->__toString();
 	}
-	
+
 	/**
 	 * Get mongo driver version
-	 * 
+	 *
 	 * @return string
 	 * @since 1.1.4
 	 */
@@ -262,10 +268,10 @@ class RMongo {
 		}
 		return "0";
 	}
-	
+
 	/**
 	 * Compare another version with current version
-	 * 
+	 *
 	 * @param string $version Version to compare
 	 * @return integer -1,0,1
 	 * @since 1.1.4
@@ -274,13 +280,13 @@ class RMongo {
 		$currentVersion = self::getVersion();
 		preg_match("/^[\\.\\d]+/", $currentVersion, $match);
 		$number = $match[0];
-		return version_compare($number, $version); 
+		return version_compare($number, $version);
 	}
-	
+
 	static function setLastInsertId($lastId) {
 		self::$_lastId = $lastId;
 	}
-	
+
 	/**
 	 * Enter description here...
 	 *
@@ -290,5 +296,3 @@ class RMongo {
 		return self::$_lastId;
 	}
 }
-
-?>

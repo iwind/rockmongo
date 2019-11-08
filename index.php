@@ -38,5 +38,3 @@ rock_check_version();
 rock_init_lang();
 rock_init_plugins();
 Rock::start();
-
-?>
