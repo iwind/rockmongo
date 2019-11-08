@@ -207,7 +207,7 @@ class CollectionController extends BaseController {
 
 }';
 			}
-			x("pagesize", 10);
+			x("pagesize", $this->_server->pageSize());
 		}
 		else {
 			$row = null;
@@ -335,7 +335,7 @@ class CollectionController extends BaseController {
 		//pagination
 		$pagesize = xi("pagesize");
 		if ($pagesize < 1) {
-			$pagesize = 10;
+			$pagesize = $this->_server->pageSize();
 		}
 		import("lib.page.RPageStyle1");
 		$page = new RPageStyle1();
