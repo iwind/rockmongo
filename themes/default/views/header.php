@@ -9,6 +9,7 @@
 <script language="javascript" src="js/jquery-1.4.2.min.js"></script>
 <script language="javascript" src="js/jquery.textarea.js"></script>
 <link rel="stylesheet" href="<?php render_theme_path() ?>/css/global.css" type="text/css" media="all"/>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <?php render_page_header(); ?>
 <script language="javascript">
 $(function () {
